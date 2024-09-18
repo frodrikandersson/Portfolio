@@ -1,0 +1,219 @@
+:root{
+    --menuRed: #ff6d56;
+}
+
+/* ----MOBILE FIRST START---- */
+/* MAIN START */
+.wrapper h2, .wrapper h5{
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--menuRed);
+}
+
+.wrapper h4{
+    font-weight: 400;
+    color: var(--menuRed);
+    font-size: 1.8rem;
+}
+
+.wrapper h5{
+    font-size: 1rem;
+    color: var(--darkGray);
+}
+.wrapper p{
+    font-size: 0.8rem;
+}
+
+body{
+    background: url(/Images/pattern.png);
+}
+
+.header-menu-image{
+    width: 100%;
+    height: 80svh;
+    background: linear-gradient(to top, rgba(255, 249, 236, 1), rgba(255, 249, 236, 0.1) 30%),
+                linear-gradient(to bottom, rgba(7, 0, 94, 1), rgba(7, 0, 94, 0.1) 50%), url('/Images/openHours.jpg');                ;
+    background-size: cover;
+    background-position-y: bottom;
+}
+
+main .wrapper{
+    background: linear-gradient(to bottom, var(--mainWhite), var(--boneWhite) 5%);
+    padding: 0;
+}
+
+.grid-main{
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+}
+
+.food{
+    grid-column: 1 / 1;
+    text-align: center;
+}
+
+.drinks{
+    grid-column: 1 / 1;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.food-container{
+    margin: 10px;
+}
+
+.food-container-wrapper{
+    display:grid;
+    grid-template-columns: 80% 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    margin: 20px auto;
+    max-width: 500px;
+    justify-content: space-between;
+}
+.food-container-wrapper:hover{
+    box-shadow: 1px 1px 1px 5px var(--mainWhite);
+    border-radius: 5px;
+}
+    .food-container-wrapper h5:nth-child(1){
+        grid-column: 1 / 1;
+        justify-self: start;
+        text-align: left;
+    }
+    .food-container-wrapper h5:nth-child(2){
+        display:flex;
+        grid-column: 2 / 2;
+        justify-self: end;
+    }
+    .food-container-wrapper h5 p{
+        display:flex;
+        font-size: 0.5rem;
+    }
+    .food-container-wrapper p:nth-child(3){
+        justify-self: start;
+        grid-column: span 2;
+        grid-row: 2 / 2;
+        text-align: left;
+    }
+
+.zoomBorder{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000005b;
+    transform: scale(1);
+}
+    .zoomContainer{
+        display: grid;
+        grid-template-rows: 3fr 1fr;
+        margin: auto;
+        width: 90svw;
+        height: 80svh;
+        background-color: var(--mainWhite);
+    }
+
+        .zoomImage{
+            background-size:contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border: 5px solid var(--boneWhite);
+            border-radius: 10px;
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+        .zoomDesc{
+            grid-row: 2 / 2;
+            width: 95%;
+            margin: 0px auto 20px;
+            background-color: rgb(255, 253, 248);
+            border: 2px solid rgb(233, 233, 233);
+        }
+.zoomOpen{
+    display: flex;
+}
+
+.header-lines-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    white-space: nowrap;
+    max-width: 500px;
+    margin: 10px auto;
+    gap: 20px;
+    text-align: center;
+}
+    div .header-line{
+        width: 100%;
+        height: 2px;
+        background-color: var(--menuRed);
+        margin: auto;
+        padding: 0;
+    }
+        div .header-line:first-child{
+            grid-column: 1 / 1;
+        }
+        div .header-line:last-child{
+            grid-column: 3 / 3;
+        }
+
+.divider{
+    width: 90%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin: 50px auto 30px;
+}
+/* MAIN END */
+/* ----MOBILE FIRST END---- */
+
+/* ----TABLET START---- */
+@media screen and (min-width:769px){
+    /* MAIN START */
+    .wrapper{
+        max-width: 1400px;
+    }
+    .wrapper h4{
+        font-size: 2.618rem;
+    }
+    .food-container-wrapper{
+        max-width: 600px;
+    }
+    .header-lines-grid{
+        max-width: 600px;
+    }
+    .zoomContainer{
+        width: 60svw;
+    }
+    /* MAIN END */
+    }
+    /* ----TABLET END---- */
+    
+    /* ----DESKTOP START---- */
+    @media screen and (min-width:961px){
+    /* MAIN START */
+    .grid-main{
+        grid-template-columns: 1fr 20px 1fr;
+    }
+    
+    .food{
+        grid-column: 1 / 1;
+        grid-row: 1 / 1;
+    }
+    
+    .drinks{
+        grid-column: 3 / 3;
+        grid-row: 1 / 1;
+        margin: 0;
+    }
+
+    .divider{
+        grid-column: 2 / 2;
+        width: 1px;
+        height: 90%;
+        margin: auto;
+    }
+    /* MAIN END */
+    }
+    /* ----DESKTOP END---- */   

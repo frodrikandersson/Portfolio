@@ -1,0 +1,185 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root{
+  --mainBlue: #06005e;
+  --mainRed: #FCB1A6;
+  --mainWhite: #FFF9EC;
+  --lightRed: #FFDCCC;
+  --darkGray: #2B2B2B;
+  --boneWhite: #FFFDF8;
+  --accentBlue: #9CBEEF;
+}
+
+body{
+  width: 100%;
+}
+
+.boka-container{
+  background-image: linear-gradient(rgba(6, 0, 94, 0.8), rgba(6, 0, 94, 0.1));
+  width: 100%; 
+}
+
+.boka-content{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 1600px;
+  padding-top: 64px;
+  margin: 0 auto;
+}
+
+.contact-box{
+  text-align: center;
+  background-color:var(--mainWhite); 
+  padding: 10px;
+}
+
+h2{
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+h2:after{
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  height: 4px;
+  width: 50px;
+  border-radius: 2px;
+  background-color: #07005E;
+}
+
+.field{
+  width: 100%;
+  padding: 0.5rem 1rem;
+  outline: none;
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-color: rgba(230, 230, 230, 0.6);
+  font-size: 1.3rem;
+  margin-bottom: 22px;
+  color: var(--mainBlue);
+}
+
+.field:hover{
+  background-color: rgba(30, 85, 250, 0.2);
+}
+.field:focus{
+  border: 2px solid rgba(30, 85, 250, 0.4);
+}
+
+::placeholder{
+  color: var(--mainBlue);
+}
+
+.btn{
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  background-color: var(--mainBlue);
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: var(--boneWhite);
+}
+
+.btn:hover{
+  background-color: var(--accentBlue);
+}
+
+textarea{
+  resize: none;
+}
+
+.form-text{
+  padding-bottom: 10px;
+}
+
+.flex-item{
+  flex: 1;
+  max-width: 100%;
+}
+
+.flex-item img{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.boka-img{
+  display: none;
+}
+
+
+
+ 
+
+
+
+
+/* Tablet */
+
+@media screen and (min-width:769px) {
+  .boka-content{
+    flex-direction: row;
+    background-image: url(/Images/new-booking.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    }
+
+    .flex-item{
+      margin-left: 50px;
+      margin-right: 50px;
+      opacity: 0.95;
+    }
+  
+}
+
+/* desktop */
+@media screen and (min-width:961px){
+  .boka-content{
+    flex-direction: row;
+    background-image: url(/Images/new-booking.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    }
+
+  .boka-img{
+    display: block;
+  }
+
+  .flex-item{
+    /* background-color: var(--mainWhite); */
+    max-width: 50%;
+    height: auto;
+    opacity: 0.85;
+  }
+
+  .flex-item img{
+    width: 100%;
+    padding: 20px;
+  }
+
+  .contact-box{
+    max-width:75%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .form-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .field:focus{
+    border: 2px solid rgba(30, 85, 250, 0.4);
+  }
+}

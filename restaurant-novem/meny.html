@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07005E" />
+    <title>Restaurant Novem</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/meny.css">
+    <link rel="icon" href="Images/Emblem-circle-cream.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://kit.fontawesome.com/294282577c.js" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <!-- HEADER CONTENT START -->
+    <header id="header">
+        <div class="wrapper"> <!-- döpt om från nav-wrap -->
+            <div id="logo"><a href="index.html">Novem</a></div>
+            <div id="toggle-menu"> <!-- eureeeeeeeeeeka! -->
+                <div id="burger-icon" onclick="menuFunction()">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
+                <nav class="dynamic-menu">
+                    <ul>
+                        <li><a href="boka-bord.html"><i class="fa-solid fa-bell-concierge"></i> Boka bord</a></li>
+                        <li><a href="meny.html"><i class="fa-solid fa-utensils"></i> Meny</a></li>
+                        <li><a href="om-oss.html"><i class="fa-solid fa-location-dot"></i> Om oss</a></li>
+                        <li><a href="galleri.html"><i class="fa-solid fa-images"></i> Galleri</a></li>
+                    </ul>
+                <div class="pattern-background"></div> <!-- mönster i mobilmenyn -->
+                </nav>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER CONTENT END -->
+
+    <!-- MAIN CONTENT START -->
+    <main>
+        <div class="header-menu-image"></div>
+        <div class="wrapper">
+            <section class="grid-main">
+                <div class="food">
+                    <h2>Mat</h2>
+                    <section class="food-container">
+
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">l'Appetizers</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper" id="food1" onclick="zoomFunction(this.id)">
+                                <h5>Paté Maison</h5>
+                                <h5>110</h5>
+                                <p>Serverad med Cornichon</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is a tasty dish</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food2" onclick="zoomFunction(this.id)">
+                                <h5>Crêpe au Fromage de Brie</h5>
+                                <h5>110</h5>
+                                <p>Sautéed Shrimp -  Soltorkad Tomatoes - Majs och lök - Garlic herb cream Sås</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food3" onclick="zoomFunction(this.id)">
+                                <h5>Moules Marinières ou à la crème</h5>
+                                <h5>105</h5>
+                                <p>Grillad Svamp - Swiss, brie och parmesan Ost - Blue Cheese Sås</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food4" onclick="zoomFunction(this.id)">
+                                <h5>Escargots Bourguignon</h5>
+                                <h5>120</h5>
+                                <p>Snigel - Garlic Parsley Smör</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food5" onclick="zoomFunction(this.id)">
+                                <h5>Bruschetta de Flageolets</h5>
+                                <h5>95</h5>
+                                <p>Grillat Franskt Bröd - Mashed flageolet Bönor - Tomato - Thyme - Garlic and Balsamic Vinegar</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">les Soupes</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper" id="food6" onclick="zoomFunction(this.id)">
+                                <h5>Soupe du Jour</h5>
+                                <h5>55</h5>
+                                <p>les Chef's special creation</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food7" onclick="zoomFunction(this.id)">
+                                <h5>Soupe à l'Oignon</h5>
+                                <h5>65</h5>
+                                <p>Onion - Swiss Cheese gratine</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food8" onclick="zoomFunction(this.id)">
+                                <h5>Lentilles</h5>
+                                <h5>50</h5>
+                                <p>Classic French Lentils</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">les Salades</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper" id="food9" onclick="zoomFunction(this.id)">
+                                <h5>Salade Douce et Amère</h5>
+                                <h5>60</h5>
+                                <p>Field Greens med Prosciutto - Soltorkade Cherries - cassis Vinnigrette</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food10" onclick="zoomFunction(this.id)">
+                                <h5>Salade d'Epinards</h5>
+                                <h5>60</h5>
+                                <p>Spinach - Romaine - Goat Cheese stuffed Endives - Grapes och Walnuts</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food11" onclick="zoomFunction(this.id)">
+                                <h5>les Salade Smooth</h5>
+                                <h5>55</h5>
+                                <p>Arugula - Watercress - Dandelion</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                        <!-- TYPE OF DISHES START -->   
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">les Classiques</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper" id="food12" onclick="zoomFunction(this.id)">
+                                <h5>Swedish toast</h5>
+                                <h5>165</h5>
+                                <p>Vendace Roe - Pickled Onions - Västerbotten Cheese</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food13" onclick="zoomFunction(this.id)">
+                                <h5>Grilled Cucumber</h5>
+                                <h5>115</h5>
+                                <p>Sour Cream - Almonds</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food14" onclick="zoomFunction(this.id)">
+                                <h5>Tuna Crudo</h5>
+                                <h5>225</h5>
+                                <p>Cream Cheese - Green Peas - Scallion - Mint</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="food15" onclick="zoomFunction(this.id)">
+                                <h5>Grilled Tiger Prawns</h5>
+                                <h5>225</h5>
+                                <p>Parsley - Garlic - Chili - Virgin Olive Oil</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+                    </section>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="drinks">
+                    <h2>Dryck</h2>
+                    <section class="food-container">
+                        
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">les Regular d'rinks</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper" id="drink1" onclick="zoomFunction(this.id)">
+                                <h5>les Cokè</h5>
+                                <h5>30</h5>
+                                <p>secret Ingrédiènts</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="food-container-wrapper" id="drink2" onclick="zoomFunction(this.id)">
+                                <h5>la Fônta</h5>
+                                <h5>30</h5>
+                                <p>L'ime - Citrus - Cinnamon - Socker</p>
+                                <div class="zoomBorder">
+                                    <div class="zoomContainer">
+                                        <div class="zoomImage"></div>
+                                        <div class="zoomDesc">
+                                            <h3>This is another tasty dish!</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">Wine, Ports och Champagne</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper">
+                                <h5>Moscato Glaciere</h5>
+                                <h5>70</h5>
+                                <p>Mousserande vin</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Graham's Six Grapes</h5>
+                                <h5>70</h5>
+                                <p>Portvin</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Renwood</h5>
+                                <h5>70</h5>
+                                <p>Vintage Portvin</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Sherry Osbourne</h5>
+                                <h5>80</h5>
+                                <p>l'Champagne</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Kir</h5>
+                                <h5>80</h5>
+                                <p>Cocktail</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Kir Royale</h5>
+                                <h5>95</h5>
+                                <p>Cocktail</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Roederer Brut</h5>
+                                <h5>380/<p>half bottle</p></h5>
+                                <p>l'Champagne</p>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                        <!-- TYPE OF DISHES START -->
+                        <div class="header-lines-grid">
+                            <div class="header-line"></div>
+                            <h4 class="header-lines">After Dinner Drinks</h4>
+                            <div class="header-line"></div>
+                        </div>
+                        <!-- TYPE OF DISHES END -->
+
+                        <!-- SPECIFIC FOOD ARTICLE START -->
+                        <section class="food-container-article">
+                            <div class="food-container-wrapper">
+                                <h5>Expresso</h5>
+                                <h5>30/45</h5>
+                                <p>Dubbel - Regular - Decaf</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Cappuccino</h5>
+                                <h5>40</h5>
+                                <p>Dubbel - Regular - Decaf</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Latte</h5>
+                                <h5>40</h5>
+                                <p>Regular - Decaf</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Cafe Glace</h5>
+                                <h5>75</h5>
+                                <p>Coffee - Ice cream float och grädde</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>Glace des Iles</h5>
+                                <h5>120</h5>
+                                <p>Kahlua - Rom - Glass</p>
+                            </div>
+                            <div class="food-container-wrapper">
+                                <h5>French Connection</h5>
+                                <h5>125</h5>
+                                <p>Cognac - Amaretto</p>
+                            </div>
+                        </section>
+                        <!-- SPECIFIC FOOD ARTICLE END -->
+
+                    </section>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- MAIN CONTENT END -->
+
+    <!-- FOOTER CONTENT START -->
+    <footer>
+        <div class="wrapper">
+            <section class="footer-logo">
+                <div>
+                    <img src="Images/Emblem-square-bonewhite.svg"/>
+                </div>
+            </section>
+            <section class="footer-socials">
+                <ul>
+                    <li><h3>Sociala medier</h3></li>
+                    <li><a href="#"><i class="fa-brands fa-square-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-square-instagram"></i></a></li>
+                </ul>
+            </section>
+            <section class="footer-links">
+                <ul>
+                    <li><h3>Quick Links</h3></li>
+                    <li><a href="boka-bord.html"><i class="fa-solid fa-arrow-right-long"></i> Boka bord</a></li>
+                    <li><a href="meny.html"><i class="fa-solid fa-arrow-right-long"></i> Meny</a></li>
+                    <li><a href="om-oss.html"><i class="fa-solid fa-arrow-right-long"></i> Om oss</a></li>
+                    <li><a href="galleri.html"><i class="fa-solid fa-arrow-right-long"></i> Galleri</a></li>
+                </ul>
+            </section>
+            <section class="footer-contact">                
+                <ul>
+                    <li><h3>Kontakta oss</h3></li>
+                    <li><a href="tel:075-555 55 55"><i class="fa-solid fa-phone"></i>075-555 55 55</a></li>
+                    <li><a href="mailto:allo.allo@novem.se"><i class="fa-solid fa-envelope"></i>allo.allo@novem.se</a></li>
+                    <li><a href="#"><i class="fa-solid fa-location-dot"></i>Hitta hit</a></li>
+                    <li>
+                        <p><b>Restaurant Novem</b><br>
+                        Restaurantvägen 55<br>
+                        119 90 Stockholm</p>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </footer>  
+    <!-- FOOTER CONTENT END -->
+
+    <!-- JAVASCRIPT START -->
+    <script>
+        // Menu bgcolor transparency change
+        window.onscroll = function() {
+            scrollFunction();
+        };
+    
+        function scrollFunction() {
+            if (document.body.scrollTop > 64 || document.documentElement.scrollTop > 64) {
+                document.getElementById("header").style.background = "rgba(7, 0, 94, 1)";
+            } else {
+                document.getElementById("header").style.background = "rgba(7, 0, 94, 0)";
+            }
+        }
+
+        // Menu bar
+        function menuFunction() {
+            var element = document.getElementById("toggle-menu");
+            element.classList.toggle("open");
+            element.classList.toggle("active"); /* eureeeka! */
+        }
+
+        //Recipe zoom
+        function zoomFunction(clicked_id) {
+            let container = document.querySelector("#"+clicked_id+" > div.zoomBorder");
+            let imageName = document.querySelector("#"+clicked_id+" > div > div > div.zoomImage");
+            imageName.style.backgroundImage="url(../Images/meny/"+clicked_id+".jpg)";
+            container.classList.toggle("zoomOpen");
+        }
+    </script>
+    <!-- JAVASCRIPT END -->
+</body>
+</html>

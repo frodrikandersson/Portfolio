@@ -125,6 +125,14 @@ section{
     background-color: #dee2e6;
 }
 
+/* HEADER / MAIN START */
+#main{
+    display: flex;
+}
+/* HEADER / MAIN END */
+
+
+/* FOOTER START */
 footer{
     background-color: #f8f9fa;
 }
@@ -144,6 +152,7 @@ footer{
 .footer-copyright p{
     color: rgb(214, 214, 214);
 }
+/* FOOTER END */
 
 
 @media screen and (max-width: 768px){

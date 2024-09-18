@@ -1,0 +1,373 @@
+
+body {background-color: var(--mainBlue);}
+.bg-lightred {background-color: var(--lightRed) !important;}
+.bg-lightblue {background-color: var(--accentBlue40) !important;}
+
+/* HEADER CSS from styles.css */
+
+/* BANNER START ------------------------------------- */
+main.galleri section {
+    background-color: var(--mainWhite);
+}
+main.galleri .wrapper {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0;
+    margin: 0 auto;
+}
+main.galleri .banner-wrapper {
+    position: relative;
+    top:0;
+    right: 0;
+    max-width: 100%;
+    height: 600px;
+}
+main.galleri .gradient-overlay {
+    background-image: linear-gradient(var(--mainBlue80), var(--mainBlue10));
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+}
+main.galleri .banner-image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-image: url('../Images/galleri/wine-glasses.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+/* BANNER END -------------------------------------- */
+
+/* MAIN CONTENT START ------------------------------ */
+main.galleri {
+    transition: all 0.6s ease;
+}
+main.galleri .content-wrapper {
+    display: block;
+    padding: 20px 20px;
+}
+main.galleri .content-wrapper .row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+}
+main.galleri .content-wrapper .row:nth-child(2n) {
+    padding-top: 20px;
+}
+main.galleri .col-2 {
+    flex: 50%;
+}
+main.galleri .col-3 {
+    flex: 30%;
+}
+main.galleri .module {
+    margin-bottom: 0;
+}
+main.galleri .text-module {
+    background-color: var(--mainRed40);
+    border-radius: 3px;
+    padding: 2rem;
+}
+main.galleri .text-module button {
+    font-size: 0.8rem;
+}
+main.galleri .text-module h2 {
+    font-family: 'Pinyon Script', serif;
+    font-size: 4.236rem;
+    color: var(--mainBlue);
+    line-height: 1em;
+    margin-bottom: 1rem;
+}
+main.galleri .text-module h5 {
+    font-size: 0.854rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    color: var(--mainBlue);
+    margin-bottom: 1rem;
+}
+main.galleri .text-module p {
+    letter-spacing: 0.03rem;
+    line-height: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--mainBlue);
+    margin-bottom: 1.5rem;
+}
+main.galleri .image-module {
+    height: calc(100% - 1rem);
+    width: 100%;
+    aspect-ratio: 4 / 5;
+}
+main.galleri .image-module img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.pattern-ruter {
+    display: none;
+    background-image: url('../Images/pattern-2-ruter.jpg');
+    background-repeat: repeat;
+    background-size: 20%;
+    height: 500px;
+    width: 47%;
+    position: absolute;
+    top: 480px;
+    right: 0px;
+    border-radius: 3px;
+    z-index: 1;
+}
+.pattern-ruter::before {
+    content: 'N .';
+    font-family: 'Pinyon Script', sans-serif;
+    font-size: 8rem;
+    color: var(--mainBlue);
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 7.5%;
+    left: 7.5%;
+    width: 85%;
+    height: 85%;
+    background-color: var(--mainWhite);
+    border: 0.02rem solid var(--accentBlue);
+}
+.emblem-logo-circle {
+    display: none;
+    position: absolute;
+    top: 500px;
+    left: 0px;
+    width: 150px;
+    height: 150px;
+    height: 150px;
+    width: 150px;
+}
+main.galleri .parallax-wrapper {
+    max-width: 100%;
+    display: block;
+    height: 600px;
+}
+main.galleri .parallax-image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-attachment: initial;
+    background-size: cover;
+    display: block;
+}
+.bg-img-1 {
+    background-image: url('../Images/galleri/grand.jpg');
+}
+.bg-img-2 {
+    background-image: url('../Images/galleri/grand2.jpg');
+}
+main.galleri .galleri-wrapper {
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+main.galleri .galleri-header {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+main.galleri .galleri-header h2 {
+    font-family: 'Pinyon Script';
+    color: var(--mainBlue);
+    font-size: 4.236rem;
+}
+main.galleri .galleri-header h5 {
+    font-size: 0.854rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    color: var(--mainBlue);
+    margin-bottom: 2rem;
+}
+main.galleri .grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-rows: repeat(6, 200px);
+    gap: 1.25rem; 
+    grid-auto-flow: dense;
+    margin-bottom: 3rem;
+}
+main.galleri .grid > li > figure {
+    height: 100%;
+}
+main.galleri .grid > li:nth-child(4n) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+main.galleri .grid > li:nth-child(8n) {
+    grid-column: span 3;
+    grid-row: span 3;
+}
+main.galleri .grid > li > figure > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+    cursor: pointer;
+}
+#lightbox {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+}
+#lightbox.clicked {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#lightbox img {
+    max-width: 90%;
+    max-height: 80%;
+    border: 1rem solid var(--mainWhite);
+    border-radius: 2px;
+}
+.line-dotted {
+    width: 100%;
+    height: 5px;
+    border-bottom: 3px dotted var(--accentBlue);
+    margin-bottom: 2rem;
+}
+.symbol-end {
+    width: 100px;
+}
+/* MAIN CONTENT END ------------------------------ */
+
+/* FOOTER CSS from styles.css */
+
+/* MEDIA QUERIES --------------------------------- */
+
+/* Extra small screens */
+@media screen and (max-width: 600px) {
+    main.galleri .content-wrapper .row {
+        flex-direction: column;
+    }
+    .footer-logo img {
+        width: 120px;
+    }
+    footer .wrapper {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+        'logo contact'
+        'socials contact'
+        'socials links';
+        padding: 60px 30px;
+        gap: 20px;
+    }
+    main.galleri .grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    main.galleri .grid > li:nth-child(4n) {
+        grid-column: initial;
+        grid-row: initial;
+    }
+    main.galleri .grid > li:nth-child(8n) {
+        grid-column: initial;
+        grid-row: initial;
+    }
+}
+
+/* Tablet */
+@media screen and (min-width: 769px) {
+    main.galleri .content-wrapper {
+        padding: 60px 20px; 
+    }
+    main.galleri .content-wrapper .row {
+        flex-direction: row;
+        gap: 40px;
+    }
+    footer .wrapper {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-areas: 
+        'logo socials links contact';
+        padding: 80px 20px;
+    }
+    .footer-socials i {
+        font-size: 1.25rem;
+    }
+}
+
+/* Desktop */
+@media screen and (min-width: 961px) {
+    main.galleri .content-wrapper .row {
+        gap: 70px;
+    }
+    main.galleri .content-wrapper .row:nth-child(2n) {
+        padding-top: 40px;
+    }
+    main.galleri .column {
+        flex: 1 0 30%;
+    }
+    main.galleri .module {
+        margin-bottom: 1rem;
+    }
+    main.galleri .parallax-image {
+        background-attachment: fixed;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .emblem-logo-circle {
+        display: block;
+    }
+    #lightbox img {
+        border: 2.618rem solid var(--mainWhite);
+    }
+    footer .wrapper {
+        grid-template-columns: 2fr 1fr 1fr 175px;
+        grid-template-areas: 
+        'logo socials links contact';
+    }
+    .scale-in-animation {
+        opacity: 0.4;
+        scale: 0.4;
+        animation: scroll-in linear forwards;
+        animation-timeline: view();
+        animation-range: 150px 250px;
+    }
+    @keyframes fade-in {
+        to {scale: 1; opacity: 1;}
+    }
+    .fade-in-animation {
+        opacity: 0;
+        transform: translateY(200px);
+        animation: fade-in linear forwards;
+        animation-timeline: view();
+        animation-range: 100px 700px;
+        transition: all 0.3s ease;
+    }
+    @keyframes fade-in {
+        to {transform: translateY(0); opacity: 1;}
+    }
+    .scroll-in-animation {
+        scale: 0.5;
+        opacity: 0;
+        animation: scroll-in linear forwards;
+        animation-timeline: view();
+        animation-range: 200px 700px;
+    }
+    @keyframes scroll-in {
+        to {left: 200px; opacity: 1; scale:1;}
+    }
+}
+@media screen and (min-width: 1201px) {
+    .pattern-ruter {
+        display: block;
+    }
+}

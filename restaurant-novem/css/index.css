@@ -1,0 +1,403 @@
+/* ----MOBILE FIRST START---- */
+/* HERO START */
+.hero {
+    display: flex;
+    background-image: linear-gradient(rgba(6, 0, 94, 0.8), rgba(6, 0, 94, 0.1));
+    width: 100%;
+    height: 100vh;
+/*     height: 100svh; */
+    min-height: 850px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bg-video {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+/* .bg-video {
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+    z-index: -1;
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .bg-video {
+        height: auto;
+        width: 100%;
+    }
+}
+
+@media (max-aspect-ratio: 16/9) {
+    .bg-video {
+        height: 100%;
+        width: auto;
+    }
+} */
+
+.hero-content {
+    display: flex;
+    gap: 30px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1200px;
+    max-height: 100vh;
+    padding-top: 64px;
+}
+    .hero-content h1 {
+        color: var(--mainWhite);
+        font-size: 2rem;
+    }
+
+    .hero-content section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        text-align: center;
+        width: 80%;
+    }
+        .hero-content section p {
+            max-width: 50ch;
+            font-size: 0.8rem;
+            color: var(--mainWhite);
+        }
+
+.hero-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+}
+/*     .hero-wrap button{
+        order: 2;
+    }
+ */
+#logo-hero {
+    max-width: 300px;
+}
+#signature {
+    width: 150px;
+    height: 75px;
+}
+/* HERO END */
+/* MAIN CONTENT START */
+main{
+    background-color: var(--mainWhite);
+}
+.grid-container{
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 300px);
+}
+
+.closingHours-left{
+    background-image: url("../Images/öppettider.jpg");
+    background-size: cover;
+    background-position: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.event-left{
+    display:flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+}
+    .event-left p{
+        max-width: 50ch;
+    }
+
+.grid-main-right{
+    display:flex;
+    flex-direction: column;
+    margin: auto 0;
+    padding: 20px;
+}
+    .grid-main-right ul{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 50px 50px;
+        list-style: none;
+    }
+        .grid-main-right ul li{
+            display:flex;
+            border-top: 1px solid rgba(6, 0, 94, 0.1);
+            justify-content: space-between;
+            align-items: center;
+        }
+            .grid-main-right ul li:nth-child(1){
+                grid-column: 1 / 1;
+                grid-row: 1 / 1;
+            }
+            .grid-main-right ul li:nth-child(2){
+                grid-column: 1 / 1;
+                grid-row: 2 / 2;
+                border-bottom: 1px solid rgba(6, 0, 94, 0.1);
+            }
+            .grid-main-right ul li:nth-child(3){
+                grid-column: 2 / 2;
+                grid-row: 1 / 1;
+                justify-content: end;
+            }
+            .grid-main-right ul li:nth-child(4){
+                grid-column: 2 / 2;
+                grid-row: 2 / 2;
+                justify-content: end;
+                border-bottom: 1px solid rgba(6, 0, 94, 0.1);
+            }
+
+.flower{
+    display:grid;
+    grid-template-columns: 200px 5px 200px;
+    grid-template-rows: auto;
+    grid-template-areas: 
+        "petal1 . petal2"
+            " . . . "
+        "petal3 . petal4";
+    gap: 2.5px;
+    margin:auto;
+}
+
+.petal{
+    width: 200px;
+    height: 200px;
+    background-size: cover;
+}
+
+.petal1{
+    grid-area: petal1;
+    background-image: url("../Images/croissant.jpg");
+    border-radius: 0 75px;
+}
+
+.petal2{
+    grid-area: petal2;
+    background-image: url("../Images/cheese-food.jpg");
+    border-radius: 75px 0;
+}
+
+.petal3{
+    grid-area: petal3;
+    background-image: url("../Images/wine.jpg");
+    border-radius: 75px 0;
+}
+
+.petal4{
+    grid-area: petal4;
+    background-image: url("../Images/macaron.jpg");
+    border-radius: 0 75px;
+}
+
+.flower-circle{
+    margin: -50px 0 0 -57px;
+    background-color: var(--accentBlue);
+    border-radius: 50px;
+    border: 2px solid var(--accentBlue);
+    width: 100px;
+}
+/* MAIN CONTENT END */
+/* Extra small screens */
+@media screen and (max-width: 600px) {
+    .hero {
+        min-height: 750px;
+    }
+    .hero-content p {
+        width: 250px;
+    }
+    .hero-content h1 {
+        font-size: 1.5rem;
+        width: 250px;
+    }
+    .hero-wrap {
+        gap: 20px;
+    }
+    #logo-hero {
+        margin-bottom: 10px;
+    }
+    .btn-hero {
+        font-size: 0.8rem;
+        padding:5px;
+        margin:0;
+        max-width: 100px;
+    }
+    .petal {
+        height: 150px;
+        width: 150px;
+    }
+    .flower {
+        grid-template-columns: 150px 5px 150px;
+    }
+}
+/* ----TABLET START---- */
+@media screen and (min-width:769px){
+    #logo-hero {
+        width: 50%;
+    }
+/* MAIN CONTENT START */
+
+/* MAIN CONTENT END */
+}
+
+/* ----DESKTOP START---- */
+@media screen and (min-width:961px){
+    /* HERO START */
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content section p {
+        font-size: 1rem;
+    }
+
+    .hero-wrap {
+        flex-direction: row;
+    }
+        /* .hero-wrap button{
+            order: initial;
+        } */
+        .btn-hero {
+            order: 3;
+        }
+        .btn-hero-left {
+            order: 1;
+        } 
+        #logo-hero {
+            order: 2;
+            width: 35%;
+            max-width: 50%;
+        }
+/* HERO END */
+
+/* MAIN CONTENT START */
+    main{
+        background-color: var(--mainWhite);
+    }
+
+    .grid-container{
+        display:grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 500px);
+    }
+
+    .grid-main-left{
+        grid-column: 1 / 1;
+    }
+        .closingHours-left{
+            background-image: url("../Images/öppettider.jpg");
+            background-size: cover;
+            background-position: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 0 0 10px 0;
+        }
+
+        .event-left{
+            display:flex;
+            flex-direction: column;
+            margin: auto;
+            padding: 20px;
+            justify-content: center;
+        }
+
+    .grid-main-right{
+        display:flex;
+        flex-direction: column;
+        grid-column: 2 / 2;
+        margin: auto 0;
+        padding: 20px;
+    }
+        .grid-main-right ul{
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 50px 50px;
+            list-style: none;
+        }
+        .grid-main-right ul li{
+            display:flex;
+            border-top: 1px solid rgba(6, 0, 94, 0.1);
+            justify-content: space-between;
+            align-items: center;
+        }
+        .grid-main-right ul li:nth-child(1){
+            grid-column: 1 / 1;
+            grid-row: 1 / 1;
+        }
+        .grid-main-right ul li:nth-child(2){
+            grid-column: 1 / 1;
+            grid-row: 2 / 2;
+            border-bottom: 1px solid rgba(6, 0, 94, 0.1);
+        }
+        .grid-main-right ul li:nth-child(3){
+            grid-column: 2 / 2;
+            grid-row: 1 / 1;
+            justify-content: end;
+        }
+        .grid-main-right ul li:nth-child(4){
+            grid-column: 2 / 2;
+            grid-row: 2 / 2;
+            justify-content: end;
+            border-bottom: 1px solid rgba(6, 0, 94, 0.1);
+        }
+
+        .flower{
+            display:grid;
+            grid-template-columns: 200px 5px 200px;
+            grid-template-rows: auto;
+            grid-template-areas: 
+                "petal1 . petal2"
+                    " . . . "
+                "petal3 . petal4";
+            gap: 2.5px;
+            margin:auto;
+        }
+
+        .petal{
+            width: 200px;
+            height: 200px;
+            background-size: cover;
+        }
+        .petal1{
+            grid-area: petal1;
+            background-image: url("../Images/croissant.jpg");
+            border-radius: 0 75px;
+        }
+        .petal2{
+            grid-area: petal2;
+            background-image: url("../Images/cheese-food.jpg");
+            border-radius: 75px 0;
+        }
+        .petal3{
+            grid-area: petal3;
+            background-image: url("../Images/wine.jpg");
+            border-radius: 75px 0;
+        }
+        .petal4{
+            grid-area: petal4;
+            background-image: url("../Images/macaron.jpg");
+            border-radius: 0 75px;
+        }
+        .flower-circle{
+            margin: -50px 0 0 -57px;
+            background-color: var(--accentBlue);
+            border-radius: 50px;
+            border: 2px solid var(--accentBlue);
+            width: 100px;
+        }
+/* MAIN CONTENT END */
+}

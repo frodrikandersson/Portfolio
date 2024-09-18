@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07005E" />
+    <title>Restaurant Novem</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/boka-bord.css">
+    <link rel="icon" href="Images/Emblem-circle-cream.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pinyon+Script&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://kit.fontawesome.com/294282577c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- HEADER CONTENT START -->
+    <header id="header">
+        <div class="wrapper"> <!-- döpt om från nav-wrap -->
+            <div id="logo"><a href="index.html">Novem</a></div>
+            <div id="toggle-menu"> <!-- eureeeeeeeeeeka! -->
+                <div id="burger-icon" onclick="menuFunction()">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
+                <nav class="dynamic-menu">
+                    <ul>
+                        <li><a href="boka-bord.html"><i class="fa-solid fa-bell-concierge"></i> Boka bord</a></li>
+                        <li><a href="meny.html"><i class="fa-solid fa-utensils"></i> Meny</a></li>
+                        <li><a href="om-oss.html"><i class="fa-solid fa-location-dot"></i> Om oss</a></li>
+                        <li><a href="galleri.html"><i class="fa-solid fa-images"></i> Galleri</a></li>
+                    </ul>
+                    <div class="pattern-background"></div> <!-- mönster i mobilmenyn -->
+                </nav>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER CONTENT END -->
+
+    <!-- MAIN CONTENT START -->
+    <main>
+        
+        <div class="boka-container">
+            <div class="boka-content">
+                <div class="flex-item boka-img">
+                    <img src="Images/Emblem-circle-cream.svg" alt="">
+                </div>
+                <div class="flex-item">
+                    <form class="form-container" action="" method="post" accept-charset="UTF-8">
+                        <div class="contact-box">
+
+                            <div class="form-text">
+                                <h2>Boka Bord</h2>
+                                <p>Om sälskapet är mer än 10 personer ber vi er kontakta oss på <a href="mailto:allo.allo@novem.se">allo.allo@novem.se</a></p>
+                            </div>
+                            <input type="text" class="field" id="namn" name="namn" placeholder="Namn" required>
+
+                            <input type="email" class="field" id="email" name="email" placeholder="Email" required>
+
+                            <input type="tel" class="field" id="number" name="number" placeholder="Tel-Nr" required>
+                            <input type="number" class="field" id="amount" name="amount" min="1" max="9"
+                                placeholder="Antal Gäster" required>
+
+                            <input type="datetime-local" class="field" id="date" name="date" required>
+
+                            <textarea class="field area" placeholder="Meddelande"></textarea>
+                            <button type="submit" class="btn">Skicka</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <!-- MAIN CONTENT END -->
+
+    <!-- FOOTER CONTENT START -->
+    <footer>
+        <div class="wrapper">
+            <section class="footer-logo">
+                <div>
+                    <img src="Images/Emblem-square-bonewhite.svg"/>
+                </div>
+            </section>
+            <section class="footer-socials">
+                <ul>
+                    <li><h3>Sociala medier</h3></li>
+                    <li><a href="#"><i class="fa-brands fa-square-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
+                    <li><a href="#"><i class="fa-brands fa-square-instagram"></i></a></li>
+                </ul>
+            </section>
+            <section class="footer-links">
+                <ul>
+                    <li><h3>Quick Links</h3></li>
+                    <li><a href="boka-bord.html"><i class="fa-solid fa-arrow-right-long"></i> Boka bord</a></li>
+                    <li><a href="meny.html"><i class="fa-solid fa-arrow-right-long"></i> Meny</a></li>
+                    <li><a href="om-oss.html"><i class="fa-solid fa-arrow-right-long"></i> Om oss</a></li>
+                    <li><a href="galleri.html"><i class="fa-solid fa-arrow-right-long"></i> Galleri</a></li>
+                </ul>
+            </section>
+            <section class="footer-contact">                
+                <ul>
+                    <li><h3>Kontakta oss</h3></li>
+                    <li><a href="tel:075-555 55 55"><i class="fa-solid fa-phone"></i>075-555 55 55</a></li>
+                    <li><a href="mailto:allo.allo@novem.se"><i class="fa-solid fa-envelope"></i>allo.allo@novem.se</a></li>
+                    <li><a href="#"><i class="fa-solid fa-location-dot"></i>Hitta hit</a></li>
+                    <li>
+                        <p><b>Restaurant Novem</b><br>
+                        Restaurantvägen 55<br>
+                        119 90 Stockholm</p>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </footer>  
+
+    <!-- JAVASCRIPT START -->
+    <script>
+        // Menu bgcolor transparency change
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 64 || document.documentElement.scrollTop > 64) {
+                document.getElementById("header").style.background = "rgba(7, 0, 94, 1)";
+            } else {
+                document.getElementById("header").style.background = "rgba(7, 0, 94, 0)";
+            }
+        }
+
+        // Menu bar
+        function menuFunction() {
+            var element = document.getElementById("toggle-menu");
+            element.classList.toggle("open");
+            element.classList.toggle("active"); /* eureeeka! */
+        }
+    </script>
+    <!-- JAVASCRIPT END -->
+</body>
+
+</html>
