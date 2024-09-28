@@ -1,58 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="description" content="Portfolio for the fullstack-developer Fredrik Andersson">
-        <title>F-A Portfolio</title>
-        <link href="css/main.css" rel="stylesheet" />
-    </head>
-    <body>
-        <header>
-            <nav class="header-left">
-                <span class="dot"></span>
-                <strong><a href="index.html" >Fredrik Andersson</a></strong>
-                <p>Fullstack developer</p>
-            </nav>
-            <nav class="header-right">
-                <ul>
-                    <li class="first-li"><a href="resume.html">Resume</a></li>
-                    <li><a href="portfolio.html">Portfolio</a></li>
-                    <li><a href="contact.html">Contact info</a></li>
-                    <li><a href="personal.html">Personal</a></li>
-                </ul>
-            </nav>
-        </header>
-        <section>
-            <div class="section-container">
-                <img src="assets/lazy.PNG" class="section-img">
-                <div class="section-about">
-                    <h1 class="section-title">Hi, I'm</h1>
-                    <h2 class="section-name">Fredrik Andersson</h2>
-                    <strong>A Bit About Me</strong>
-                    <p>I am a soon to be fullstack developer graduating from Medieinstitutet in Sweden. I attempt to fill my portfolio with a huge variety of projects ranging from webdesign to AI-learning in order to pursue my passion, programming.</p>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio for the fullstack-developer Fredrik Andersson">
+    <title>frodrikandersson</title>
+    <link rel="stylesheet" href="restaurant-novem/css/styles.css">
+    <link rel="stylesheet" href="restaurant-novem/css/index.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Pinyon+Script&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://kit.fontawesome.com/294282577c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div id="hero-star" class="hero-star-content">
+        <video autoplay defaultMuted muted loop playsinline id="starVideo" poster="assets/images/starPoster.png">
+            <source src="assets/video/Star_Background_1080x1920.mp4" type="video/mp4">
+        </video>
+    
+        <div id="novem" class="novem">
+            <div id="return-header-novem" onclick="returnHeader(this.id)">
+                <a><h2>Return</h2></a>
+            </div>
+                <!-- HEADER CONTENT START -->
+            <header id="novem-header">
+                <div class="wrapper">
+                    <div id="logo"><a href="index.html">Novem</a></div>
+                    <div id="toggle-menu">
+                        <div id="burger-icon" onclick="menuFunction()">
+                            <div class="bar1"></div>
+                            <div class="bar2"></div>
+                            <div class="bar3"></div>
+                        </div>
+                        <nav class="dynamic-menu">
+                            <ul>
+                                <li><a href=""><i class="fa-solid fa-bell-concierge"></i> Boka bord</a></li>
+                                <li><a href=""><i class="fa-solid fa-utensils"></i> Meny</a></li>
+                                <li><a href=""><i class="fa-solid fa-location-dot"></i> Om oss</a></li>
+                                <li><a href=""><i class="fa-solid fa-images"></i> Galleri</a></li>
+                            </ul>
+                        <div class="pattern-background"></div> <!-- mönster i mobilmenyn -->
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <div class="hero">
+                <video autoplay defaultMuted muted loop playsinline class="bg-video" id="bg-video" poster="video/hero-video-poster.jpg">
+                    <source media="(min-width: 1200px)" src="restaurant-novem/video/Hero-video_1080.mp4" type="video/mp4">
+                    <source src="restaurant-novem/video/Hero-video_720.mp4" type="video/mp4">
+                </video>
+                <div class="hero-content">
+                    <div class="hero-wrap">
+                        <img src="restaurant-novem/Images/Wordmark-red.svg" id="logo-hero"/>
+                        <a href="" class="btn-prinskorv btn-hero btn-hero-left">Boka bord</a>
+                        <a href="" class="btn-prinskorv btn-hero">Meny</a>
+                    </div>
+                    <section>
+                        <h1>Välkommen, welcome, bienvenue till restaurant Novem</h1>
+                        <p>Här blir din upplevelse i centrum oavsett syfte med ditt besök, och vi lägger lika stor vikt vid helheten som de små detaljerna. </p>
+                        <img src="restaurant-novem/Images/signature.svg" alt="" id="signature"/>
+                        <p>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </p>
+                    </section>
                 </div>
             </div>
-            <div class="section-dot-container">
-                <a href="resume.html"><span class="dot dot-resume">Resume</span></a>
-                <a href="portfolio.html"><span class="dot dot-portfolio">Portfolio</span></a>
-                <a href="contact.html"><span class="dot dot-contact">Contact</span></a>
-                <a href="personal.html"><span class="dot dot-personal">Personal</span></a>
-            </div>
-        </section>
-        <footer class="main-footer">
-            <div class="main-footer-container">
-                <div class="main-footer-left">
-                    <h3>Email</h3>
-                    <p>frodrikandersson@gmail.com</p>
+            <!-- HEADER CONTENT END -->
+
+            <!-- MAIN CONTENT START -->
+            <main>
+                <div class="grid-container">
+                    <div class="grid-main-left">
+                        <div class="closingHours-left"></div>
+                    </div>
+                    <div class="grid-main-right">
+                        <h3>Våra öppettider</h3>
+                        <h2 class="uppercase">Varmt Välkomna</h2>
+                        <div class="grid-main-ul-container">
+                            <ul>
+                                <li class="bold-light">Måndag - Fredag</li>
+                                <li class="bold-light">Lördag - Söndag</li>
+                                <li class="bold-light">10:00 - 22:00</li>
+                                <li class="bold-light">11:00 - 23:00</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid-main-left">
+                        <div class="event-left">
+                            <h2>Event</h2>
+                            <p>Välkomna på Julbord på Restaurang Novem! Perfekt att boka för familjen, företaget & vännerna!</p>
+                        </div>
+                    </div>
+                    <div class="grid-main-right">
+                        <div class="flower">
+                            <div class="petal1 petal"></div>
+                            <div class="petal2 petal"></div>
+                            <div class="petal3 petal"></div>
+                            <div class="petal4 petal"><img class="flower-circle" src="restaurant-novem/Images/Emblem-circle-cream.svg" /></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="main-footer-center">
-                    <h3>GitHub</h3>
-                    <a href="https://github.com/frodrikandersson">https://github.com/frodrikandersson</a>
-                </div class=main-footer-right>
-                <div class="footer-copyright">
-                    <p>&copy; 2024 by Fredrik Andersson</p>
+            </main>
+            <!-- MAIN CONTENT END -->
+
+            <!-- FOOTER CONTENT START -->
+            <footer>
+                <div class="wrapper">
+                    <section class="footer-logo">
+                        <div>
+                            <img src="restaurant-novem/Images/Emblem-square-bonewhite.svg"/>
+                        </div>
+                    </section>
+                    <section class="footer-socials">
+                        <ul>
+                            <li><h3>Sociala medier</h3></li>
+                            <li><a href="#"><i class="fa-brands fa-square-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-x-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-tiktok"></i></a></li>
+                            <li><a href="#"><i class="fa-brands fa-square-instagram"></i></a></li>
+                        </ul>
+                    </section>
+                    <section class="footer-links">
+                        <ul>
+                            <li><h3>Quick Links</h3></li>
+                            <li><a href="boka-bord.html"><i class="fa-solid fa-arrow-right-long"></i> Boka bord</a></li>
+                            <li><a href="meny.html"><i class="fa-solid fa-arrow-right-long"></i> Meny</a></li>
+                            <li><a href="om-oss.html"><i class="fa-solid fa-arrow-right-long"></i> Om oss</a></li>
+                            <li><a href="galleri.html"><i class="fa-solid fa-arrow-right-long"></i> Galleri</a></li>
+                        </ul>
+                    </section>
+                    <section class="footer-contact">                
+                        <ul>
+                            <li><h3>Kontakta oss</h3></li>
+                            <li><a href="tel:075-555 55 55"><i class="fa-solid fa-phone"></i>075-555 55 55</a></li>
+                            <li><a href="mailto:allo.allo@novem.se"><i class="fa-solid fa-envelope"></i>allo.allo@novem.se</a></li>
+                            <li><a href="#"><i class="fa-solid fa-location-dot"></i>Hitta hit</a></li>
+                            <li>
+                                <p><b>Restaurant Novem</b><br>
+                                Restaurantvägen 55<br>
+                                119 90 Stockholm</p>
+                            </li>
+                        </ul>
+                    </section>
                 </div>
-            </div>
-        </footer>
-    </body>
+            </footer>  
+            <!-- FOOTER CONTENT END -->
+        </div>
+        <div id="project2" class="project2">
+        </div>
+        <div id="project3" class="project3">
+        </div>
+        <div id="project4" class="project4">
+        </div>
+        
+    </div>
+
+    <!-- JAVASCRIPT START -->
+    <script src="js/main.js"></script>
+    <!-- JAVASCRIPT END -->
+</body>
 </html>

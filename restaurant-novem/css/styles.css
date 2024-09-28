@@ -42,12 +42,12 @@ b {
     'opsz' 24;
 }
 
-*{
+body{
     font-family: Montserrat;
     font-weight: 300;
     margin: 0;
     padding: 0;
-    transition: all 0.3s ease-in-out;
+    /* transition: all 0.3s ease-in-out; */
     box-sizing: border-box;
 }
 
@@ -127,7 +127,7 @@ small{
     width: 100%;
     height: 64px;
     background-color: rgba(6, 0, 94, 0);
-    z-index: 999;
+    z-index: 3;
 }
 .wrapper { /* denna class kan nu återanvändas i andra delar av sidan */
     width: 100%;
@@ -231,7 +231,7 @@ small{
     background-color: var(--mainWhite);
     margin: 8px 0;
     transition: 0.4s;
-    z-index: 99999;
+    z-index: 4;
 }
 /* HEADER END */
 
@@ -325,10 +325,10 @@ footer h3 {
 
 /* xs screens */
 @media screen and (max-width: 600px) {
-    .footer-logo img {
+    #novem .footer-logo img {
         width: 120px;
     }
-    footer .wrapper {
+    #novem footer .wrapper {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: 
         'logo contact'
@@ -342,10 +342,10 @@ footer h3 {
 @media screen and (min-width:769px){
 
 /* HEADER START */
-    #burger-icon{
+    #novem #burger-icon{
         display: none;
     }
-    .dynamic-menu {
+    #novem .dynamic-menu {
         height: auto;
         position: static;
         transform: translateX(0);
@@ -354,17 +354,17 @@ footer h3 {
         opacity: 1;
         transition: transform 1s cubic-bezier(.23,1,.32,1), opacity 1.5s ease;
     }
-    .dynamic-menu .pattern-background {
+    #novem .dynamic-menu .pattern-background {
         display: none;
     }
-    .dynamic-menu ul {
+    #novem .dynamic-menu ul {
         flex-direction: row;
         justify-content: flex-end;
     }
-    .dynamic-menu i {
+    #novem .dynamic-menu i {
         display:none;
     }
-    .dynamic-menu a {
+    #novem .dynamic-menu a {
         padding: 0;
         margin: 0 10px;
         border-radius: 0;
@@ -373,12 +373,11 @@ footer h3 {
         flex-direction: column;
         align-items: center;
     }
-    .dynamic-menu a:hover {
+    #novem .dynamic-menu a:hover {
         background-color: #06005e00;
         color: var(--mainRed);
-        /* border-bottom: 1px solid var(--mainRed); */
     }
-    .dynamic-menu a::after {
+    #novem .dynamic-menu a::after {
         content: '';
         display: flex;
         width: 0;
@@ -386,36 +385,35 @@ footer h3 {
         background: var(--mainRed);
         transition: width .3s;
     }
-    .dynamic-menu a:hover::after {
+    #novem .dynamic-menu a:hover::after {
         width: 95%;
     }
-    footer .wrapper {
+    #novem footer .wrapper {
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-areas: 
         'logo socials links contact';
         padding: 80px 20px;
     }
-    .footer-socials i {
+    #novem .footer-socials i {
         font-size: 1.25rem;
     }
 /* HEADER END */
 
 /* FOOTER START */
-.footer-wrapper{
-    grid-template-columns: repeat(4, 1fr);
-}
-
-footer section{
-    padding-bottom: 0px;
-}
-
-.footer-links{
-    display: initial;
-}
-    .footer-links li{
-        display: flex;
-/*         justify-content: center; */
+    #novem .footer-wrapper{
+        grid-template-columns: repeat(4, 1fr);
     }
+
+    #novem footer section{
+        padding-bottom: 0px;
+    }
+
+    #novem .footer-links{
+        display: initial;
+    }
+    #novem .footer-links li{
+            display: flex;
+        }
 /* FOOTER END */
 }
 /* ----TABLET END---- */
@@ -424,7 +422,7 @@ footer section{
 @media screen and (min-width:961px){
 
 /* FOOTER START */
-    footer .wrapper {
+    #novem footer .wrapper {
         grid-template-columns: 2fr 1fr 1fr 175px;
         grid-template-areas: 
         'logo socials links contact';
