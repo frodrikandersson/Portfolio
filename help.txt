@@ -1,0 +1,789 @@
+-npm create vite@latest
+    -Projektnamn (engelska, små bokstäver, inga specialtecken)
+    -React
+    -Typescript
+
+
+Starta projekt
+-Ställ er i projektet
+    -cd Projektnamn
+
+-npm install (men bara första gången i projektet)
+
+-npm run dev
+
+exempel mappstruktur
+    -project
+        -node_modules
+        -public
+        -src
+            -assets
+            -components
+            -models (typescript)
+                .TheBlueOneProps.ts
+                .ITheBlueOneInterface.ts
+            -hooks
+                .useFetch.ts
+            -contexts
+                .MyContexts.ts
+            -reducers
+                .TextReducer.ts
+        -Service
+            .movieService.ts
+
+
+.ts eller .tsx
+.ts används när ingen html renderas i filen (return <h1></h1> etc)
+
+Typescript specific crap
+    union
+        name: string | undefined (typescript)
+        { name = <></> : <p></p> } (if name is undefined, then show right side. if true, then show left side)
+
+    Interface is also typescript mumbojumbo
+
+Render & State
+    interpolation = {use to write javascript}
+    
+    Object skapas från TS constructor
+        const p = new Person("Sebastian", 45, true);
+    
+    interpolation med boolean exempel
+        <input type="checkbox" checked={p.isMarried}/>
+
+    Conditional rendering example
+        returnary example
+        return
+            <>
+                { p.age < 40 ? 
+                    (<>
+                        <div>....</div>
+                    </>)
+                :
+                    (<div>
+                        <p>----</p>
+                    </div>)
+                }
+            </>
+
+        if example
+            if(p.age < 40) {
+                return
+                    <>
+                        <div>...</div>
+                    </>
+            } else{
+                return
+                    <div>
+                        <p>---</p>
+                    </div>
+            }
+
+    State skapas endast första gången koden renderas
+        const [name, setName] = useState("Sebastian");
+
+        function handleClick() {
+            setName("Hanna");
+        }
+
+        return <p onClick={handleClick}>{name}<p>
+
+        hantera olika datatyper i State
+            string                  |   const [name, setName] = useState("Sebastian");
+            number                  |   const [age, setAge] = useState(45);   
+            boolean                 |   const [isMarried, setisMarried] = useState(true);
+            class/interface/type    |   const [person, setPerson] = useState<Person>();
+            undefined/null          |   
+            Date                    |
+
+    Listor i state
+        const [numbers, setNumbers] = useState<number[]>([1, 1, 2, 3, 5, 8]);
+
+    Object
+        spread(...) används för att skapa en kopia av ett objekt
+            
+            plane = { model: "Cessna", color: "Yellow", series: 123 }
+            
+            function handleClick(){
+                setPlane({...plane, color: "Green"});
+            }
+        varför använda spread för att göra en kopia? för att kunna gå tillbaka till föregående states
+    
+    map function används för att hitta något i en lista[]
+        return
+            <ul>
+                {numbers.map((n, i) => {
+                    return <li key={i}>{n}</li>
+                })}
+            </ul>
+
+    1. Lägg till i listan
+        function addNumber(){
+            setNumbers([...numbers, 13])
+        }
+
+    2. Ta bort ur listan
+        function removeNumber(){
+            setNumbers(numbers.filter((number) => { n !== 5 ? return n }))
+        }
+
+    3. Ändra i listan
+        function updateNumber(){
+            setNumbers(numbers.map((number) = {
+                if(n === 3 ) {
+                    return 30;
+                } else{
+                    return n;
+                }
+            }));
+        }
+
+    Datatypes (class/interface/type)
+        Person.ts
+            export class Person{
+                constructor(public name: string, public age: number, public isMarried: boolean) {}
+            }
+        ShowPerson.tsx
+            function MyPerson() {
+                const [person, setPerson] = useState<Person>(new Person("Fredrik", 32, false));
+            }
+        
+
+
+
+    key behövs för att ge varje ett unikt id till html kod för att react ska kunna hitta koden som ska förändras
+
+Forms - Props
+
+    händelser i javascript
+        document.getElementById("...").addEventListener("click", () => {});
+
+    händelser i react
+        i react kan vi lyssna på vilken händelse som helst genom att skriva on... i vår html
+        <button onClick={() => {}}></button>
+
+        onChange - används när vi ändrar något i en input (oftast i text inputs)
+
+        onSubmit - gör en POST request till samma sida. Detta gör att sidan laddas om. Vi behöver avbryta omladdningen så vi har kontroll och kan göra vad vi vill
+            OPTION 1 (NOT GOOD)
+            const [name, setName] = useState("");
+            const [age, setAge] = useState(0);
+            const [isMarried, setIsMarried] = useState(false);
+            
+            <form onSubmit={(event) => {
+                event.preventDefault();
+                //Skicka data till api
+            }}>
+                <input type="text" onChange={(event) => { setName(event.target.value) }} />
+                <input type="number" onChange={(event) => { setAge(event.target.value) }} />
+                <input type="checkbox" onChange={(event) => { setIsMarried(event.target.checked) }} />
+                <button type="submit"></button>
+            </form>
+            
+            OPTION 2 (GOOD)
+            const [person, setPerson] = useState<Person>();
+
+            function handleChange(e:ChangeEvent<HTMLInputElement>){
+                if(e.target.type === "text") {
+                    setPerson({...person, [e.target.name]: e.target.value});
+                }
+                if(e.type === "number") {
+                    setPerson({...person, [e.target.name]: +e.target.value});
+                }
+                if(e.type === "checkbox") {
+                    setPerson({...person, [e.target.name]: e.target.checked});
+                }
+            }
+
+            <form onSubmit={(event) => {
+                event.preventDefault();
+                //Skicka data till api
+            }}>
+                <input type="text" onChange={(event) => { handleChange(event) }} name="name"/>
+                <input type="number" onChange={(event) => { handleChange(event) }} name="age" />
+                <input type="checkbox" onChange={(event) => { handleChange(event) }} name="isMarried" />
+                <button type="submit"></button>
+            </form>
+
+    props, send information between components
+        the information thats being sent is ALWAYS an object (with typescript, you must create a TS file with a constructor)
+        Three ways of sending info:
+            - Class (did we create the object ourselves? No, react creates it so don't use Class when using props)
+            - Interface 
+            - Type
+
+    interface defines whats inside the props object
+        whatever is inside the interface (message: string in this case) decides what the props object must have
+        interface IHelloWorldProps {
+            message: string;
+        }
+
+        use export if its in models -> IHelloworldProps.ts
+        export interfaceIHelloWorldProps {
+            message: string;
+        }
+        
+        interface is always placed in the child component. So if <Hej> is placed inside <App>, then <Hej> has the interface
+
+        HelloWorld.tsx
+            interface IHelloWorldProps {
+                message: string;
+            }
+
+            export function HelloWorld(props: IHelloWorldProps) {
+                return <></>
+            }
+
+        App.tsx
+            return 
+            <>
+                <HelloWorld message="Hello There" />
+            </>
+
+    type is the same as interface but it varies slightly in syntax
+        Child.tsx
+            type TheBlueOneProps = {
+                message: string;
+            }
+
+            function TheBlueOne (props: TheBlueOneProps){
+                return <>{props.message}</>;
+            }
+
+        App.tsx
+            function App(){
+                return
+                    <>
+                        <TheBlueOne message="Hello" />
+                    </>
+            }
+
+Lifting State Up
+    children speaks with each other through their parent
+    CerealApp.tsx (parent)
+        const [cereals, setCereals] = useState<Cereal[]>([]);
+
+        function addCereal(name: string, crispiness: number, flavor: string){
+            setCereals([...cereals, new Cereal(name, crispiness, flavor)]);
+        }
+
+        return
+            <>
+                <AddCereal addCereal={addCereal}/>
+                <ShowCereals />
+            </>
+
+    ShowCereal.tsx (child)
+        props: Cereals[]
+
+        return <>{props.cereals.map()}</>
+
+    AddCereal.tsx (child)
+        interface IAddCerealInterface = {
+            addCereal: (name: string, crispiness: number, taste: string) => void;
+        }
+
+        function AddCereal(props: IAddCerealInterface){
+            function handleSubmit(e: FormEvent){
+                e.preventDefault();
+                props.addCereal(name, crispiness, flavor);
+            }
+        }
+        
+        return 
+            <form>
+                
+            </form>
+
+
+localStorage lagrar text. omvandla till text vid SET, omvandla från text vid GET
+    localStorage.setItem("person", JSON.stringify(p))
+        // person -> "{name:"Sebastian", age:45, isMarried: true}
+
+    const textFromLS = localStorage.getItem("person")
+        //textFromLS = "{name:"Sebastian", age:45, isMarried: true}"
+    const p:Person = JSON.parse(textFromLS);
+        //p måste vara definerad som ett Person objekt.
+
+    EXAMPLE TO SET A LIST IN LS
+        const persons: Person[] = [
+            new Person("Sebastian", 45, true),
+            new Person("Hanna", 44, true)
+        ];
+        localStorage.setItem("persons", JSON.stringify(persons));
+
+    EXAMPLE TO GET A LIST IN LS
+        const textFromLS = localStorage.getItem("persons");
+        const persons:Person[] = JSON.parse(textFromLS);
+            //This is now a list again
+
+fetch (hämtar data från ett API)
+    //Utan typescript
+    const response = await fetch("...")
+    const data = await response.json();
+
+    för att plocka ut information med typescript måste vi beskriva vilken data som vi vill använda i API som skickats
+    
+    //med typescript
+    interface IOmdbResponse {
+        Search: [];
+        totalResult: string;
+        response: string;
+    }
+
+    nu kan jag använda API info Search, totalResult och response.
+
+    const data:IOmdbResponse = await response.json();
+    data.Search
+    data.totalResult
+    data.response
+
+    om det finns en lista eller objekt nästlat i data., så behöver vi skapa en interface för den också.
+    exempelvis Search har en Title, Poster och imdbID
+
+    interface IMovie {
+        Title: string;
+        Poster: string;
+        imdbID: string;
+    }
+
+    const data:IOmdbResponse = await response.json();
+    {data.Search.map((movie) => {
+        <div>
+            <h3>{movie.Title}</h3>
+        </div>
+    })}
+
+useEffect (happens at the start and whenever it re-renders)
+    denna skall användas sparsamt! Vitsen med useEffect är att vi skall kommunicera med externa system.
+    useEffect kommer att användas när vi ska använda fetch. I alla fall när vi startar komponenten.
+
+    useEffect körs när
+        1. efter första renderingen av en komponent laddas
+        2. Vid varje uppdatering av ett state
+
+    useEffect(() => {
+        ...
+    });
+
+    exempel som skapar en oändlig loop
+        function MyComponent {
+            const [name, setName] = useState("Sebastian");
+
+            useEffect(() => {
+                setName("Hanna");
+            });
+
+            return
+                <>
+                    <p>{name}</p>
+                </>
+        }
+
+    exempel som har mer kontroll
+        useEffect(() => {}, []);
+            // [dependencyArray] som ser till att den endast köra vid laddning
+
+    bästa sättet enligt react
+        useEffect(() => {
+            if(name === "Hanna"){
+                return;
+            } else {
+                setName("Hanna");
+            }
+        }, [name]);
+        //om useEffect är beroende av name, skriv [name] i slutet
+
+    exempel när vi hämtar data från API
+        function MovieApp(){
+            const [movies, setMovies] = useState<Movie[]>([]);
+
+            useEffect(() => {
+                async function getData(){
+                    const response = await fetch("url");
+                    const data = await response.json();
+
+                    setMovies(data);
+                }
+                if (movies.length > 0){
+                    return;
+                } else{
+                    getData();
+                }
+            })
+
+            return
+                <>
+                    {movies.map((m) => {
+                        return
+                            <div>
+                                <h3>{m.Title}</h3>
+                            </div>
+                    })}
+                </>
+        }
+
+Service, 1st service fil per API
+    Syftet med en service är att den ska innehålla funktioner som motsvarar crud operationerna i API't (& searches in urls)
+
+    exempel
+    MovieApp.tsx (huvudkomponent)
+    useEffect(() => {
+        async function getData(){
+            const movies = await getMovies();
+            setMovies(movies);
+        }
+
+        if(movies.length > 0) return;
+        getData();
+    })
+
+
+    movieService.ts
+
+        const BASE_URL = "https://omdbapi.com/?apikey=416ed51a&";
+
+        export async function getMovies() {
+            const response = await fetch(BASE_URL + "s=star");
+            const data:IOmdbResponse = await response.json();
+
+            return data.Search;
+        }
+
+        export async function getMovieById() {
+            const response = await fetch(BASE_URL + "t=" + id);
+            const data:IMovie = await response.json();
+
+            return data;
+        }
+    exempel med en serviceBase.ts
+        exempel
+    MovieApp.tsx (huvudkomponent)
+    useEffect(() => {
+        async function getData(){
+            const movies = await getMovies();
+            setMovies(movies);
+        }
+
+        if(movies.length > 0) return;
+        getData();
+    })
+
+
+    movieService.ts
+
+        const BASE_URL = "https://omdbapi.com/?apikey=416ed51a&";
+
+        export async function getMovies() {
+            const data = await <IOmdbResponse>get(BASE_URL + "s=star");
+
+            return data.Search;
+        }
+
+        export async function getMovieById() {
+            const data = await get<IMovie>(BASE_URL + "t=" + id);
+
+            return data;
+        }
+
+    serviceBase.ts
+        alla service filer som vill göra ett anrop behöver gå igenom denna fil. endast denna fil har fetch. detta måste inte göras men det är professionellt.
+
+        export async function get<T>(url:string){
+            const response = await fetch(url);
+            const data:T = await response.json();
+
+            return data;
+        }
+
+
+react router (multi page)
+    en router bestämmer vilken komponent som ska visas
+
+    installerar via kommando
+        npm i react-router
+
+    exempel
+        src mapp
+            Router.tsx
+                export const router = createBrowserRouter([
+                    {
+                        path: "/",
+                        element: <Home /> 
+                    },
+                    {
+                        path: "/about",
+                        element: <About />
+                    },
+                    {
+                        path: "/contact",
+                        element: <Contact />
+                    }
+                ]);
+
+            App.tsx
+                return
+                    <>
+                        <RouterProvider router={router}></RouterProvider> <-- denna komponent visar routerns olika paths. kan läggas i t.ex. main         
+                    </>
+
+                exempel NavLink (ger en class "active" till den man klickar på)
+                <nav>
+                    <ul>
+                        <li><NavLink to={"/"}>Home</NavLink></li>
+                        <li><NavLink to={"/about"}>About</NavLink></li>
+                        <li><NavLink to={"/contact"}>Contact</NavLink></li>
+                    </ul>
+                </nav>
+
+                exempel Link (Link skall placeras som innehåll, NavLink skall användas i navigeringar)
+                <Link to={"/contact"}>Contact</Link>
+
+                exempel useNavigate
+                const navigate = useNavigate();
+
+                function handleClick(){
+                    ... (do a thing, API or whatnot)
+
+                    navigate("/about");  (then navigate to about)
+                }
+
+
+    params layout (är en dynamisk del av vår path. det är en variabel i slutet av vår path.)
+        exempel
+        {
+            path: "/movie/:id",         id = http://localhost:5173/movie/tt100342  <-- id är tt100342
+            element: <Movie />
+        }
+
+        Movie.tsx
+            function Movie(){
+                const { id } = useParams(); <-- kallas för destructuring
+
+
+                return(
+                    <>
+                        {id}
+                    </>
+            )}
+
+    layout
+        createBrowserRouter([
+            {
+                path:"/",
+                element: <Layout />
+                errorElement: <NotFound />,
+                children:[
+                    {
+                        path: "/",
+                    },
+                    {
+                        path: "/about",
+                    },
+                    {
+                        path: "/contact",
+                    }
+                ]
+            }
+
+        ]);
+
+        Någonstans inuti Layout vill vi visa resultatet av vår route (Home, About eller Contact).
+        Detta görs med <Outlet />
+        <Outlet /> -> Home -> localhost:5173/
+        <Outlet /> -> About -> localhost:5173/about
+        <Outlet /> -> Contact -> localhost:5173/contact
+
+        exempel
+        Layout.tsx
+            export function Layout(){
+                return(
+                    <>
+                        <header>
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <NavLink to={"/"}>Home</NavLink
+                                    </li>
+                                    <li>
+                                        <NavLink to={"/movies"}>Movies</NavLink
+                                    </li>
+                                    <li>
+                                        <NavLink to={"/pokemons"}>Pokemons</NavLink
+                                    </li>
+                                    <li>
+                                        <NavLink to={"/music"}>Music</NavLink
+                                    </li>
+                                </ul>
+                            </nav>
+                        </header>
+                        <main>
+                            <Outlet/>
+                        </main>
+                        <footer></footer>
+                    </>
+                )
+            }
+
+custom hooks
+    funktioner som börjar med "use" kallas för hooks, t.ex useEffect, useState, useParams, useNavigate
+    hooks används för att skapa återanvändningsbara saker i vår kod.
+    DRY, dont repeat yourself.
+
+    när vi skapar en hook gör vi detta i en ts-fil.
+    vi kan däremot använda react-koncept i denna fil. t.ex. useState, useEffect...
+
+    src
+        hooks
+            useFetch.ts
+                export function useFetch(){
+                    const [data, setData] = useState<Movie[]>([]);
+
+                    useEffect(() => {
+                        async function getData(){
+                            const response = await fetch("...");
+                            const data:OmdbResponse = await response.json();
+                            setData(data.Search);
+                        }
+
+                        if(data.length>0) return;
+                        getData();
+                    });
+
+                    return data;
+                }
+            
+        Movies.tsx
+            export function Movies(){
+                const data = useFetch(); (data = data från useFetch.ts)
+            
+                return(
+                    <>
+                        {data.map((movie) => {
+                            return(
+                                <div>
+                                    {movie.Title}
+                                </div>
+                            )
+                        })}
+                    </>
+                )
+            }
+
+Context
+    ett context är ett "globalt" state. det fungerar som ett state men den är global.
+    Vad skall finnas i ett context?
+    - Tema (ljus, mörkt)
+    - Inloggad användare
+    etc
+
+    createContext<T>(defaultValue: T): Context; <-- defaultValue används om vi gör fel när vi anropar MyContext.Provider
+
+    exempel
+        contexts
+            MyContexts.ts
+                const MyContext = createContext<string>("Lorem ipsum");
+
+        App.tsx
+            return(
+                <>
+                    <MyContext.Provider value={"Hello World"}> <-- inte HTML men liknar en komponent
+                        <AwesomeComponent />
+                    </MyContext.Provider>
+                </>
+            )
+
+    Hur använder vi ett context?
+        AwesomeComponent.tsx
+            function AwesomeComponent(){
+                return(
+                    <>
+                        <SomeCoolComponent />
+                    </>
+                )
+            }
+
+        SomeCoolComponent.tsx
+            function SomeCoolComponent(){
+                const theValue = useContext(MyContext);
+                
+                return(
+                    <>
+                        {theValue}
+                    </>
+                )
+            }
+
+    Vi kommer nu åt "theValue" från barnbarnet. barnbarnet får sitt value i "theValue" från contextet i App.tsx
+    Vi använder inga props.
+
+Reducer
+    man använder reducer för att flytta state och logik till en ny fil. flera filer men mindre kod gör det lättare att hantera koden
+    en funktion, tar emot två parametrar (det gamla statet och förändringen som skall göras), returnera det nya statet
+    en förändring (action) innehåller:
+        type: string        ||"CHANGED"||"REMOVED"||"ADDED"||"TOGGLED"||
+        payload: string 
+
+
+    src
+        reducers
+            TextReducer.ts
+                interface IAction {
+                    type: string        OR type: "ADDED" | "REMOVED" | "TOGGLED"; OR export enum (see below)
+                    payload: string
+                }
+
+                export enum IActionType {
+                    ADDED,
+                    REMOVED,
+                    TOGGLED
+                }
+
+                export function TextReducer(text: string, action: IAction): string{
+                    
+                    if(action.type === "CHANGED"){
+                        return action.payload;
+                    }
+                    
+                    return text;
+                }
+
+
+    att använda gör vi istället för att göra vår vanliga state
+
+    App.tsx
+       const [text, dispatch] = useReducer(TextReducer, "Lorem");       example name instead of dispatch --> textDispatch
+
+       function handleClick(){
+        dispatch({
+            type: "CHANGED",
+            payload: "ipsum"
+        })
+       }
+
+
+
+
+------------------------------------------------------------------------------------------------------
+
+CRUD med insomnia (Create, Read, Update, Delete)
+Insomnia används för att förundersöka ett API
+
+Skapa anrop som:
+    Hämtar alla puns. GET: https://pun-api.vercel.app/puns
+    Hämtar en specifik pun efter ett id som hittas i pun-listan, via första anrop GET: https://pun-api.vercel.app/puns/<punId>
+
+
+- Begin with installing the packages mysql2 and dotenv: npm install mysql2 dotenv
+- In PHPMyAdmin -> Create a DB with a posts-table, with the following fields:
+  - id INT(10) PK 
+  - title VARCHAR(100)
+  - content TEXT
+  - author VARCHAR(100)
+- Establish a DB-connection in index.ts. For XAMPP, the login info is:
+  - host: "localhost"
+  - user: "root"
+  - password: "" // Empty string
+  - database: ??? // Whatever you named the databse when creating it
+  - port: 3306
+- Make sure the above credentials are saved in a .env file, and used by importing the dotenv package
