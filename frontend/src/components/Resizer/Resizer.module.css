@@ -1,0 +1,7 @@
+.resizer {
+  width: 5px;
+  cursor: col-resize;
+  background-color: #333;
+  z-index: 10;
+  user-select: none;
+}

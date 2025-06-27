@@ -1,0 +1,31 @@
+/* EditorPage */
+.editorPage {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.contentArea {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.secondarySidebarWrapper {
+  transition: none;
+}
+
+.animate {
+  transition: 0.2s ease-out;
+}

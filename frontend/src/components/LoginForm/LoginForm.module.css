@@ -1,0 +1,20 @@
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  max-width: 300px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonRegister {
+  padding: 0.5rem;
+  background: #007acc;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

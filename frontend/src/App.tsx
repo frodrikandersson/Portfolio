@@ -1,12 +1,17 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { AppRoutes } from './routes/AppRoutes';
+import { SidebarProvider } from './contexts/SidebarContext';
+import { TabProvider } from './contexts/TabContext';
 
-function App() {
-
+export const App: React.FC = () => {
   return (
-    <>
-      <div className="text-3xl font-bold underline">Hello World</div>
-    </>
-  )
-}
-
-export default App
+    <BrowserRouter>
+      <SidebarProvider>
+        <TabProvider>
+          <AppRoutes />
+        </TabProvider>
+      </SidebarProvider>
+    </BrowserRouter>
+  );
+};
