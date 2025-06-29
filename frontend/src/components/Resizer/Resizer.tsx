@@ -8,27 +8,45 @@ type ResizerProps = {
 };
 
 export const Resizer: React.FC<ResizerProps> = ({ onDrag, onResizeStart, onResizeEnd }) => {
-  const handleMouseDown = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleStart = (clientX: number) => {
     onResizeStart?.();
+    let prevX = clientX;
 
-    let prevX = e.clientX;
-
-    const onMouseMove = (e: MouseEvent) => {
-      const deltaX = e.clientX - prevX;
-      prevX = e.clientX;
+    const onMove = (e: MouseEvent | TouchEvent) => {
+      const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const deltaX = currentX - prevX;
+      prevX = currentX;
       onDrag(deltaX);
     };
 
-    const onMouseUp = () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      onResizeEnd?.(); 
+    const onEnd = () => {
+      window.removeEventListener('mousemove', onMove as any);
+      window.removeEventListener('mouseup', onEnd);
+      document.removeEventListener('touchmove', onMove as any);
+      document.removeEventListener('touchend', onEnd);
+      onResizeEnd?.();
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('mousemove', onMove as any);
+    window.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchmove', onMove as any, { passive: false });
+    document.addEventListener('touchend', onEnd);
   };
 
-  return <div className={classes.resizer} onMouseDown={handleMouseDown} />;
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleStart(e.clientX);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    handleStart(e.touches[0].clientX);
+  };
+
+  return (
+    <div
+      className={classes.resizer}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+    />
+  );
 };

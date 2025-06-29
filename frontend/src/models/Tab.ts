@@ -3,13 +3,8 @@ import React from 'react';
 export interface Tab {
   id: string;
   title: string;
-  content: React.ReactNode;
+  componentName: string;
 }
-
-export type TabContextType = {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-};
 
 export type State = {
   tabs: Tab[];
@@ -20,3 +15,8 @@ export type Action =
   | { type: 'ADD_TAB'; tab: Tab }
   | { type: 'CLOSE_TAB'; id: string }
   | { type: 'SET_ACTIVE'; id: string };
+
+export type TabContextType = {
+  state: State;
+  dispatch: React.Dispatch<Action>;
+};

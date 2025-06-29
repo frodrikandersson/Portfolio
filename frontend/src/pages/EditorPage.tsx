@@ -1,39 +1,83 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LeftSidebar } from '../components/LeftSidebar/LeftSidebar';
 import { SecondarySidebar } from '../components/SecondarySidebar/SecondarySidebar';
 import { Footer } from '../components/Footer/Footer';
 import { Resizer } from '../components/Resizer/Resizer';
 import { MainContent } from '../components/MainContent/MainContent';
 import { useSidebar } from '../contexts/SidebarContext';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useSwipeSidebar } from '../hooks/useSwipeSidebar';
+import { useSidebarWidth } from '../hooks/useSidebarWidth';
 import classes from './Pages.module.css';
 
 export const EditorPage: React.FC = () => {
-  const [secondaryWidth, setSecondaryWidth] = useState(300);
+  const isMobile = useMediaQuery('(max-width: 1024px)');
   const { sidebarType } = useSidebar();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
 
-  const handleDrag = (deltaX: number) => {
-    setSecondaryWidth((w) => Math.min(Math.max(w + deltaX, 150), 600));
-  };
+  const { width: secondaryWidth, updateWidth } = useSidebarWidth(isMobile);
+  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipeSidebar(isMobile, sidebarOpen, setSidebarOpen);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setSidebarOpen(true);
+    }
+  }, [isMobile]);
 
   return (
     <div className={classes.editorPage}>
-      <div className={classes.contentArea}>
-        <LeftSidebar />
-        <div
-          className={`${classes.secondarySidebarWrapper} ${!isResizing ? classes.animate : ''}`}
-          style={{
-            width: sidebarType ? secondaryWidth : 0,
-            overflow: 'hidden',
-          }}
-        >
-          <SecondarySidebar />
+      <div
+        className={classes.contentArea}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className={classes.sidebarRegion}>
+          <div className={`${classes.leftSidebarWrapper} ${sidebarOpen ? classes.open : ''}`}>
+            <LeftSidebar />
+            {sidebarType && (
+              <div
+                className={`${classes.secondarySidebarWrapper} ${!isResizing ? classes.animate : ''}`}
+                style={{
+                  width: sidebarOpen ? (isMobile ? '50vw' : `${secondaryWidth}px`) : 0,
+                  overflow: 'hidden',
+                }}
+              >
+                <SecondarySidebar onLinkClick={() => setSidebarOpen(false)} />
+              </div>
+            )}
+          </div>
+
+          {isMobile && !sidebarOpen && (
+            <div
+              className={classes.slideArrow}
+              onClick={() => setSidebarOpen(true)}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              ➤
+            </div>
+          )}
+
+          {isMobile && sidebarOpen && (
+            <div
+              className={classes.slideArrow}
+              onClick={() => setSidebarOpen(false)}
+              style={{ left: sidebarType ? `calc(50vw + 28px)` : `28px` }}
+            >
+              ◀
+            </div>
+          )}
         </div>
+
         <Resizer
-          onDrag={handleDrag}
+          onDrag={updateWidth}
           onResizeStart={() => setIsResizing(true)}
           onResizeEnd={() => setIsResizing(false)}
         />
+
         <main className={classes.mainContent}>
           <MainContent />
         </main>

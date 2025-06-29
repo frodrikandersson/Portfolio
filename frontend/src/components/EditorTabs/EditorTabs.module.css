@@ -5,6 +5,14 @@
   overflow-x: auto;
 }
 
+.tabBar {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  background-color: #2b2b2b;
+  padding: 4px;
+}
+
 .tab {
   display: flex;
   align-items: center;
@@ -24,13 +32,7 @@
   background: #555;
 }
 
-.tabBar {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  background-color: #2b2b2b;
-  padding: 4px;
-}
+
 
 .tabButtons {
   display: flex;

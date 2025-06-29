@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useReducer, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react';
 import type { Action, State, Tab, TabContextType } from '../models/Tab';
 
 const TabContext = createContext<TabContextType | undefined>(undefined);
 
-const initialTabs: Tab[] = [];
+const STORAGE_KEY = 'editorTabsState';
 
 function tabReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -17,9 +17,7 @@ function tabReducer(state: State, action: Action): State {
     }
     case 'CLOSE_TAB': {
       const remaining = state.tabs.filter((tab) => tab.id !== action.id);
-      // If closed tab was active, set activeTabId to first tab if exists, else empty string
-      const newActiveTabId =
-        state.activeTabId === action.id && remaining.length > 0 ? remaining[0].id : '';
+      const newActiveTabId = state.activeTabId === action.id && remaining.length > 0 ? remaining[0].id : '';
 
       return {
         tabs: remaining,
@@ -38,9 +36,16 @@ function tabReducer(state: State, action: Action): State {
 
 export const TabProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(tabReducer, {
-    tabs: initialTabs,
+    tabs: [],
     activeTabId: '',
+  }, () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : { tabs: [], activeTabId: '' };
   });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
   return <TabContext.Provider value={{ state, dispatch }}>{children}</TabContext.Provider>;
 };

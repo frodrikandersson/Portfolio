@@ -1,6 +1,11 @@
 import React from 'react';
 import classes from './EditorTabs.module.css';
 import type { Tab } from '../../models/Tab';
+import { ProfilePage } from '../../pages/ProfilePage';
+import { SearchPage } from '../../pages/SearchPage';
+import { ExplorerPage } from '../../pages/ExplorerPage';
+import { RegisterPage } from '../../pages/RegisterPage';
+import { LoginPage } from '../../pages/LoginPage';
 
 interface EditorTabsProps {
   tabs: Tab[];
@@ -10,6 +15,14 @@ interface EditorTabsProps {
   onSplit?: (tab: Tab, direction: 'right' | 'down') => void;
   onTabClose: (tabId: string) => void;
 }
+
+const componentMap: Record<string, React.FC> = {
+  LoginPage,
+  RegisterPage,
+  ProfilePage,
+  SearchPage,
+  ExplorerPage
+};
 
 export const EditorTabs: React.FC<EditorTabsProps> = ({
   tabs,
@@ -87,7 +100,12 @@ export const EditorTabs: React.FC<EditorTabsProps> = ({
         ))}
       </div>
       <div className={classes.editorContent} role="tabpanel">
-        {tabs.find((tab) => tab.id === activeTabId)?.content}
+        {(() => {
+          const activeTab = tabs.find((tab) => tab.id === activeTabId);
+          if (!activeTab) return null;
+          const Component = componentMap[activeTab.componentName];
+          return Component ? <Component /> : <div>Component not found</div>;
+        })()}
       </div>
     </div>
   );

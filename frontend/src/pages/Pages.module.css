@@ -5,6 +5,7 @@
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative; 
 }
 
 .contentArea {
@@ -22,10 +23,62 @@
   color: white;
 }
 
-.secondarySidebarWrapper {
-  transition: none;
+.sidebarRegion {
+  position: relative;
+  display: flex;
+  flex-direction: row;
 }
 
-.animate {
-  transition: 0.2s ease-out;
+.secondarySidebarWrapper {
+  position: relative;
+  z-index: 10;
 }
+
+
+.leftSidebarWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.leftSidebarWrapper.open {
+  transform: translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .leftSidebarWrapper {
+    transform: translateX(0);
+    position: static;
+  }
+}
+
+.slideArrow {
+  position: absolute;
+  top: 50%;
+  right: -2px;
+  transform: translateX(100%);
+  width: 16px;
+  height: 96px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 0 4px 4px 0;
+  z-index: 1001;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+@media (max-width: 1024px) {
+  /* Show on tablet and smaller */
+  .slideArrow {
+    display: flex;
+  }
+}
+
