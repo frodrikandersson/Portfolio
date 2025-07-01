@@ -38,7 +38,7 @@ export const EditorPage: React.FC = () => {
             <LeftSidebar />
             {sidebarType && (
               <div
-                className={`${classes.secondarySidebarWrapper} ${!isResizing ? classes.animate : ''}`}
+                className={classes.secondarySidebarWrapper}
                 style={{
                   width: sidebarOpen ? (isMobile ? '50vw' : `${secondaryWidth}px`) : 0,
                   overflow: 'hidden',
@@ -49,25 +49,20 @@ export const EditorPage: React.FC = () => {
             )}
           </div>
 
-          {isMobile && !sidebarOpen && (
+          {isMobile && (
             <div
               className={classes.slideArrow}
-              onClick={() => setSidebarOpen(true)}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              style={{
+                left: sidebarOpen
+                  ? (sidebarType ? `calc(50vw + 28px)` : `28px`)
+                  : `-15px`,
+              }}
             >
-              ➤
-            </div>
-          )}
-
-          {isMobile && sidebarOpen && (
-            <div
-              className={classes.slideArrow}
-              onClick={() => setSidebarOpen(false)}
-              style={{ left: sidebarType ? `calc(50vw + 28px)` : `28px` }}
-            >
-              ◀
+              {sidebarOpen ? '◀' : '➤'}
             </div>
           )}
         </div>

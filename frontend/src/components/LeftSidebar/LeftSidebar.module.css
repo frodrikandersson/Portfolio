@@ -23,7 +23,7 @@
   }
 }
 
-:global(body.light) .sidebarButton img {
+:global(html.light) .sidebarButton img {
   opacity: 0.8;
   filter: brightness(0.8) contrast(1.2);
 }

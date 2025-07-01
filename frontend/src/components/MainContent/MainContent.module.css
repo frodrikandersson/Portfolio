@@ -28,7 +28,7 @@
   }
 }
 
-:global(body.light) .emptyState img {
+:global(html.light) .emptyState img {
   opacity: 0.8;
   filter: brightness(0.8) contrast(1.2);
 }

@@ -25,7 +25,7 @@ export const SecondarySidebar: React.FC<{ onLinkClick?: () => void }> = ({ onLin
 
   return (
     <aside
-      className={`${classes.secondarySidebar} ${!sidebarType ? classes.hidden : ''}`}
+      className={classes.secondarySidebar}
     >
       <h2 className={classes.sidebarTitle}>{sidebarType ?? ''}</h2>
       <ul className={classes.menuList}>

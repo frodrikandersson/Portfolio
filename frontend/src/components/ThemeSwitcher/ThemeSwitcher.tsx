@@ -15,8 +15,8 @@ export const ThemeSwitcher: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle('dark', isNight);
-    document.body.classList.toggle('light', !isNight);
+    document.documentElement.classList.toggle('dark', isNight);
+    document.documentElement.classList.toggle('light', !isNight);
     localStorage.setItem('theme', isNight ? 'dark' : 'light');
   }, [isNight]);
 

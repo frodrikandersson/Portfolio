@@ -1,6 +1,4 @@
 .secondarySidebar {
-  background-color: var(--bg-color-dark);
-  color: var(--text-color-dark); 
   height: 100%;
   overflow-y: auto;
   display: flex;
