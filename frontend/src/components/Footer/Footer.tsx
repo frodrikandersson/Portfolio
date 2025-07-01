@@ -2,6 +2,7 @@ import React from 'react';
 import classes from './Footer.module.css';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { useTabs } from '../../contexts/TabContext';
+import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher'; 
 
 export const Footer: React.FC = () => {
   const { sidebarType } = useSidebar();
@@ -23,6 +24,9 @@ export const Footer: React.FC = () => {
   return (
     <footer className={classes.footer} role="contentinfo">
       <div>{displayText}</div>
+      <div style={{ marginLeft: 'auto' }}>
+        <ThemeSwitcher />
+      </div>
     </footer>
   );
 };

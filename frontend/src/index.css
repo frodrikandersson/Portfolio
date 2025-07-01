@@ -1,19 +1,42 @@
+/* Light theme colors */
+body.light {
+--bg-color-bright: #ffffff;
+--bg-color-dark: #f5f5f5;
+--bg-color-focus: #cacaca;
+--text-color-dark: #222222;
+--text-color-soft: #555555;
+--line-color: #dddddd;
+--logo-color-pink: #c47aff;
+--logo-color-blue: #54c9de;
+--logo-color-blue-hover: #3794ff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme colors */
+body.dark {
+  --bg-color-bright: #1f1f1f;
+  --bg-color-dark: #181818;
+  --bg-color-focus: #333;
+  --text-color-dark: #eeeeee;
+  --text-color-soft: #cccccc;
+  --line-color: #2b2b2b;
+  --logo-color-pink: #b46bdf;
+  --logo-color-blue: #42becc;
+  --logo-color-blue-hover: #3794ff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 * {
   box-sizing: border-box;
 }
 
-html, body, #root {
+html, body {
   height: 100%;
   margin: 0;
-  background-color: #1e1e1e;
-  color: #d4d4d4;
   font-family: 'Inconsolata', 'Courier New', monospace;
 }
 
-button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  font-size: 20px;
+#root {
+  height: 100%;
 }
+

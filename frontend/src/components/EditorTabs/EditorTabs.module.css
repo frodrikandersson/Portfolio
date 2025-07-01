@@ -1,54 +1,66 @@
-.container {
-  display: flex;
-  background-color: #2d2d2d;
-  border-bottom: 1px solid #333;
-  overflow-x: auto;
-}
-
 .tabBar {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  background-color: #2b2b2b;
-  padding: 4px;
+  background-color: var(--bg-color-dark);
+  position: relative;
+  z-index: 1;
 }
 
 .tab {
   display: flex;
   align-items: center;
-  background: #3c3c3c;
-  padding: 6px 10px;
-  margin-right: 4px;
-  border-radius: 4px;
+  background-color: var(--bg-color-dark);
+  padding: 6px 5px;
+  border-radius: 4px 4px 0 0;
   cursor: pointer;
-  color: white;
+  color: var(--text-color-dark);
+  border: 1px solid var(--line-color);
+  border-left: 0px solid transparent;
+  z-index: 0;
+  position: relative;
 }
 
 .tab:hover {
-  background-color: #3c3c3c;
+  background-color: var(--bg-color-focus);
 }
 
 .tab.active {
-  background: #555;
+  background-color: var(--bg-color-bright);
+  border-color: var(--line-color);
+  border-bottom-color: var(--bg-color-bright);
+  color: var(--logo-color-pink); 
+  z-index: 2;
 }
-
-
 
 .tabButtons {
   display: flex;
+  align-items: center;
   gap: 4px;
-  margin-left: 8px;
+  margin-left: 12px;
+  visibility: hidden;
+}
+
+.tab:hover .tabButtons,
+.tab.active .tabButtons {
+  visibility: visible;
 }
 
 .closeBtn {
   background: transparent;
-  color: white;
+  color: var(--text-color-dark);
   border: none;
   cursor: pointer;
+  padding: 2px 6px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.closeBtn:hover {
+  background-color: var(--bg-color-focus);
+  border-radius: 2px;
 }
 
 .active {
-  background-color: #1e1e1e;
-  color: white;
   font-weight: bold;
 }

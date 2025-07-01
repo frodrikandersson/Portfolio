@@ -7,11 +7,11 @@ import { TabProvider } from './contexts/TabContext';
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <SidebarProvider>
-        <TabProvider>
-          <AppRoutes />
-        </TabProvider>
-      </SidebarProvider>
+        <SidebarProvider>
+          <TabProvider>
+            <AppRoutes />
+         </TabProvider>
+        </SidebarProvider>
     </BrowserRouter>
   );
 };

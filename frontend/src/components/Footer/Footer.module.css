@@ -1,10 +1,22 @@
-.container {
-  height: 25px;
-  background-color: #007acc;
-  color: white;
+.footer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 10px;
-  font-size: 12px;
-  border-top: 1px solid #005a9e;
+  background-color: var(--bg-color-dark);
+  color: var(--text-color-dark);
+  padding: 2px;
+  border-top: 1px solid var(--line-color);
+}
+
+.themeToggle {
+  background: none;
+  border: 1px solid var(--text-color-dark);
+  cursor: pointer;
+  color: var(--text-color-dark);
+  background-color: transparent;
+}
+
+.themeToggle:hover {
+  background-color: var(--bg-color-dark);
+  color: var(--text-color-dark);
 }

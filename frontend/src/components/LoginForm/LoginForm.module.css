@@ -13,8 +13,8 @@ label {
 
 .buttonRegister {
   padding: 0.5rem;
-  background: #007acc;
-  color: white;
+  background: var(--logo-color-blue);
+  color: var(--text-color-dark);
   border: none;
   cursor: pointer;
 }

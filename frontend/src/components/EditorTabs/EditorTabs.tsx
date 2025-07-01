@@ -12,7 +12,6 @@ interface EditorTabsProps {
   activeTabId: string;
   onTabClick: (tabId: string) => void;
   onTabDrop?: (tab: Tab) => void;
-  onSplit?: (tab: Tab, direction: 'right' | 'down') => void;
   onTabClose: (tabId: string) => void;
 }
 
@@ -29,7 +28,6 @@ export const EditorTabs: React.FC<EditorTabsProps> = ({
   activeTabId,
   onTabClick,
   onTabDrop,
-  onSplit,
   onTabClose,
 }) => {
   const handleDragStart = (e: React.DragEvent, tab: Tab) => {
@@ -61,30 +59,8 @@ export const EditorTabs: React.FC<EditorTabsProps> = ({
             onClick={() => onTabClick(tab.id)}
             onDragStart={(e) => handleDragStart(e, tab)}
           >
-            {tab.title}
+            <div>{tab.title}</div>
             <div className={classes.tabButtons}>
-              {onSplit && (
-                <>
-                  <button
-                    title="Split right"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSplit(tab, 'right');
-                    }}
-                  >
-                    ⇨
-                  </button>
-                  <button
-                    title="Split down"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSplit(tab, 'down');
-                    }}
-                  >
-                    ⇩
-                  </button>
-                </>
-              )}
               <button
                 className={classes.closeBtn}
                 aria-label={`Close ${tab.title}`}
