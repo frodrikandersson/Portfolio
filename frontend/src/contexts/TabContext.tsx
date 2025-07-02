@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react';
-import type { Action, State, Tab, TabContextType } from '../models/Tab';
+import type { Action, State, TabContextType } from '../models/Tab';
 
 const TabContext = createContext<TabContextType | undefined>(undefined);
 

@@ -3,7 +3,7 @@ import { getCollection } from "../config/db";
 import { IUser } from "../interfaces/UserInterface";
 import { ISession } from "../interfaces/SessionInterface";
 
-export async function isAuthenticated(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function isAuthenticated(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization;
 
     if (!token) {

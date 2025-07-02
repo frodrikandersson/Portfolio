@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const uri = process.env.MONGO_URL!;
-const dbName = process.env.MONGO_DB_NAME || 'QuilCountDB';
+const dbName = process.env.MONGO_DB_NAME || 'QuilCount';
 
 let client: MongoClient | null = null;
 let db: Db | null = null;

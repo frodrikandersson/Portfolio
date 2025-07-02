@@ -6,6 +6,9 @@ import { ISession } from '../interfaces/SessionInterface';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 
+
+// Public START
+
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const collection = await getCollection<IUser>('users'); 
@@ -13,58 +16,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
     res.json(users);
   } catch {
     res.status(500).json({ error: 'Could not get users' });
-  }
-};
-
-export const getOneUserById = async (req: Request, res: Response) => {
-  const { id } = req.params as { id: string };
-  try {
-    const collection = await getCollection<IUser>('users'); 
-    const users = await collection.findOne({ _id: new ObjectId(id) });
-    if (!users) {
-      res.status(404).json({ message: 'could not find this user' });
-      return; 
-    } 
-    res.json(users);
-  } catch {
-    res.status(500).json({ message: 'error' });
-}};
-
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
-  
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    res.status(400).json({ error: 'Email and password are required'});
-    return;
-  }
-
-  try {
-    const usersCollection = await getCollection<INewUser>('users');
-    const existingUser = await usersCollection.findOne({ email });
-
-    if (existingUser) {
-      res.status(400).json({ error: 'Email already in use' });
-      return;
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const newUser: INewUser = {
-      firstName: "",
-      lastName: "",
-      email,
-      passwordHash,
-      role: 'user',
-      createdAt: new Date(),
-      updatedAt: new Date(),  
-    };
-
-    const result = await usersCollection.insertOne(newUser);
-    res.status(201).json({ message: 'User registered', id: result.insertedId });
-  } catch (err) {
-    console.error('Registration error:', err);
-    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -128,6 +79,88 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 
 };
 
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ error: 'Email and password are required'});
+    return;
+  }
+
+  try {
+    const usersCollection = await getCollection<INewUser>('users');
+    const existingUser = await usersCollection.findOne({ email });
+
+    if (existingUser) {
+      res.status(400).json({ error: 'Email already in use' });
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const newUser: INewUser = {
+      firstName: "",
+      lastName: "",
+      email,
+      passwordHash,
+      role: 'user',
+      createdAt: new Date(),
+      updatedAt: new Date(),  
+    };
+
+    const result = await usersCollection.insertOne(newUser);
+    res.status(201).json({ message: 'User registered', id: result.insertedId });
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Public END
+
+
+
+// Private START 
+
+export const getOneUserById = async (req: Request, res: Response) => {
+  const { id } = req.params as { id: string };
+  try {
+    const collection = await getCollection<IUser>('users'); 
+    const users = await collection.findOne({ _id: new ObjectId(id) });
+    if (!users) {
+      res.status(404).json({ message: 'could not find this user' });
+      return; 
+    } 
+    res.json(users);
+  } catch {
+    res.status(500).json({ message: 'error' });
+  }
+};
+
+export const getLoggedInUser = async (req: Request, res: Response) => {
+    try {
+        const user = (req as any).user as IUser;
+
+        if (!user) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        res.json({
+            email: user.email,
+            role: user.role,
+        });
+
+    } catch (err) {
+        console.error('Error in /me route:', err);
+        res.status(500).json({ message: 'Internal server error' });
+        
+    }
+};
+
+// Private END
+
+
+
+// Admin START
+
 export const updateUserRole = async (req: Request, res: Response): Promise <void> => {
   const { id } = req.params;
   const { role } = req.body;
@@ -155,5 +188,6 @@ export const updateUserRole = async (req: Request, res: Response): Promise <void
     console.error('Error updating user role:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
-
 };
+
+// Admin END
