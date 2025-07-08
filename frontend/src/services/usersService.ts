@@ -9,7 +9,7 @@ export const publicGetAllUsers = async () => {
 };
 
 export const publicLoginUser = async (email: string, password: string) => {
-  const res = await fetch(`${API_URL}/users/login`, {
+  const res = await fetch(`${API_URL}/users/public/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,6 +18,10 @@ export const publicLoginUser = async (email: string, password: string) => {
   });
 
   const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || 'Login failed');
+  }
 
   const token = data.sessionToken;
   if (token) {
@@ -31,7 +35,7 @@ export const publicLogoutUser = async () => {
   const token = getToken();
   if (!token) return;
 
-  await fetch(`${API_URL}/users/logout`, {
+  await fetch(`${API_URL}/users/public/logout`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -53,6 +57,11 @@ export const publicRegisterUser = async (email: string, password: string) => {
   });
 
   const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.err || 'Registration failed');
+  }
+
   return data;
 };
 
@@ -79,7 +88,7 @@ export const privateGetCurrentUser = async () => {
     throw new Error('No token found');
   }
 
-  const res = await fetch(`${API_URL}/users/me`, {
+  const res = await fetch(`${API_URL}/users/private/me`, {
     method: 'GET',
     headers: {
       Authorization: token,

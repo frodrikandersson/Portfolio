@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { getAllUsers, getLoggedInUser, getOneUserById, loginUser, logoutUser, registerUser, updateUserRole } from '../controllers/userController';
 import { isAuthenticated } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/isAdmin';
@@ -12,8 +12,8 @@ router.post('/public/logout', logoutUser);
 router.post('/public/register', registerUser);
 
 // Set private routes
-router.get('/private/:id', isAuthenticated, getOneUserById);
 router.get('/private/me', isAuthenticated, getLoggedInUser);
+router.get('/private/:id', isAuthenticated, getOneUserById);
 
 // Admin routes
 router.patch('/admin/:id/role', isAuthenticated, isAdmin, updateUserRole);

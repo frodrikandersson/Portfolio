@@ -24,18 +24,15 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const usersCollection = await getCollection<IUser>('users');
     const user = await usersCollection.findOne({ email });
-
     if (!user) {
-      console.log('No user found with that email');
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ err: 'Invalid email' });
       return;
     }
 
     const match = await bcrypt.compare(password, user.passwordHash);
 
     if (!match) {
-      console.log('Password does not match');
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ err: 'Invalid credentials' });
       return;
     }
 
@@ -47,15 +44,14 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       userId: user._id,
       sessionToken,
       createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 days
+      expiresAt: new Date(Date.now() + 1 * 1 * 5 * 60 * 1000), // 1 days (1 * 24 * 60 * 60 * 1000)
     };
 
     await sessionsCollection.insertOne(session);
     res.json({ message: 'Login successful', sessionToken });
 
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ err: 'Server error' });
   }
 };
 
@@ -82,7 +78,7 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).json({ error: 'Email and password are required'});
+    res.status(400).json({ err: 'Email and password are required'});
     return;
   }
 
@@ -91,7 +87,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const existingUser = await usersCollection.findOne({ email });
 
     if (existingUser) {
-      res.status(400).json({ error: 'Email already in use' });
+      res.status(400).json({ err: 'Email already in use' });
       return;
     }
 
@@ -109,8 +105,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const result = await usersCollection.insertOne(newUser);
     res.status(201).json({ message: 'User registered', id: result.insertedId });
   } catch (err) {
-    console.error('Registration error:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ err: 'Server error' });
   }
 };
 
@@ -122,16 +117,22 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
 export const getOneUserById = async (req: Request, res: Response) => {
   const { id } = req.params as { id: string };
+  if (!ObjectId.isValid(id)) {
+    res.status(400).json({ message: 'Invalid user ID format' });
+    return;
+  }
   try {
     const collection = await getCollection<IUser>('users'); 
     const users = await collection.findOne({ _id: new ObjectId(id) });
+    
     if (!users) {
       res.status(404).json({ message: 'could not find this user' });
       return; 
     } 
+
     res.json(users);
-  } catch {
-    res.status(500).json({ message: 'error' });
+  } catch (err){
+    res.status(500).json({ message: 'getOneUserById error' });
   }
 };
 
@@ -150,7 +151,7 @@ export const getLoggedInUser = async (req: Request, res: Response) => {
 
     } catch (err) {
         console.error('Error in /me route:', err);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Internal server error', err});
         
     }
 };

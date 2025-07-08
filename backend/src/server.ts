@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { connectToDatabase } from './config/db';
 import userRoutes from './routes/userRoutes';
+import sessionRoutes from './routes/sessionRoutes';
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/users', userRoutes);
+app.use('/sessions', sessionRoutes)
 
 connectToDatabase().then(() => {
   app.listen(port, () => {

@@ -19,8 +19,9 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const auth = useAuthProvider();
 
-  useSessionPing(`${import.meta.env.VITE_API_URL}/private/me`, 5000);
-
+  useSessionPing(`${import.meta.env.VITE_API_URL}/users/private/me`, 5000, () => {
+    auth.setLoggedIn(false);   // 💡 This will trigger the useEffect and clear auth
+  });
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 

@@ -5,7 +5,7 @@ import { ProfilePage } from '../../pages/ProfilePage';
 import { SearchPage } from '../../pages/SearchPage';
 import { ExplorerPage } from '../../pages/ExplorerPage';
 import { RegisterPage } from '../../pages/RegisterPage';
-import { LoginPage } from '../../pages/LoginPage';
+import { AuthPanel } from '../AuthPanel/AuthPanel';
 
 interface EditorTabsProps {
   tabs: Tab[];
@@ -16,7 +16,7 @@ interface EditorTabsProps {
 }
 
 const componentMap: Record<string, React.FC> = {
-  LoginPage,
+  AuthPanel,
   RegisterPage,
   ProfilePage,
   SearchPage,

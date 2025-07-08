@@ -1,4 +1,3 @@
-// hooks/useAuthProvider.ts
 import { useState, useCallback, useEffect } from 'react';
 import { getToken } from '../services/authService';
 import { handleLogoutUser, handleGetCurrentUserInfo } from './handleUsers';

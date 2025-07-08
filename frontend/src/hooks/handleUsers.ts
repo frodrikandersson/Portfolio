@@ -25,7 +25,7 @@ export const handleLoginUser = async (email: string, password: string) => {
     return data;
   } catch (err: any) {
     console.error('Error logging in:', err.message);
-    return null;
+    throw err;
   }
 };
 
@@ -45,7 +45,7 @@ export const handleRegisterUser = async (email: string, password: string) => {
     return data;
   } catch (err: any) {
     console.error('Error registering user:', err.message);
-    return null;
+    throw err;
   }
 };
 
