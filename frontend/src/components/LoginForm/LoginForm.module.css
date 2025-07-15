@@ -18,3 +18,9 @@ label {
   border: none;
   cursor: pointer;
 }
+
+.googleLogin {
+  display: flex;
+  max-width: 300px;
+  justify-content: center;
+}

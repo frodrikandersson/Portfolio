@@ -5,6 +5,7 @@ import {
   publicLogoutUser,
   privateGetOneUserById,
   privateGetCurrentUser,
+  privateUpdateUser
 } from '../services/usersService';
 
 export const handleGetAllUsers = async () => {
@@ -70,3 +71,18 @@ export const handleGetCurrentUserInfo = async () => {
     throw err;
   }
 };
+
+
+export const handleUpdateUser = async (
+  formData: { firstName: string; lastName: string; picture: string }
+) => {
+  try {
+    const data = await privateUpdateUser(formData);
+    console.log('Updated user:', data);
+    return data;
+  } catch (err: any) {
+    console.error('Error updating user:', err.message);
+    throw err;
+  }
+};
+

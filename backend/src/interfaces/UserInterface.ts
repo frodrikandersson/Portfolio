@@ -4,6 +4,8 @@ export interface IUser extends Document {
     _id: ObjectId | string;
     firstName: string;
     lastName: string;
+    picture?: string;
+    googleId?: string;
     email: string;
     passwordHash: string;
     role: "user" | "admin";
@@ -14,8 +16,10 @@ export interface IUser extends Document {
 export interface INewUser {
     firstName: string;
     lastName: string;
+    picture?: string;
+    googleId?: string;
     email: string;
-    passwordHash: string;
+    passwordHash?: string;
     role: "user" | "admin";
     createdAt: Date;
     updatedAt: Date;

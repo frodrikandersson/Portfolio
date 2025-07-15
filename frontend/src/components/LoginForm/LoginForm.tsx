@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import classes from './LoginForm.module.css';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
 import { useAsync } from '../../hooks/useAsync';
 import { handleLoginUser } from '../../hooks/handleUsers';
 import { useAuth } from '../../contexts/AuthContext';
+import { handleAuth } from '../../hooks/handleAuth';
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setLoggedIn } = useAuth();
+  const { handleGoogleLogin } = handleAuth();
 
   const { execute: loginUser, loading, error, data } = useAsync(handleLoginUser);
 
@@ -48,15 +49,22 @@ export const LoginForm: React.FC = () => {
           {loading ? 'Logging in...' : 'Log in'}
         </button>
       </form>
-      <GoogleLogin 
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse)
-          console.log(jwtDecode(credentialResponse.credential as string));
-        }} 
-        onError={() => console.log("Login failed")} />
-
+      <div className={classes.googleLogin}>
+        <GoogleLogin
+          onSuccess={async (credentialResponse) => {
+            const idToken = credentialResponse.credential;
+            if (!idToken) return;
+            try {
+              await handleGoogleLogin(idToken);
+            } catch {
+              console.error('Failed to login with Google');
+            }
+          }}
+          onError={() => console.log('Login Failed')}
+        />
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {data && <p style={{ color: 'green' }}>Login successful!</p>}
+      </div>
     </>
   );
 };

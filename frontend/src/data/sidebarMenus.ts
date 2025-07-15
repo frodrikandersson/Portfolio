@@ -19,12 +19,14 @@ export const useSidebarMenus = () => {
           label: 'Register',
         },
       ] : [],
-      {
-        id: 'profile-page',
-        title: 'Profile.tsx',
-        componentName: 'ProfilePage',
-        label: 'Profile page',
-      },
+      ...isLoggedIn ? [
+        {
+          id: 'profile-page',
+          title: 'Profile.tsx',
+          componentName: 'ProfilePage',
+          label: 'Profile page',
+        },
+      ] : [],
     ],
     search: [
       {

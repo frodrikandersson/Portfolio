@@ -99,3 +99,20 @@ export const privateGetCurrentUser = async () => {
   return data;
 };
 
+
+export const privateUpdateUser = async (formData: { firstName: string; lastName: string; picture: string }) => {
+  const res = await fetch(`${API_URL}/users/private/update`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `${localStorage.getItem('sessionToken') || ''}`,
+    },
+    body: JSON.stringify(formData),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update user');
+  }
+
+  return res.json(); 
+};

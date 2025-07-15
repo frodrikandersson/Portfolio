@@ -58,7 +58,7 @@ export const EditorPage: React.FC = () => {
               onTouchEnd={handleTouchEnd}
               style={{
                 left: sidebarOpen
-                  ? (sidebarType ? `calc(50vw + 28px)` : `28px`)
+                  ? (sidebarType ? `calc(50vw + 25px)` : `25px`)
                   : `-15px`,
               }}
             >

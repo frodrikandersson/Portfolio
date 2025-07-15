@@ -137,23 +137,67 @@ export const getOneUserById = async (req: Request, res: Response) => {
 };
 
 export const getLoggedInUser = async (req: Request, res: Response) => {
-    try {
-        const user = (req as any).user as IUser;
+  try {
+      const user = (req as any).user as IUser;
 
-        if (!user) {
-            res.status(404).json({ message: 'User not found' });
-            return;
-        }
-        res.json({
-            email: user.email,
-            role: user.role,
-        });
+      if (!user) {
+          res.status(404).json({ message: 'User not found' });
+          return;
+      }
+      res.json({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          picture: user.picture,
+          email: user.email,
+          role: user.role,
+      });
 
-    } catch (err) {
-        console.error('Error in /me route:', err);
-        res.status(500).json({ message: 'Internal server error', err});
-        
+  } catch (err) {
+      console.error('Error in /me route:', err);
+      res.status(500).json({ message: 'Internal server error', err});
+      
+  }
+};
+
+export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
+  const user = (req as any).user as IUser;
+
+  if (!user?._id) {
+    res.status(401).json({ message: 'User not authenticated' });
+    return;
+  }
+
+  const { firstName, lastName, picture } = req.body;
+  const file = (req as any).file;
+
+  try {
+    const usersCollection = await getCollection<IUser>('users');
+
+    const updateFields: Partial<IUser> = {
+      updatedAt: new Date(),
+    };
+
+    if (typeof firstName === 'string') updateFields.firstName = firstName;
+    if (typeof lastName === 'string') updateFields.lastName = lastName;
+    if (typeof picture === 'string') updateFields.picture = picture;
+    if (file) updateFields.picture = `/uploads/${file.filename}`;
+
+    const result = await usersCollection.updateOne(
+      { _id: new ObjectId(user._id) },
+      { $set: updateFields }
+    );
+
+    if (result.modifiedCount === 0) {
+      res.status(404).json({ message: 'User not found or nothing changed' });
+      return;
     }
+
+    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(user._id) });
+    res.json(updatedUser);
+  } catch (err) {
+    console.error('Error updating user profile:', err);
+    res.status(500).json({ message: 'Failed to update profile' });
+  }
 };
 
 // Private END
