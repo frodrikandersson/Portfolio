@@ -2,7 +2,9 @@ import type { SidebarSection } from "../models/Sidebar";
 
 
 export const sidebarSections: SidebarSection[] = [
-  { type: 'search', label: <img src="/icons/searchBlue.svg" alt="Search"/> },
-  { type: 'explorer', label: <img src="/icons/explorerBlue.svg" alt="Explore"/> },
-  { type: 'profile', label: <img src="/icons/profileBlue.svg" alt="Profile"/> }
+  { type: 'home', label: <img src="/icons/homeBlue.png" alt="Home" /> },
+  { type: 'products', label: <img src="/icons/boxBlue.png" alt="Products & Subscription" /> },
+  { type: 'blog', label: <img src="/icons/blogBlue.png" alt="Blog" /> },
+  { type: 'contact', label: <img src="/icons/callBlue.png" alt="Contact" /> },
+  { type: 'profile', label: <img src="/icons/profileBlue.svg" alt="Profile" /> },
 ];

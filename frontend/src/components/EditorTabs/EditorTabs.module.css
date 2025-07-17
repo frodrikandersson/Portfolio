@@ -1,10 +1,43 @@
+.editorTabs {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .tabBar {
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: auto;
+  overflow-x: scroll !important;
   background-color: var(--bg-color-dark);
   position: relative;
   z-index: 1;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: auto; 
+  scrollbar-color: #ccc transparent;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: grab;
+}
+
+.tabBar:active {
+  cursor: grabbing;
+}
+
+.tabBar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabBar::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 3px;
+}
+
+.tabBar::-webkit-scrollbar-track {
+  background: #ddd;
 }
 
 .tab {
@@ -19,6 +52,8 @@
   border-left: 0px solid transparent;
   z-index: 0;
   position: relative;
+  flex: 0 0 auto; 
+  min-width: max-content;
 }
 
 .tab:hover {

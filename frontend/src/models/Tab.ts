@@ -4,6 +4,7 @@ export interface Tab {
   id: string;
   title: string;
   componentName: string;
+  props?: any;
 }
 
 export type State = {
