@@ -28,17 +28,17 @@ export const EditorPage: React.FC = () => {
   return (
     <div className={classes.editorPage}>
       <div
-        className={classes.contentArea}
+        className={classes.editorContentArea}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className={classes.sidebarRegion}>
-          <div className={`${classes.leftSidebarWrapper} ${sidebarOpen ? classes.open : ''}`}>
+        <div className={classes.editorSidebarRegion}>
+          <div className={`${classes.editorLeftSidebarWrapper} ${sidebarOpen ? classes.open : ''}`}>
             <LeftSidebar />
             {sidebarType && (
               <div
-                className={classes.secondarySidebarWrapper}
+                className={classes.editorSecondarySidebarWrapper}
                 style={{
                   width: sidebarOpen ? (isMobile ? '50vw' : `${secondaryWidth}px`) : 0,
                   overflow: 'hidden',
@@ -51,7 +51,7 @@ export const EditorPage: React.FC = () => {
 
           {isMobile && (
             <div
-              className={classes.slideArrow}
+              className={classes.editorSlideArrow}
               onClick={() => setSidebarOpen(!sidebarOpen)}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
@@ -73,7 +73,7 @@ export const EditorPage: React.FC = () => {
           onResizeEnd={() => setIsResizing(false)}
         />
 
-        <main className={classes.mainContent}>
+        <main className={classes.editorMainContent}>
           <MainContent />
         </main>
       </div>

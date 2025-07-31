@@ -11,7 +11,7 @@ export const ProfilePage: React.FC = () => {
     firstName: string;
     lastName: string;
     picture: string;
-    pictureFile?: File; // optional file
+    pictureFile?: File;
   }>({
     firstName: '',
     lastName: '',
@@ -73,37 +73,37 @@ export const ProfilePage: React.FC = () => {
   if (!user) return <p>Loading profile...</p>;
 
   return (
-    <div className={classes.ProfilePageContainer}>
-      <h2 className={classes.ProfilePageTitle}>Profile Page</h2>
+    <div className={classes.profileContainer}>
+      <h2 className={classes.profileTitle}>Profile Page</h2>
 
       <img
         src={formData.picture}
         alt="Profile"
-        className={classes.ProfilePageImage}
+        className={classes.profileImage}
       />
 
       {editing ? (
         <>
-          <div className={classes.ProfilePageField}>
-            <label className={classes.ProfilePageLabel}>First Name:</label>
+          <div className={classes.profileField}>
+            <label className={classes.profileLabel}>First Name:</label>
             <input
-              className={classes.ProfilePageInput}
+              className={classes.profileInput}
               value={formData.firstName}
               onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             />
           </div>
-          <div className={classes.ProfilePageField}>
-            <label className={classes.ProfilePageLabel}>Last Name:</label>
+          <div className={classes.profileField}>
+            <label className={classes.profileLabel}>Last Name:</label>
             <input
-              className={classes.ProfilePageInput}
+              className={classes.profileInput}
               value={formData.lastName}
               onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             />
           </div>
-          <div className={classes.ProfilePageField}>
-            <label className={classes.ProfilePageLabel}>Profile Picture URL:</label>
+          <div className={classes.profileField}>
+            <label className={classes.profileLabel}>Profile Picture URL:</label>
             <input
-              className={classes.ProfilePageInput}
+              className={classes.profileInput}
               type="text"
               value={formData.picture}
               onChange={(e) => setFormData({ ...formData, picture: e.target.value, pictureFile: undefined })}
@@ -111,8 +111,8 @@ export const ProfilePage: React.FC = () => {
             />
           </div>
 
-          <div className={classes.ProfilePageField}>
-            <label className={classes.ProfilePageLabel}>Or Upload Picture:</label>
+          <div className={classes.profileField}>
+            <label className={classes.profileLabel}>Or Upload Picture:</label>
             <input
               type="file"
               accept="image/*"
@@ -131,11 +131,11 @@ export const ProfilePage: React.FC = () => {
 
           {error && <p style={{ color: 'red' }}>Error: {error.toString()}</p>}
 
-          <div className={classes.ProfilePageButtons}>
-            <button className={classes.ProfilePageButton} onClick={handleUpdate} disabled={loading}>
+          <div className={classes.profileButtons}>
+            <button className={classes.profileButton} onClick={handleUpdate} disabled={loading}>
               {loading ? 'Saving...' : 'Save'}
             </button>
-            <button className={`${classes.ProfilePageButton} ${classes.ProfilePageCancelButton}`} onClick={() => setEditing(false)} disabled={loading}>
+            <button className={`${classes.profileButton} ${classes.profileCancelButton}`} onClick={() => setEditing(false)} disabled={loading}>
               Cancel
             </button>
           </div>
@@ -145,7 +145,7 @@ export const ProfilePage: React.FC = () => {
           <p><strong>First Name:</strong> {user.firstName}</p>
           <p><strong>Last Name:</strong> {user.lastName}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <button className={classes.ProfilePageButton} onClick={() => setEditing(true)}>Edit Profile</button>
+          <button className={classes.profileButton} onClick={() => setEditing(true)}>Edit Profile</button>
         </>
       )}
     </div>

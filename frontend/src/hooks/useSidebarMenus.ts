@@ -49,11 +49,11 @@ export const useSidebarMenus = (): {
           ]
         : []),
       ...blogPosts.map(post => ({
-        id: `blog-${post.id}`,
+        id: `blog-${post._id}`,
         title: `${post.title}.tsx`,
         componentName: 'BlogPostPage',
         label: post.title,
-        props: { postId: post.id },
+        props: { postId: post._id },
       })),
     ],
     contact: [

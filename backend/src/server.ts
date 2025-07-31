@@ -5,7 +5,8 @@ import { connectToDatabase } from './config/db';
 import userRoutes from './routes/userRoutes';
 import sessionRoutes from './routes/sessionRoutes';
 import authRoutes from './routes/authRoutes';
-
+import blogRoutes from './routes/blogRoutes';
+import consentRoutes from './routes/consentRoutes';
 
 const app = express();
 const port = 4000;
@@ -40,6 +41,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes);
 app.use('/sessions', sessionRoutes)
+app.use('/blogs', blogRoutes)
+app.use('/consents', consentRoutes)
 
 connectToDatabase().then(() => {
   app.listen(port, () => {

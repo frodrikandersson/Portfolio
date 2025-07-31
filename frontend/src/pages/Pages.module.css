@@ -8,13 +8,13 @@
   position: relative; 
 }
 
-.contentArea {
+.editorContentArea {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-.mainContent {
+.editorMainContent {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -23,13 +23,13 @@
   color: var(--text-color-soft);
 }
 
-.sidebarRegion {
+.editorSidebarRegion {
   position: relative;
   display: flex;
   flex-direction: row;
 }
 
-.secondarySidebarWrapper {
+.editorSecondarySidebarWrapper {
   position: relative;
   z-index: 10;
   background-color: var(--bg-color-dark);
@@ -37,29 +37,22 @@
 }
 
 
-.leftSidebarWrapper {
-  position: fixed;
+.editorLeftSidebarWrapper {
+  position: static;
   top: 0;
   left: 0;
   height: 100%;
   display: flex;
   flex-direction: row;
-  transform: translateX(-100%);
+  transform: translateX(0);
   z-index: 1000;
 }
 
-.leftSidebarWrapper.open {
+.editorLeftSidebarWrapper.open {
   transform: translateX(0);
 }
 
-@media (min-width: 1024px) {
-  .leftSidebarWrapper {
-    transform: translateX(0);
-    position: static;
-  }
-}
-
-.slideArrow {
+.editorSlideArrow {
   position: absolute;
   top: 50%;
   right: -2px;
@@ -79,14 +72,19 @@
 
 @media (max-width: 1024px) {
   /* Show on tablet and smaller */
-  .slideArrow {
+  .editorSlideArrow {
     display: flex;
+  }
+  .editorLeftSidebarWrapper {
+    transform: translateX(-100%);
+    position: fixed;
+    padding-bottom: 31px;
   }
 }
 
 /* ProfilePage */
 
-.ProfilePageContainer {
+.profileContainer {
   max-width: 480px;
   margin: 40px auto;
   padding: 20px;
@@ -98,7 +96,7 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.ProfilePageTitle {
+.profileTitle {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 700;
@@ -106,7 +104,7 @@
   margin-bottom: 24px;
 }
 
-.ProfilePageImage {
+.profileImage {
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -116,20 +114,20 @@
   border: 2px solid var(--line-color);
 }
 
-.ProfilePageField {
+.profileField {
   display: flex;
   flex-direction: column;
   margin-bottom: 16px;
 }
 
-.ProfilePageLabel {
+.profileLabel {
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-color-dark);
   margin-bottom: 5px;
 }
 
-.ProfilePageInput {
+.profileInput {
   padding: 10px;
   border: 1px solid var(--line-color);
   border-radius: 6px;
@@ -139,19 +137,19 @@
   transition: border-color 0.2s;
 }
 
-.ProfilePageInput:focus {
+.profileInput:focus {
   border-color: var(--text-color-dark);
   outline: none;
 }
 
-.ProfilePageButtons {
+.profileButtons {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-top: 24px;
 }
 
-.ProfilePageButton {
+.profileButton {
   flex: 1;
   padding: 10px 14px;
   font-size: 0.95rem;
@@ -164,17 +162,17 @@
   transition: background-color 0.2s ease;
 }
 
-.ProfilePageButton:hover {
+.profileButton:hover {
   background-color: var(--line-color);
 }
 
-.ProfilePageCancelButton {
+.profileCancelButton {
   background-color: transparent;
   border: 1px solid var(--line-color);
   color: var(--text-color-soft);
 }
 
-.ProfilePageCancelButton:hover {
+.profileCancelButton:hover {
   background-color: var(--bg-color-light);
 }
 
@@ -182,10 +180,347 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
+}
+
+
+/* BlogPostPage */
+.blogPost {
+  margin: 1rem;
+  padding: 2rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: auto; 
+  scrollbar-color: #ccc transparent;
+  color: var(--text-color-dark);
+  background-color: var(--bg-color-dark);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  line-height: 1.7;
+}
+
+.blogTitle {
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color-soft);
+}
+
+.blogCoverImage {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.blogMeta {
+  font-size: 0.95rem;
+  color: var(--text-color-soft);
+  margin-bottom: 1.5rem;
+}
+
+.blogMeta span {
+  margin-right: 1rem;
+}
+
+.blogExcerpt {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-bottom: 1.8rem;
+  color: var(--text-color-soft);
+  background-color: var(--bg-color-bright);
+  padding: 1rem;
+  border-left: 4px solid var(--line-color);
+  border-radius: 6px;
+}
+
+.blogContent {
+  font-size: 1.1rem;
+  color: var(--text-color-dark);
+  margin-bottom: 2rem;
+}
+
+.blogContent p {
+  margin-bottom: 1.2rem;
+}
+
+.blogTags {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.blogTag {
+  background-color: var(--logo-color-blue);
+  color: var(--text-on-logo-blue);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.blogTag:hover {
+  background-color: var(--logo-color-blue-hover);
+}
+
+.blogCommentsDisabled {
+  margin-top: 2rem;
+  font-style: italic;
+  color: #b71c1c;
+  background-color: #ffebee;
+  padding: 1rem;
+  border-left: 4px solid #e53935;
+  border-radius: 6px;
+}
+
+
+/* AdminPage */
+
+.adminPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background-color: var(--bg-color-bright);
+  color: var(--text-color-soft);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.adminBlogWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  padding: 40px;
+  margin: 20px auto;
+  gap: 20px;
+  background-color: var(--logo-color-blue);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.adminBlogTitle {
+  color: var(--text-on-logo-blue);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+/* Homepage */
+
+.homeIntro {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color-dark);
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+}
+
+.homeContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  line-height: 1.6;
+}
+
+.homeSubtitle {
+  font-size: 1.25rem;
+  font-weight: 300;
+  margin-bottom: 2rem;
+}
+
+.homeCtaButton {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  background-color: #007acc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.homeCtaButton:hover {
+  background-color: #005a9e;
+}
+
+.homeServices, .homeContact {
+  margin: 4rem 0;
+  padding: 0 1rem;
+}
+
+.homeServices h2,
+.homeContact h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--text-color-dark);
+}
+
+.homeServices {
+  text-align: center;
+}
+
+.homeServiceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.homeCard {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  border: 1px solid #3c3c3c;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.homeCard h3 {
+  color: #569cd6;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.homeCard p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.homeCard a {
+  color: var(--logo-color-blue);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.homeCard a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.homeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+}
+
+.homeContact {
+  text-align: center;
+}
+
+.homeContact p {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+  color: var(--text-color-soft);
+}
+
+.homeVgenIcon {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.homeVgenIcon:hover {
+  transform: scale(1.05);
+}
+
+.homeVgenSection {
+  margin-top: 4rem;
+  padding: 2rem;
+  background-color: var(--bg-color-opposite);
+  border: 1px solid var(--bg-color-opposite);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.homeVgenHeading {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: var(--text-color-opposite);
+}
+
+.homeVgenCard {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: var(--bg-color-opposite);
+  border-radius: 10px;
+  border: 1px solid var(--line-color);
+}
+
+.homeVgenCard p {
+  font-size: 1rem;
+  color: var(--text-color-opposite);
+  margin-bottom: 1rem;
+}
+
+/* AboutPage */
+
+.aboutAvatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.aboutHero {
+  text-align: center;
+  padding: 2rem;
+}
+
+.aboutSubtitle {
+  color: var(--text-color-dark);
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.aboutCtaButton {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--logo-color-blue);
+  color: var(--text-color-dark);
+  font-weight: bold;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.aboutCtaButton:hover {
+  background-color: var(--logo-color-blue-hover);
+}
+
+.aboutSection {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: var(--text-color-soft);
+}
+
+.aboutReviewCards {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-color-dark);
+  border-radius: 8px;
+  text-align: center;
+  color: #aaa;
+  font-style: italic;
 }

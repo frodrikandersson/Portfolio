@@ -1,0 +1,18 @@
+import { ObjectId } from "mongodb";
+
+export interface IConsent {
+  _id: ObjectId,
+  userId: ObjectId, 
+  analytics: true,
+  marketing: false,
+  dataSharing: false,
+  timestamp: Date
+}
+
+export interface INewConsent {
+  userId: ObjectId, 
+  analytics: true,
+  marketing: false,
+  dataSharing: false,
+  timestamp: Date
+}

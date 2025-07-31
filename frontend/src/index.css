@@ -13,10 +13,13 @@ html {
 html.light {
   --bg-color-bright: #ffffff;
   --bg-color-dark: #f5f5f5;
+  --bg-color-opposite: #181818; 
   --bg-color-focus: #cacaca;
   --bg-color-arrow: #6969691a;
   --text-color-dark: #222222;
   --text-color-soft: #555555;
+  --text-color-opposite: #eeeeee;
+  --text-on-logo-blue: #111214;
   --line-color: #dddddd;
   --logo-color-pink: #c47aff;
   --logo-color-blue: #54c9de;
@@ -29,10 +32,13 @@ html.light {
 html.dark {
   --bg-color-bright: #1f1f1f;
   --bg-color-dark: #181818;
+  --bg-color-opposite: #f5f5f5; 
   --bg-color-focus: #333;
   --bg-color-arrow: #acacac1a;
   --text-color-dark: #eeeeee;
   --text-color-soft: #cccccc;
+  --text-color-opposite: #222222;
+  --text-on-logo-blue: #111214;
   --line-color: #2b2b2b;
   --logo-color-pink: #b46bdf;
   --logo-color-blue: #42becc;

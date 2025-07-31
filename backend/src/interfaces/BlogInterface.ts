@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export interface IBlogPost {
-  _id?: string;
+  _id?: ObjectId | string;
   title: string;
   slug: string;
   content: string;
