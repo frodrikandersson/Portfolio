@@ -1,25 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from "react";
 
 const WIDTH_KEY = 'secondarySidebarWidth';
 const defaultWidth = 300;
 
 export function useSidebarWidth(isMobile: boolean) {
+  // Use `isMobile` as part of a key to force new state when it changes
   const [width, setWidth] = useState(() => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+    if (isMobile) {
       return Math.floor(window.innerWidth * 0.5);
     }
     const saved = localStorage.getItem(WIDTH_KEY);
     return saved ? parseInt(saved, 10) : defaultWidth;
   });
-
-  useEffect(() => {
-    if (isMobile) {
-      setWidth(Math.floor(window.innerWidth * 0.5));
-    } else {
-      const saved = localStorage.getItem(WIDTH_KEY);
-      setWidth(saved ? parseInt(saved, 10) : defaultWidth);
-    }
-  }, [isMobile]);
 
   const updateWidth = (deltaX: number) => {
     setWidth((w) => {

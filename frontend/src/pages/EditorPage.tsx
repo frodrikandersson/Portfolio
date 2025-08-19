@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LeftSidebar } from '../components/LeftSidebar/LeftSidebar';
 import { SecondarySidebar } from '../components/SecondarySidebar/SecondarySidebar';
 import { Footer } from '../components/Footer/Footer';
@@ -19,11 +19,9 @@ export const EditorPage: React.FC = () => {
   const { width: secondaryWidth, updateWidth } = useSidebarWidth(isMobile);
   const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipeSidebar(isMobile, sidebarOpen, setSidebarOpen);
 
-  useEffect(() => {
-    if (!isMobile) {
-      setSidebarOpen(true);
-    }
-  }, [isMobile]);
+  const shouldShowSidebar = !isMobile || sidebarOpen;
+
+
 
   return (
     <div className={classes.editorPage}>
@@ -34,13 +32,13 @@ export const EditorPage: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         <div className={classes.editorSidebarRegion}>
-          <div className={`${classes.editorLeftSidebarWrapper} ${sidebarOpen ? classes.open : ''}`}>
+          <div className={`${classes.editorLeftSidebarWrapper} ${shouldShowSidebar ? classes.open : ''}`}>
             <LeftSidebar />
             {sidebarType && (
               <div
                 className={classes.editorSecondarySidebarWrapper}
                 style={{
-                  width: sidebarOpen ? (isMobile ? '50vw' : `${secondaryWidth}px`) : 0,
+                  width: shouldShowSidebar  ? (isMobile ? '50vw' : `${secondaryWidth}px`) : 0,
                   overflow: 'hidden',
                 }}
               >

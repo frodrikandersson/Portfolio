@@ -14,7 +14,44 @@
   border-right: 1px solid var(--line-color);
 }
 
+.maskWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mask {
+  position: absolute;
+  inset: 0;
+  background: url('/glitter/Group_1.png') repeat;
+  background-size: 500px 500px;
+
+  mask-image: url('/glitter/particle_mask_inverted.png');
+  mask-repeat: repeat;
+  mask-size: 500px 500px;
+  mask-mode: luminance;
+
+  -webkit-mask-image: url('/glitter/particle_mask_inverted.png');
+  -webkit-mask-repeat: repeat;
+  -webkit-mask-size: 500px 500px;
+  -webkit-mask-mode: luminance;
+
+  animation: moveMask 15s linear infinite;
+}
+
+@keyframes moveGlitter {
+  from { background-position: 0 0; }
+  to   { background-position: 500px 500px; }
+}
+
+@keyframes moveMask {
+  from { -webkit-mask-position: 0 0; mask-position: 0 0; }
+  to   { -webkit-mask-position: -300px 200px; mask-position: -300px 200px; }
+}
+
 .emptyState {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -23,7 +60,7 @@
 
   img {
     width: 100%;
-    max-width: 500px; 
+    max-width: 500px;
     height: auto;
     object-fit: contain;
   }

@@ -6,6 +6,7 @@
   color: var(--text-color-dark);
   padding: 2px;
   border-top: 1px solid var(--line-color);
+  z-index: 10;
 }
 
 .themeToggle {

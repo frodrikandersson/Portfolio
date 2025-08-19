@@ -78,7 +78,7 @@
   .editorLeftSidebarWrapper {
     transform: translateX(-100%);
     position: fixed;
-    padding-bottom: 31px;
+    z-index: 2;
   }
 }
 
