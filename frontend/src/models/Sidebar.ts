@@ -1,4 +1,4 @@
-export type SidebarType = 'home' | 'products' | 'blog' | 'contact' | 'profile' | null;
+export type SidebarType = 'home' | 'products' | 'blog' | 'support' | 'profile' | null;
 
 export type SidebarSection = {
   type: string;
@@ -11,5 +11,5 @@ export interface SidebarMenuItem {
   title: string;
   componentName: string;
   label: string;
-  props?: any; 
+  props?: Record<string, unknown>;
 }

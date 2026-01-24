@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 import type { Action, State, TabContextType } from '../models/Tab';
 
 const TabContext = createContext<TabContextType | undefined>(undefined);
@@ -47,7 +48,9 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  return <TabContext.Provider value={{ state, dispatch }}>{children}</TabContext.Provider>;
+  const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+
+  return <TabContext.Provider value={value}>{children}</TabContext.Provider>;
 };
 
 export const useTabs = (): TabContextType => {

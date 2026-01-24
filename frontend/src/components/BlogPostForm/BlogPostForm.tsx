@@ -1,4 +1,3 @@
-// components/BlogPostForm.tsx
 import classes from '../BlogPostCreator/BlogPostCreator.module.css';
 
 type BlogPostFormProps = {
@@ -50,6 +49,7 @@ export const BlogPostForm = ({
           className={classes.Input}
           value={title}
           onChange={e => setTitle(e.target.value)}
+          placeholder="Enter post title"
         />
       </div>
 
@@ -59,7 +59,8 @@ export const BlogPostForm = ({
           className={classes.Input}
           value={content}
           onChange={e => setContent(e.target.value)}
-          rows={6}
+          rows={8}
+          placeholder="Write your post content..."
         />
       </div>
 
@@ -69,8 +70,30 @@ export const BlogPostForm = ({
           className={classes.Input}
           value={excerpt}
           onChange={e => setExcerpt(e.target.value)}
-          rows={3}
+          rows={2}
+          placeholder="Short summary for previews"
         />
+      </div>
+
+      <div className={classes.FieldRow}>
+        <div className={classes.Field}>
+          <label className={classes.Label}>Category</label>
+          <input
+            className={classes.Input}
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+            placeholder="e.g. tutorial, update"
+          />
+        </div>
+        <div className={classes.Field}>
+          <label className={classes.Label}>Tags (comma-separated)</label>
+          <input
+            className={classes.Input}
+            value={tags}
+            onChange={e => setTags(e.target.value)}
+            placeholder="react, typescript, vscode"
+          />
+        </div>
       </div>
 
       <div className={classes.Field}>
@@ -79,43 +102,27 @@ export const BlogPostForm = ({
           className={classes.Input}
           value={coverImage}
           onChange={e => setCoverImage(e.target.value)}
+          placeholder="https://..."
         />
       </div>
 
-      <div className={classes.Field}>
-        <label className={classes.Label}>Tags (comma-separated)</label>
-        <input
-          className={classes.Input}
-          value={tags}
-          onChange={e => setTags(e.target.value)}
-        />
-      </div>
-
-      <div className={classes.Field}>
-        <label className={classes.Label}>Category</label>
-        <input
-          className={classes.Input}
-          value={category}
-          onChange={e => setCategory(e.target.value)}
-        />
-      </div>
-
-      <div className={classes.Field}>
-        <label className={classes.Label}>Publish Now?</label>
-        <input
-          type="checkbox"
-          checked={isPublished}
-          onChange={e => setIsPublished(e.target.checked)}
-        />
-      </div>
-
-      <div className={classes.Field}>
-        <label className={classes.Label}>Enable Comments?</label>
-        <input
-          type="checkbox"
-          checked={commentsEnabled}
-          onChange={e => setCommentsEnabled(e.target.checked)}
-        />
+      <div className={classes.CheckboxRow}>
+        <label className={classes.CheckboxLabel}>
+          <input
+            type="checkbox"
+            checked={isPublished}
+            onChange={e => setIsPublished(e.target.checked)}
+          />
+          Publish
+        </label>
+        <label className={classes.CheckboxLabel}>
+          <input
+            type="checkbox"
+            checked={commentsEnabled}
+            onChange={e => setCommentsEnabled(e.target.checked)}
+          />
+          Comments
+        </label>
       </div>
 
       <div className={classes.Buttons}>

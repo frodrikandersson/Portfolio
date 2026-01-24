@@ -15,7 +15,7 @@ const handleOpenTab = (
     id: string,
     title: string,
     componentName: string,
-    props?: any 
+    props?: Record<string, unknown>
   ) => {
     const existingTab = state.tabs.find((tab) => tab.id === id);
     if (!existingTab) {
@@ -27,7 +27,7 @@ const handleOpenTab = (
     }
 };
 
-  const menuItems = sidebarType ? sidebarMenus[sidebarType] : [];
+  const menuItems = (sidebarType && sidebarMenus[sidebarType]) || [];
 
   return (
     <aside className={classes.secondarySidebar}>

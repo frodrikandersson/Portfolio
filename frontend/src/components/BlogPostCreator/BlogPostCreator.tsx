@@ -18,8 +18,8 @@ export const BlogPostCreator = () => {
     setEditorState,
   } = useBlogPostEditor();
 
-  const set = (field: string) => (value: any) =>
-    setEditorState((prev: any) => ({ ...prev, [field]: value }));
+  const set = (field: string) => (value: unknown) =>
+    setEditorState((prev) => ({ ...prev, [field]: value }));
 
   const resetForm = () => {
     setEditorState({
@@ -56,8 +56,8 @@ export const BlogPostCreator = () => {
     try {
       await addPost(newPost);
       resetForm();
-    } catch (err) {
-      console.error('Failed to create post:', err);
+    } catch {
+      // Error state handled by BlogContext
     }
   };
 
@@ -80,8 +80,8 @@ export const BlogPostCreator = () => {
     try {
       await updatePost(editingPostId, updatedPost);
       resetForm();
-    } catch (err) {
-      console.error('Failed to update post:', err);
+    } catch {
+      // Error state handled by BlogContext
     }
   };
 

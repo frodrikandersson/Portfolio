@@ -14,8 +14,10 @@ export const ShowBlogPosts = () => {
     <ul className={classes.postList}>
       {blogPosts.map(post => (
         <li className={classes.postItem} key={post._id}>
-          <strong>{post.title}</strong>
-          <p>{post.excerpt || post.content?.slice(0, 100)}...</p>
+          <div>
+            <strong>{post.title}</strong>
+            <p>{post.excerpt || post.content?.slice(0, 100)}...</p>
+          </div>
           <div className={classes.actionButtons}>
             <button
               onClick={() => startEditing(post)}

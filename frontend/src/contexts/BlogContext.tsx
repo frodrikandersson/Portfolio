@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { IBlogPost } from '../models/BlogPostInterface';
 import {
-  handleGetAllBlogPosts,
-  handleCreateBlogPost,
-  handleUpdateBlogPost,
-  handleDeleteBlogPost
-} from '../hooks/handleBlog';
+  publicGetAllBlogPosts,
+  privateCreateBlogPost,
+  privateUpdateBlogPost,
+  privateDeleteBlogPost
+} from '../services/blogService';
 
 interface BlogContextType {
   blogPosts: IBlogPost[];
@@ -23,12 +24,11 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load blog posts from backend on mount
   useEffect(() => {
     setLoading(true);
-    handleGetAllBlogPosts()
-      .then(posts => {
-        setBlogPosts(posts || []);
+    publicGetAllBlogPosts()
+      .then(data => {
+        setBlogPosts(data.posts || []);
         setError(null);
       })
       .catch(err => {
@@ -43,11 +43,11 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>) => {
       try {
         setLoading(true);
-        const newPost = await handleCreateBlogPost(postData);
+        const newPost = await privateCreateBlogPost(postData as Record<string, unknown>);
         setBlogPosts(prev => [...prev, newPost]);
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'Failed to add blog post');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to add blog post');
         throw err;
       } finally {
         setLoading(false);
@@ -60,13 +60,13 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async (id: string, updatedPost: Partial<IBlogPost>) => {
       try {
         setLoading(true);
-        const updated = await handleUpdateBlogPost(id, updatedPost);
+        const updated = await privateUpdateBlogPost(id, updatedPost as Record<string, unknown>);
         setBlogPosts(prev =>
           prev.map(p => (p._id === id ? updated : p))
         );
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'Failed to update blog post');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to update blog post');
         throw err;
       } finally {
         setLoading(false);
@@ -79,11 +79,11 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async (id: string) => {
       try {
         setLoading(true);
-        await handleDeleteBlogPost(id);
+        await privateDeleteBlogPost(id);
         setBlogPosts(prev => prev.filter(p => p._id !== id));
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'Failed to delete blog post');
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to delete blog post');
         throw err;
       } finally {
         setLoading(false);
@@ -92,10 +92,13 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
     []
   );
 
+  const value = useMemo(
+    () => ({ blogPosts, addPost, updatePost, deletePost, loading, error }),
+    [blogPosts, addPost, updatePost, deletePost, loading, error]
+  );
+
   return (
-    <BlogContext.Provider
-      value={{ blogPosts, addPost, updatePost, deletePost, loading, error }}
-    >
+    <BlogContext.Provider value={value}>
       {children}
     </BlogContext.Provider>
   );

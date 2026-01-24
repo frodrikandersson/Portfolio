@@ -1,71 +1,101 @@
 .CreatorContainer {
-  padding: 24px;
+  padding: 1.25rem;
   border: 1px solid var(--line-color);
-  border-radius: 12px;
+  border-radius: 8px;
   background-color: var(--bg-color-dark);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 .Title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--text-on-logo-blue);
-  margin-bottom: 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 1rem;
 }
 
 .Field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin-bottom: 0.875rem;
+}
 
-  input[type="checkbox"] {
-    align-self: flex-start;
-  }
-  
+.Field input[type="checkbox"] {
+  align-self: flex-start;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
 }
 
 .Label {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  color: var(--text-color-dark);
-  margin-bottom: 6px;
+  color: var(--text-color-soft);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .Input {
+  padding: 0.5rem 0.65rem;
   border: 1px solid var(--line-color);
-  border-radius: 6px;
+  border-radius: 4px;
   background-color: var(--bg-color-light);
   color: var(--text-color-dark);
+  font-size: 0.9rem;
+  font-family: inherit;
   resize: vertical;
   transition: border-color 0.2s;
 }
 
 .Input:focus {
-  border-color: var(--text-color-dark);
+  border-color: var(--logo-color-blue);
   outline: none;
+}
+
+.Input::placeholder {
+  color: var(--text-color-soft);
+  opacity: 0.6;
+}
+
+.FieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.875rem;
+}
+
+.CheckboxRow {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 0.875rem;
+}
+
+.CheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-color-dark);
+  cursor: pointer;
 }
 
 .Buttons {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .Button {
-  padding: 10px 16px;
-  font-size: 1rem;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.875rem;
   font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  background-color: var(--bg-color-focus);
-  color: var(--text-color-dark);
-  transition: background-color 0.2s ease;
+  background-color: var(--logo-color-blue);
+  color: #fff;
+  transition: opacity 0.2s;
 }
 
 .Button:hover {
-  background-color: var(--line-color);
+  opacity: 0.85;
 }

@@ -5,6 +5,6 @@ try {
     theme = mql.matches ? 'dark' : 'light';
   }
   document.documentElement.classList.add(theme);
-} catch (e) {
+} catch {
   document.documentElement.classList.add('light');
 }

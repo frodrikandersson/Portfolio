@@ -108,3 +108,8 @@
 .active {
   font-weight: bold;
 }
+
+.loading {
+  padding: 2rem;
+  color: var(--text-color-soft);
+}

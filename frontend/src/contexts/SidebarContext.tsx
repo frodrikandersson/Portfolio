@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { SidebarType } from '../models/Sidebar';
 
 interface SidebarContextType {
@@ -20,8 +21,11 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({ child
     localStorage.setItem(SIDEBAR_KEY, JSON.stringify(sidebarType));
   }, [sidebarType]);
 
+  const setSidebarType = useCallback((type: SidebarType) => setSidebarTypeState(type), []);
+  const value = useMemo(() => ({ sidebarType, setSidebarType }), [sidebarType, setSidebarType]);
+
   return (
-    <SidebarContext.Provider value={{ sidebarType, setSidebarType: setSidebarTypeState }}>
+    <SidebarContext.Provider value={value}>
       {children}
     </SidebarContext.Provider>
   );

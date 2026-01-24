@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { IUser } from "../interfaces/UserInterface";
 
-export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  const user = (req as any).user as IUser;
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user;
 
   if (!user) {
     res.status(401).json({ message: "User not authenticated" });

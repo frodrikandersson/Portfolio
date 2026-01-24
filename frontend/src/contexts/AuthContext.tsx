@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, type ReactNode } from 'react';
 import { useSessionPing } from '../hooks/useSessionPing';
 import { useAuthProvider } from '../hooks/useAuthProvider';
@@ -19,8 +20,8 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const auth = useAuthProvider();
 
-  useSessionPing(`${import.meta.env.VITE_API_URL}/users/private/me`, 5000, () => {
-    auth.setLoggedIn(false);   // 💡 This will trigger the useEffect and clear auth
+  useSessionPing(`${import.meta.env.VITE_API_URL}/users/private/me`, 60000, () => {
+    auth.setLoggedIn(false);
   });
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };

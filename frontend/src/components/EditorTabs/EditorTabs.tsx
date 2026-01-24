@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import classes from './EditorTabs.module.css';
 import type { Tab } from '../../models/Tab';
-import { ProfilePage } from '../../pages/ProfilePage';
-import { RegisterPage } from '../../pages/RegisterPage';
-import { AdminPage } from '../../pages/AdminPage';
-import { AuthPanel } from '../AuthPanel/AuthPanel';
 import { useHorizontalScroll } from '../../hooks/useHorizontalScroll';
-import { HomePage } from '../../pages/HomePage';
-import { AboutPage } from '../../pages/AboutPage';
-import { ProductsPage } from '../../pages/ProductsPage';
-import { SubscriptionPage } from '../../pages/SubscriptionPage';
-import { ContactPage } from '../../pages/ContactPage';
-import { SocialLinksPage } from '../../pages/SocialLinksPage';
-import { BlogPostPage } from '../../pages/BlogPostPage';
+
+const HomePage = lazy(() => import('../../pages/HomePage').then(m => ({ default: m.HomePage })));
+const AboutPage = lazy(() => import('../../pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const ProductsPage = lazy(() => import('../../pages/ProductsPage').then(m => ({ default: m.ProductsPage })));
+const SubscriptionPage = lazy(() => import('../../pages/SubscriptionPage').then(m => ({ default: m.SubscriptionPage })));
+const SupportPage = lazy(() => import('../../pages/SupportPage').then(m => ({ default: m.SupportPage })));
+const SocialLinksPage = lazy(() => import('../../pages/SocialLinksPage').then(m => ({ default: m.SocialLinksPage })));
+const BlogPostPage = lazy(() => import('../../pages/BlogPostPage').then(m => ({ default: m.BlogPostPage })));
+const LibraryPage = lazy(() => import('../../pages/LibraryPage').then(m => ({ default: m.LibraryPage })));
+const TermsOfServicePage = lazy(() => import('../../pages/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })));
+const ProfilePage = lazy(() => import('../../pages/ProfilePage').then(m => ({ default: m.ProfilePage })));
+const RegisterPage = lazy(() => import('../../pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
+const AdminPage = lazy(() => import('../../pages/AdminPage').then(m => ({ default: m.AdminPage })));
+const AuthPanel = lazy(() => import('../AuthPanel/AuthPanel').then(m => ({ default: m.AuthPanel })));
 
 interface EditorTabsProps {
   tabs: Tab[];
@@ -22,18 +25,21 @@ interface EditorTabsProps {
   onTabClose: (tabId: string) => void;
 }
 
-const componentMap: Record<string, React.FC<any>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const componentMap: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
   HomePage,
   AboutPage,
   ProductsPage,
   SubscriptionPage,
-  ContactPage,
+  SupportPage,
   SocialLinksPage,
   AuthPanel,
   RegisterPage,
   ProfilePage,
   AdminPage,
-  BlogPostPage
+  BlogPostPage,
+  LibraryPage,
+  TermsOfServicePage,
 };
 
 export const EditorTabs: React.FC<EditorTabsProps> = ({
@@ -53,7 +59,7 @@ const {
 
   return (
     <div className={classes.editorTabs}>
-      <div 
+      <div
         className={classes.tabBar}
         ref={tabBarRef}
         role="tablist"
@@ -87,12 +93,14 @@ const {
         ))}
       </div>
       <div className={classes.editorContent} role="tabpanel">
-        {(() => {
-          const activeTab = tabs.find((tab) => tab.id === activeTabId);
-          if (!activeTab) return null;
-          const Component = componentMap[activeTab.componentName];
-          return Component ? <Component {...activeTab.props} /> : <div>Component not found</div>;
-        })()}
+        <Suspense fallback={<div className={classes.loading}>Loading...</div>}>
+          {(() => {
+            const activeTab = tabs.find((tab) => tab.id === activeTabId);
+            if (!activeTab) return null;
+            const Component = componentMap[activeTab.componentName];
+            return Component ? <Component {...activeTab.props} /> : <div>Component not found</div>;
+          })()}
+        </Suspense>
       </div>
     </div>
   );

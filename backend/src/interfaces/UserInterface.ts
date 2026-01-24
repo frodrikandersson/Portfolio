@@ -9,6 +9,10 @@ export interface IUser extends Document {
     email: string;
     passwordHash: string;
     role: "user" | "admin";
+    stripeCustomerId?: string;
+    subscriptionStatus?: "active" | "cancelled" | "past_due" | "none";
+    subscriptionPlan?: "monthly" | "yearly" | null;
+    subscriptionExpiresAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }

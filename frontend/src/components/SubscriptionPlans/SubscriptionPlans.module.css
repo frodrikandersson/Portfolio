@@ -1,0 +1,178 @@
+.container {
+  padding: 2rem;
+  overflow-y: auto;
+  height: 100%;
+  color: var(--text-color-dark);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.errorText {
+  color: #e53935;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.loadingText {
+  text-align: center;
+  opacity: 0.7;
+}
+
+.benefit {
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--logo-color-blue);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-color-soft);
+}
+
+.benefitHighlight {
+  font-weight: 700;
+  color: var(--logo-color-blue);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.planCard {
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.planCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.planName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.planPrice {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--logo-color-blue);
+  margin-bottom: 0.25rem;
+}
+
+.planInterval {
+  font-size: 0.85rem;
+  color: var(--text-color-soft);
+  margin-bottom: 1rem;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.features li {
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  color: var(--text-color-soft);
+}
+
+.features li::before {
+  content: "\2713 ";
+  color: #4caf50;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.planButton {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: var(--logo-color-blue);
+  color: #f5f5f5;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.2s;
+}
+
+.planButton:hover {
+  opacity: 0.85;
+}
+
+.planButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loginPrompt {
+  text-align: center;
+  color: var(--text-color-soft);
+  font-style: italic;
+}
+
+.statusCard {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.statusCard h3 {
+  margin-bottom: 0.5rem;
+}
+
+.statusActive {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.manageButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1.25rem;
+  background-color: transparent;
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  color: var(--text-color-dark);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.manageButton:hover {
+  background-color: var(--bg-color-focus);
+}

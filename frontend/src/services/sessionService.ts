@@ -1,11 +1,5 @@
-import { getToken } from "./authService";
+import { apiFetch } from './api';
 
-export const getDataFromSession = async () => {
-    const token = getToken();
-    if (!token) {
-        throw new Error('You must be logged in to manage your subscription.');
-    }
-
-    const res = await fetch(`http://localhost:4000/sessions/${token}`);
-    return res.json();
+export const getDataFromSession = async (sessionToken: string) => {
+  return apiFetch(`/sessions/${sessionToken}`);
 };

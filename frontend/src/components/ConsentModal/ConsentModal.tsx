@@ -1,69 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useUserConsent } from '../../hooks/useUserConsent';
+import type { ConsentModalProps } from '../../models/consentsInterface';
 import classes from './ConsentModal.module.css';
-import {
-  handleGetUserConsent,
-  handleRegisterOrUpdateConsent,
-} from '../../hooks/handleConsents';
-import type { ConsentChoices, ConsentModalProps } from '../../models/consentsInterface';
 
 export const ConsentModal: React.FC<ConsentModalProps> = ({ userId }) => {
-  const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [choices, setChoices] = useState<ConsentChoices>({
-    analytics: false,
-    marketing: false,
-    dataSharing: false,
-  });
-
-  useEffect(() => {
-    const fetchConsent = async () => {
-      try {
-        const consent = await handleGetUserConsent(userId);
-        if (!consent) {
-          setVisible(true);
-        } else {
-          setChoices({
-            analytics: consent.analytics ?? false,
-            marketing: consent.marketing ?? false,
-            dataSharing: consent.dataSharing ?? false,
-          });
-        }
-      } catch (err) {
-        console.error('Failed to fetch user consent');
-        setVisible(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchConsent();
-  }, [userId]);
-
-  const handleAcceptAll = async () => {
-    try {
-      await handleRegisterOrUpdateConsent({
-        userId,
-        analytics: true,
-        marketing: true,
-        dataSharing: true,
-      });
-      setVisible(false);
-    } catch (err) {
-      console.error('Failed to accept all consent');
-    }
-  };
-
-  const handleSavePreferences = async () => {
-    try {
-      await handleRegisterOrUpdateConsent({
-        userId,
-        ...choices,
-      });
-      setVisible(false);
-    } catch (err) {
-      console.error('Failed to save consent preferences');
-    }
-  };
+  const { visible, loading, choices, setChoices, handleAcceptAll, handleSavePreferences } = useUserConsent(userId);
 
   if (loading || !visible) return null;
 

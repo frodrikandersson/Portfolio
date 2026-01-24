@@ -1,10 +1,5 @@
-import classes from './Pages.module.css';
+import { SubscriptionPlans } from '../components/SubscriptionPlans/SubscriptionPlans';
 
 export const SubscriptionPage: React.FC = () => {
-  
-  return (
-    <div className={classes.subscriptionPage}>
-      
-    </div>
-  );
+  return <SubscriptionPlans />;
 };

@@ -1,18 +1,8 @@
-export const getToken = () => localStorage.getItem('sessionToken');
+import { apiFetch } from './api';
 
-export const removeToken = () => localStorage.removeItem('sessionToken');
-
-export const loginWithGoogle = async (idToken: string): Promise<{ sessionToken?: string }> => {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/public/google-login`, {
+export const loginWithGoogle = async (idToken: string): Promise<{ message: string }> => {
+  return apiFetch('/auth/public/google-login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken }),
+    body: { idToken },
   });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || 'Google login failed');
-  }
-
-  return await res.json(); 
 };

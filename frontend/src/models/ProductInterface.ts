@@ -1,0 +1,31 @@
+export interface IProductFrontend {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  category: string;
+  platform: string;
+  coverImage?: string;
+  isPublished: boolean;
+  downloadCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IPurchaseFrontend {
+  _id: string;
+  userId: string;
+  productId: string;
+  purchaseDate: string;
+  stripePaymentId: string | null;
+  amount: number;
+  status: string;
+  product: IProductFrontend | null;
+}
+
+export interface ISubscriptionStatus {
+  subscriptionStatus: 'active' | 'cancelled' | 'past_due' | 'none';
+  subscriptionPlan: 'monthly' | 'yearly' | null;
+  subscriptionExpiresAt: string | null;
+}

@@ -1,0 +1,46 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: var(--text-color-dark);
+  line-height: 1.7;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--text-color-soft);
+  font-size: 0.9rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color-dark);
+}
+
+.section p,
+.section ul {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+}
+
+.section ul {
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.section ul li {
+  margin-bottom: 0.35rem;
+}

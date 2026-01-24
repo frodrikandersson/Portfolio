@@ -5,34 +5,41 @@ import { ObjectId } from 'mongodb';
 import { ISession } from '../interfaces/SessionInterface';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
+import { env } from '../config/env';
+import { setSessionCookie, clearSessionCookie } from '../utils/sessionCookie';
 
-
-// Public START
+// Public
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const collection = await getCollection<IUser>('users'); 
-    const users = await collection.find().toArray();
+    const collection = await getCollection<IUser>('users');
+    const users = await collection.find(
+      {},
+      { projection: { passwordHash: 0, googleId: 0, email: 0, stripeCustomerId: 0 } }
+    ).toArray();
     res.json(users);
   } catch {
-    res.status(500).json({ error: 'Could not get users' });
+    res.status(500).json({ message: 'Could not get users' });
   }
 };
 
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
+  const normalizedEmail = email.trim().toLowerCase();
+
   try {
     const usersCollection = await getCollection<IUser>('users');
-    const user = await usersCollection.findOne({ email });
-    if (!user) {
-      res.status(401).json({ err: 'Invalid email' });
+    const user = await usersCollection.findOne({ email: normalizedEmail });
+
+    if (!user || !user.passwordHash) {
+      res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
 
     const match = await bcrypt.compare(password, user.passwordHash);
 
     if (!match) {
-      res.status(401).json({ err: 'Invalid credentials' });
+      res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
 
@@ -44,50 +51,47 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       userId: user._id,
       sessionToken,
       createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 1 * 1 * 5 * 60 * 1000), // 1 days (1 * 24 * 60 * 60 * 1000)
+      expiresAt: new Date(Date.now() + env.SESSION_EXPIRY_HOURS * 60 * 60 * 1000),
     };
 
     await sessionsCollection.insertOne(session);
-    res.json({ message: 'Login successful', sessionToken });
-
+    setSessionCookie(res, sessionToken);
+    res.json({ message: 'Login successful' });
   } catch (err) {
-    res.status(500).json({ err: 'Server error' });
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
-  const { sessionToken } = req.body;
+  const sessionToken = req.cookies?.session_token;
 
   if (!sessionToken) {
-    res.status(400).json({ error: 'Session token required' });
+    res.status(400).json({ message: 'No active session' });
     return;
   }
 
   try {
     const sessionsCollection = await getCollection<ISession>('sessions');
     await sessionsCollection.deleteOne({ sessionToken });
+    clearSessionCookie(res);
     res.json({ message: 'Logged out successfully' });
-    
   } catch (err) {
     console.error('Logout error:', err);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ message: 'Server error' });
   }
-
 };
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    res.status(400).json({ err: 'Email and password are required'});
-    return;
-  }
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
     const usersCollection = await getCollection<INewUser>('users');
-    const existingUser = await usersCollection.findOne({ email });
+    const existingUser = await usersCollection.findOne({ email: normalizedEmail });
 
     if (existingUser) {
-      res.status(400).json({ err: 'Email already in use' });
+      res.status(400).json({ message: 'Email already in use' });
       return;
     }
 
@@ -95,72 +99,75 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     const newUser: INewUser = {
       firstName: "",
       lastName: "",
-      email,
+      email: normalizedEmail,
       passwordHash,
       role: 'user',
       createdAt: new Date(),
-      updatedAt: new Date(),  
+      updatedAt: new Date(),
     };
 
     const result = await usersCollection.insertOne(newUser);
     res.status(201).json({ message: 'User registered', id: result.insertedId });
   } catch (err) {
-    res.status(500).json({ err: 'Server error' });
+    console.error('Registration error:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Public END
-
-
-
-// Private START 
+// Private
 
 export const getOneUserById = async (req: Request, res: Response) => {
-  const { id } = req.params as { id: string };
+  const { id } = req.params;
+
   if (!ObjectId.isValid(id)) {
     res.status(400).json({ message: 'Invalid user ID format' });
     return;
   }
-  try {
-    const collection = await getCollection<IUser>('users'); 
-    const users = await collection.findOne({ _id: new ObjectId(id) });
-    
-    if (!users) {
-      res.status(404).json({ message: 'could not find this user' });
-      return; 
-    } 
 
-    res.json(users);
-  } catch (err){
-    res.status(500).json({ message: 'getOneUserById error' });
+  try {
+    const collection = await getCollection<IUser>('users');
+    const user = await collection.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { passwordHash: 0, googleId: 0 } }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user:', err);
+    res.status(500).json({ message: 'Failed to get user' });
   }
 };
 
 export const getLoggedInUser = async (req: Request, res: Response) => {
   try {
-      const user = (req as any).user as IUser;
+    const user = req.user;
 
-      if (!user) {
-          res.status(404).json({ message: 'User not found' });
-          return;
-      }
-      res.json({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          picture: user.picture,
-          email: user.email,
-          role: user.role,
-      });
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
 
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      picture: user.picture,
+      email: user.email,
+      role: user.role,
+    });
   } catch (err) {
-      console.error('Error in /me route:', err);
-      res.status(500).json({ message: 'Internal server error', err});
-      
+    console.error('Error in /me route:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
 export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
-  const user = (req as any).user as IUser;
+  const user = req.user;
 
   if (!user?._id) {
     res.status(401).json({ message: 'User not authenticated' });
@@ -168,7 +175,6 @@ export const updateUserProfile = async (req: Request, res: Response): Promise<vo
   }
 
   const { firstName, lastName, picture } = req.body;
-  const file = (req as any).file;
 
   try {
     const usersCollection = await getCollection<IUser>('users');
@@ -177,10 +183,9 @@ export const updateUserProfile = async (req: Request, res: Response): Promise<vo
       updatedAt: new Date(),
     };
 
-    if (typeof firstName === 'string') updateFields.firstName = firstName;
-    if (typeof lastName === 'string') updateFields.lastName = lastName;
+    if (typeof firstName === 'string') updateFields.firstName = firstName.trim();
+    if (typeof lastName === 'string') updateFields.lastName = lastName.trim();
     if (typeof picture === 'string') updateFields.picture = picture;
-    if (file) updateFields.picture = `/uploads/${file.filename}`;
 
     const result = await usersCollection.updateOne(
       { _id: new ObjectId(user._id) },
@@ -192,7 +197,10 @@ export const updateUserProfile = async (req: Request, res: Response): Promise<vo
       return;
     }
 
-    const updatedUser = await usersCollection.findOne({ _id: new ObjectId(user._id) });
+    const updatedUser = await usersCollection.findOne(
+      { _id: new ObjectId(user._id) },
+      { projection: { passwordHash: 0, googleId: 0 } }
+    );
     res.json(updatedUser);
   } catch (err) {
     console.error('Error updating user profile:', err);
@@ -200,18 +208,14 @@ export const updateUserProfile = async (req: Request, res: Response): Promise<vo
   }
 };
 
-// Private END
+// Admin
 
-
-
-// Admin START
-
-export const updateUserRole = async (req: Request, res: Response): Promise <void> => {
+export const updateUserRole = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { role } = req.body;
 
-  if (!['admin', 'user'].includes(role)) {
-    res.status(400).json({ message: 'Invalid role. Must be "admin" or "user".'});
+  if (!ObjectId.isValid(id)) {
+    res.status(400).json({ message: 'Invalid user ID format' });
     return;
   }
 
@@ -228,11 +232,8 @@ export const updateUserRole = async (req: Request, res: Response): Promise <void
     }
 
     res.json({ message: `User role updated to ${role}` });
-    
   } catch (err) {
     console.error('Error updating user role:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-// Admin END

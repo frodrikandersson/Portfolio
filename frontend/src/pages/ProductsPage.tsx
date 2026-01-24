@@ -1,10 +1,5 @@
-import classes from './Pages.module.css';
+import { ProductGrid } from '../components/ProductGrid/ProductGrid';
 
 export const ProductsPage: React.FC = () => {
-  
-  return (
-    <div className={classes.productsPage}>
-      
-    </div>
-  );
+  return <ProductGrid />;
 };

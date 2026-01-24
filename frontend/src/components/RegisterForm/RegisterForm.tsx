@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import classes from './RegisterForm.module.css';
 import { useAsync } from '../../hooks/useAsync';
-import { handleRegisterUser } from '../../hooks/handleUsers';
+import { publicRegisterUser } from '../../services/usersService';
 
-declare const google: any;
-
-export const RegisterForm: React.FC = () => {
+export const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const { execute: registerUser, loading, error, data } = useAsync(handleRegisterUser);
+  const { execute: registerUser, loading, error, data } = useAsync(publicRegisterUser);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await registerUser(email, password);
-    console.log("RegisterForm", result)
     if (result) {
       setEmail('');
       setUsername('');
@@ -24,50 +21,59 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <>
-      <form className={classes.registerForm} onSubmit={handleSubmit}>
-        <h2>Register</h2>
+    <div className={classes.container}>
+      <div className={classes.header}>
+        <h2>Create an Account</h2>
+        <p>Sign up to purchase products and access your library.</p>
+      </div>
 
-        <label>
-          Username
+      <form className={classes.form} onSubmit={handleSubmit}>
+        <div className={classes.field}>
+          <label htmlFor="reg-username">Username</label>
           <input
+            id="reg-username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Your username"
             required
             disabled={loading}
           />
-        </label>
+        </div>
 
-        <label>
-          Email
+        <div className={classes.field}>
+          <label htmlFor="reg-email">Email</label>
           <input
+            id="reg-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
             required
             disabled={loading}
           />
-        </label>
+        </div>
 
-        <label>
-          Password
+        <div className={classes.field}>
+          <label htmlFor="reg-password">Password</label>
           <input
+            id="reg-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Choose a password"
             required
             disabled={loading}
           />
-        </label>
+        </div>
 
-        <button className={classes.buttonRegister} type="submit" disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
+        <button className={classes.submitButton} type="submit" disabled={loading}>
+          {loading ? 'Creating account...' : 'Create account'}
         </button>
-
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {data && <p style={{ color: 'green' }}>Registration successful!</p>}
       </form>
-    </>
+
+      {error && <p className={classes.error}>{error}</p>}
+      {data && <p className={classes.success}>Registration successful! You can now log in.</p>}
+    </div>
   );
 };

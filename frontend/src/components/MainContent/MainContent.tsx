@@ -12,8 +12,10 @@ export const MainContent: React.FC = () => {
         <div className={classes.mask}></div>
         
         <div className={classes.emptyState}>
-          <img src="/gif/movingLogo.webp" alt="No open tabs" />
-          <p>No files open. Start by opening or creating a new tab.</p>
+          <div className={classes.wrapper}>
+            <img src="/gif/movingLogo.webp" alt="No open tabs" />
+            <p>No files open. Start by opening or creating a new tab.</p>
+          </div>
         </div>
       </div>
     );

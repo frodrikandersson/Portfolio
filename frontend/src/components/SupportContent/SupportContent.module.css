@@ -1,0 +1,61 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: var(--text-color-dark);
+  line-height: 1.7;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color-dark);
+}
+
+.faqItem {
+  margin-bottom: 1.25rem;
+}
+
+.faqItem h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-color-dark);
+}
+
+.faqItem p {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.contactInfo {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+}
+
+.contactInfo a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.contactInfo a:hover {
+  text-decoration: underline;
+}

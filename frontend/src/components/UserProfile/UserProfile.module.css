@@ -1,0 +1,101 @@
+.container {
+  max-width: 480px;
+  margin: 40px auto;
+  padding: 20px;
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  background-color: var(--bg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  color: var(--text-color-soft);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
+  margin-bottom: 24px;
+}
+
+.image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 24px auto;
+  display: block;
+  border: 2px solid var(--line-color);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-color-dark);
+  margin-bottom: 5px;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  background-color: var(--bg-color-light);
+  color: var(--text-color-dark);
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--text-color-dark);
+  outline: none;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.button {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: var(--bg-color-focus);
+  color: var(--text-color-dark);
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--line-color);
+}
+
+.cancelButton {
+  background-color: transparent;
+  border: 1px solid var(--line-color);
+  color: var(--text-color-soft);
+}
+
+.cancelButton:hover {
+  background-color: var(--bg-color-light);
+}
+
+.errorText {
+  color: #e53935;
+  margin-top: 0.5rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

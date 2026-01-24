@@ -20,16 +20,16 @@ export const Resizer: React.FC<ResizerProps> = ({ onDrag, onResizeStart, onResiz
     };
 
     const onEnd = () => {
-      window.removeEventListener('mousemove', onMove as any);
+      window.removeEventListener('mousemove', onMove as EventListener);
       window.removeEventListener('mouseup', onEnd);
-      document.removeEventListener('touchmove', onMove as any);
+      document.removeEventListener('touchmove', onMove as EventListener);
       document.removeEventListener('touchend', onEnd);
       onResizeEnd?.();
     };
 
-    window.addEventListener('mousemove', onMove as any);
+    window.addEventListener('mousemove', onMove as EventListener);
     window.addEventListener('mouseup', onEnd);
-    document.addEventListener('touchmove', onMove as any, { passive: false });
+    document.addEventListener('touchmove', onMove as EventListener, { passive: false });
     document.addEventListener('touchend', onEnd);
   };
 

@@ -1,9 +1,8 @@
-import { useState, useCallback, useEffect } from 'react';
-import { getToken } from '../services/authService';
-import { handleLogoutUser, handleGetCurrentUserInfo } from './handleUsers';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { privateGetCurrentUser, publicLogoutUser } from '../services/usersService';
 
 export const useAuthProvider = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => !!getToken());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState<string | null>(null);
   const [subscriptionLevel, setSubscriptionLevel] = useState<string | null>(null);
 
@@ -15,20 +14,25 @@ export const useAuthProvider = () => {
 
   const fetchUserInfo = useCallback(async () => {
     try {
-      const data = await handleGetCurrentUserInfo();
+      const data = await privateGetCurrentUser();
       setRole(data.role);
       setSubscriptionLevel(data.subscriptionLevel);
       setIsLoggedIn(true);
-    } catch (err: any) {
-      console.error('Failed to fetch user info:', err.message);
-      if (err.message === 'Unauthorized' || err.message === 'Session expired') {
-        await handleLogoutUser();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : '';
+      if (message === 'Unauthorized' || message === 'Not authenticated') {
         resetAuthState();
       }
       throw err;
     }
   }, [resetAuthState]);
 
+  // On mount, check if a session cookie is valid
+  useEffect(() => {
+    fetchUserInfo().catch(() => {});
+  }, [fetchUserInfo]);
+
+  // When isLoggedIn changes to true (after login), refresh user info
   useEffect(() => {
     if (isLoggedIn) {
       fetchUserInfo().catch(() => {});
@@ -36,16 +40,18 @@ export const useAuthProvider = () => {
   }, [fetchUserInfo, isLoggedIn]);
 
   const logoutUser = useCallback(async () => {
-    await handleLogoutUser();
+    await publicLogoutUser();
     resetAuthState();
   }, [resetAuthState]);
 
-  return {
+  const setLoggedIn = useCallback((val: boolean) => setIsLoggedIn(val), []);
+
+  return useMemo(() => ({
     isLoggedIn,
     role,
     subscriptionLevel,
     logoutUser,
-    setLoggedIn: (val: boolean) => setIsLoggedIn(val),
+    setLoggedIn,
     fetchUserInfo,
-  };
+  }), [isLoggedIn, role, subscriptionLevel, logoutUser, setLoggedIn, fetchUserInfo]);
 };

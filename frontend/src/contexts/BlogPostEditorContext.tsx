@@ -1,8 +1,25 @@
-import { createContext, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState, type Dispatch, type SetStateAction } from 'react';
+import type { IBlogPost } from '../models/BlogPostInterface';
 
-export const BlogPostEditorContext = createContext<any>(null);
+interface EditorState {
+  editingPostId: string | null;
+  title: string;
+  content: string;
+  excerpt: string;
+  coverImage: string;
+  tags: string;
+  category: string;
+  isPublished: boolean;
+  commentsEnabled: boolean;
+}
 
-const defaultEditorState = {
+interface BlogPostEditorContextType extends EditorState {
+  setEditorState: Dispatch<SetStateAction<EditorState>>;
+  startEditing: (post: Partial<IBlogPost>) => void;
+}
+
+const defaultEditorState: EditorState = {
   editingPostId: null,
   title: '',
   content: '',
@@ -14,10 +31,12 @@ const defaultEditorState = {
   commentsEnabled: true,
 };
 
-export const BlogPostEditorProvider = ({ children }: { children: React.ReactNode }) => {
-  const [editorState, setEditorState] = useState<any>(defaultEditorState);
+export const BlogPostEditorContext = createContext<BlogPostEditorContextType | null>(null);
 
-  const startEditing = (post: any) => {
+export const BlogPostEditorProvider = ({ children }: { children: React.ReactNode }) => {
+  const [editorState, setEditorState] = useState<EditorState>(defaultEditorState);
+
+  const startEditing = (post: Partial<IBlogPost>) => {
     setEditorState({
       editingPostId: post._id ?? null,
       title: post.title ?? '',

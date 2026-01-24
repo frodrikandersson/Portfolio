@@ -1,6 +1,6 @@
-import { useAuth } from '../contexts/AuthContext';
-import { useBlog } from '../contexts/BlogContext';
-import type { SidebarMenuItem } from '../models/Sidebar';
+import { useAuth } from "../contexts/AuthContext";
+import { useBlog } from "../contexts/BlogContext";
+import type { SidebarMenuItem } from "../models/Sidebar";
 
 export const useSidebarMenus = (): {
   [key: string]: SidebarMenuItem[];
@@ -11,99 +11,115 @@ export const useSidebarMenus = (): {
   return {
     home: [
       {
-        id: 'home',
-        title: 'Home.tsx',
-        componentName: 'HomePage',
-        label: 'Home',
+        id: "home",
+        title: "Home.tsx",
+        componentName: "HomePage",
+        label: "Home",
       },
       {
-        id: 'about',
-        title: 'About.tsx',
-        componentName: 'AboutPage',
-        label: 'About',
+        id: "about",
+        title: "About.tsx",
+        componentName: "AboutPage",
+        label: "About",
+      },
+      {
+        id: "terms-of-service",
+        title: "TermsOfService.tsx",
+        componentName: "TermsOfServicePage",
+        label: "Terms of Service",
       },
     ],
     products: [
       {
-        id: 'products',
-        title: 'Products.tsx',
-        componentName: 'ProductsPage',
-        label: 'Standalone products',
+        id: "products",
+        title: "Products.tsx",
+        componentName: "ProductsPage",
+        label: "Standalone products",
       },
       {
-        id: 'product-package',
-        title: 'Product Package.tsx',
-        componentName: 'SubscriptionPage',
-        label: 'Subscription package',
+        id: "product-package",
+        title: "Product Package.tsx",
+        componentName: "SubscriptionPage",
+        label: "Subscription package",
       },
     ],
     blog: [
-      ...(isLoggedIn && role === 'admin'
+      ...(isLoggedIn && role === "admin"
         ? [
             {
-              id: 'new-blog-post',
-              title: 'NewBlogPost.tsx',
-              componentName: 'AdminPage',
-              label: '+ New Blog Post',
+              id: "new-blog-post",
+              title: "NewBlogPost.tsx",
+              componentName: "AdminPage",
+              label: "+ New Blog Post",
             },
           ]
         : []),
-      ...blogPosts.map(post => ({
+      ...blogPosts.map((post) => ({
         id: `blog-${post._id}`,
         title: `${post.title}.tsx`,
-        componentName: 'BlogPostPage',
+        componentName: "BlogPostPage",
         label: post.title,
         props: { postId: post._id },
       })),
     ],
-    contact: [
+    support: [
       {
-        id: 'contact',
-        title: 'Contact.tsx',
-        componentName: 'ContactPage',
-        label: 'Contact',
+        id: "support",
+        title: "Support-FAQ.tsx",
+        componentName: "SupportPage",
+        label: "Support / FAQ",
       },
       {
-        id: 'social-links',
-        title: 'SocialLinks.tsx',
-        componentName: 'SocialLinksPage',
-        label: 'Social links',
+        id: "social-links",
+        title: "SocialLinks.tsx",
+        componentName: "SocialLinksPage",
+        label: "Social links",
       },
     ],
     profile: [
       {
-        id: 'auth',
-        title: 'Authentication.tsx',
-        componentName: 'AuthPanel',
-        label: isLoggedIn ? 'Log out' : 'Log in',
+        id: "auth",
+        title: "Authentication.tsx",
+        componentName: "AuthPanel",
+        label: isLoggedIn ? "Log out" : "Log in",
       },
       ...(!isLoggedIn
         ? [
             {
-              id: 'register',
-              title: 'Register.tsx',
-              componentName: 'RegisterPage',
-              label: 'Register',
+              id: "register",
+              title: "Register.tsx",
+              componentName: "RegisterPage",
+              label: "Register",
             },
           ]
         : []),
       ...(isLoggedIn
         ? [
             {
-              id: 'profile-page',
-              title: 'Profile.tsx',
-              componentName: 'ProfilePage',
-              label: 'Profile page',
+              id: "library",
+              title: "Library.tsx",
+              componentName: "LibraryPage",
+              label: "My Library",
             },
           ]
         : []),
-      ...(role === 'admin'
+      ...(isLoggedIn
         ? [
             {
-              id: 'admin-page',
-              title: 'Admin.tsx',
-              componentName: 'AdminPage',
-              label: 'Admin page',
+              id: "profile-page",
+              title: "Profile.tsx",
+              componentName: "ProfilePage",
+              label: "Profile page",
+            },
+          ]
+        : []),
+      ...(role === "admin"
+        ? [
+            {
+              id: "admin-page",
+              title: "Admin.tsx",
+              componentName: "AdminPage",
+              label: "Admin page",
             },
           ]
         : []),

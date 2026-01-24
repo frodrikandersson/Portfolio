@@ -1,3 +1,37 @@
-.loginForm {
-    padding: 1rem;
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--text-color-dark);
+}
+
+.greeting {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  color: var(--text-color-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.logoutButton {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-color-soft);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.logoutButton:hover {
+  color: #e53935;
+  border-color: #e53935;
 }

@@ -1,10 +1,5 @@
-import classes from './Pages.module.css';
+import { SocialLinksContent } from '../components/SocialLinksContent/SocialLinksContent';
 
-export const SocialLinksPage: React.FC = () => {
-  
-  return (
-    <div className={classes.socialLinksPage}>
-      
-    </div>
-  );
+export const SocialLinksPage = () => {
+  return <SocialLinksContent />;
 };

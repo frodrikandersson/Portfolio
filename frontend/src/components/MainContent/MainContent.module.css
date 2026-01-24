@@ -20,18 +20,47 @@
   height: 100%;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 2rem;
+  background-color: var(--bg-color-dark);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  gap: 1rem;
+  width: 99.5%;
+  height: 99.5%;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color-secondary, #888);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  img {
+    width: 100%;
+    max-width: 800px;
+    opacity: 0.8;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
 .mask {
   position: absolute;
   inset: 0;
-  background: url('/glitter/Group_1.png') repeat;
+  background: url("/glitter/Group_1.png") repeat;
   background-size: 500px 500px;
 
-  mask-image: url('/glitter/particle_mask_inverted.png');
+  mask-image: url("/glitter/particle_mask_inverted.png");
   mask-repeat: repeat;
   mask-size: 500px 500px;
   mask-mode: luminance;
 
-  -webkit-mask-image: url('/glitter/particle_mask_inverted.png');
+  -webkit-mask-image: url("/glitter/particle_mask_inverted.png");
   -webkit-mask-repeat: repeat;
   -webkit-mask-size: 500px 500px;
   -webkit-mask-mode: luminance;
@@ -40,13 +69,23 @@
 }
 
 @keyframes moveGlitter {
-  from { background-position: 0 0; }
-  to   { background-position: 500px 500px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 500px 500px;
+  }
 }
 
 @keyframes moveMask {
-  from { -webkit-mask-position: 0 0; mask-position: 0 0; }
-  to   { -webkit-mask-position: -300px 200px; mask-position: -300px 200px; }
+  from {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+  to {
+    -webkit-mask-position: -300px 200px;
+    mask-position: -300px 200px;
+  }
 }
 
 .emptyState {
@@ -57,16 +96,4 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-
-  img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    object-fit: contain;
-  }
-}
-
-:global(html.light) .emptyState img {
-  opacity: 0.8;
-  filter: brightness(0.8) contrast(1.2);
 }
