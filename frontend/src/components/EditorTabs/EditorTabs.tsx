@@ -74,6 +74,24 @@ useEffect(() => {
   }
 }, [dragState.isDragging, resetScroll]);
 
+// Add non-passive touch listener to prevent scroll during drag
+// React event handlers are passive by default, so we need to use addEventListener
+useEffect(() => {
+  const container = scrollRef.current;
+  if (!container) return;
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (dragState.isPending || dragState.isDragging) {
+      e.preventDefault();
+    }
+  };
+
+  container.addEventListener('touchmove', handleTouchMove, { passive: false });
+  return () => {
+    container.removeEventListener('touchmove', handleTouchMove);
+  };
+}, [dragState.isPending, dragState.isDragging, scrollRef]);
+
 // Combine refs
 const tabBarRef = useCallback((node: HTMLDivElement | null) => {
   scrollRef.current = node;

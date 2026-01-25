@@ -162,8 +162,9 @@ export function useLongPressDrag<T extends HTMLElement>(
   const onTouchMove = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     handleMove(touch.clientX, touch.clientY);
-    // Prevent scrolling while dragging
-    if (dragState.isDragging) {
+    // Prevent scrolling while pending or dragging
+    // Use ref for sync check since state updates are async
+    if (isPendingRef.current || dragState.isDragging) {
       e.preventDefault();
     }
   }, [handleMove, dragState.isDragging]);
