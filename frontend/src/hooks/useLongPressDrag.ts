@@ -93,11 +93,11 @@ export function useLongPressDrag<T extends HTMLElement>(
     pendingDragIndex.current = null;
   }, [dragState, onReorder, clearLongPressTimer]);
 
-  const handleMove = useCallback((clientX: number, _clientY: number) => {
+  const handleMove = useCallback((clientX: number, clientY: number) => {
     // If still waiting for long press, check if moved too much
     if (startPosition.current && pendingDragIndex.current !== null) {
       const dx = Math.abs(clientX - startPosition.current.x);
-      const dy = Math.abs(_clientY - startPosition.current.y);
+      const dy = Math.abs(clientY - startPosition.current.y);
       if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
         cancelLongPress();
         return;
@@ -111,16 +111,9 @@ export function useLongPressDrag<T extends HTMLElement>(
 
       tabs.forEach((tab) => {
         const rect = tab.getBoundingClientRect();
-        const tabCenter = rect.left + rect.width / 2;
-
         if (clientX >= rect.left && clientX <= rect.right) {
           const tabIndex = parseInt(tab.getAttribute('data-tab-index') || '0', 10);
-          // Determine if we should place before or after this tab
-          if (clientX < tabCenter) {
-            newDragOverIndex = tabIndex;
-          } else {
-            newDragOverIndex = tabIndex;
-          }
+          newDragOverIndex = tabIndex;
         }
       });
 

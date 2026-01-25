@@ -1,8 +1,7 @@
-import React, { Suspense, lazy, useCallback, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import classes from './EditorTabs.module.css';
 import type { Tab } from '../../models/Tab';
-import { useHorizontalScroll } from '../../hooks/useHorizontalScroll';
-import { useLongPressDrag } from '../../hooks/useLongPressDrag';
+import { useTabBarInteraction } from '../../hooks/useTabBarInteraction';
 
 const HomePage = lazy(() => import('../../pages/HomePage').then(m => ({ default: m.HomePage })));
 const AboutPage = lazy(() => import('../../pages/AboutPage').then(m => ({ default: m.AboutPage })));
@@ -50,93 +49,13 @@ export const EditorTabs: React.FC<EditorTabsProps> = ({
   onTabClose,
   onTabReorder,
 }) => {
-
-const {
-  containerRef: scrollRef,
-  onMouseDown: onScrollMouseDown,
-  onMouseMove: onScrollMouseMove,
-  onMouseLeave: onScrollMouseLeave,
-  onMouseUp: onScrollMouseUp,
-  wasRecentDrag,
-  reset: resetScroll,
-} = useHorizontalScroll<HTMLDivElement>();
-
-const {
-  containerRef: dragRef,
-  dragState,
-  handlers: dragHandlers,
-} = useLongPressDrag<HTMLDivElement>(onTabReorder);
-
-// When drag mode activates, reset scroll state to prevent "catch up"
-useEffect(() => {
-  if (dragState.isDragging) {
-    resetScroll();
-  }
-}, [dragState.isDragging, resetScroll]);
-
-// Add non-passive touch listener to prevent scroll during drag
-// React event handlers are passive by default, so we need to use addEventListener
-// Only prevent when actually dragging (not pending) - pending allows scroll to cancel it
-useEffect(() => {
-  const container = scrollRef.current;
-  if (!container) return;
-
-  const handleTouchMove = (e: TouchEvent) => {
-    // Only prevent scroll when actually in drag mode, not during pending
-    // During pending, if user swipes, the movement will cancel pending and allow scroll
-    if (dragState.isDragging) {
-      e.preventDefault();
-    }
-  };
-
-  container.addEventListener('touchmove', handleTouchMove, { passive: false });
-  return () => {
-    container.removeEventListener('touchmove', handleTouchMove);
-  };
-}, [dragState.isDragging, scrollRef]);
-
-// Combine refs
-const tabBarRef = useCallback((node: HTMLDivElement | null) => {
-  scrollRef.current = node;
-  dragRef.current = node;
-}, [scrollRef, dragRef]);
-
-// Combined mouse handlers
-const handleMouseDown = useCallback((e: React.MouseEvent) => {
-  // Always init scroll - it will be reset if drag mode activates
-  if (!dragState.isDragging) {
-    onScrollMouseDown(e);
-  }
-}, [dragState.isDragging, onScrollMouseDown]);
-
-const handleMouseMove = useCallback((e: React.MouseEvent) => {
-  // Always call drag handler during pending/dragging to detect movement
-  if (dragState.isPending || dragState.isDragging) {
-    dragHandlers.onMouseMove(e);
-  }
-  // Only scroll if not in drag mode
-  if (!dragState.isDragging) {
-    onScrollMouseMove(e);
-  }
-}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseMove]);
-
-const handleMouseUp = useCallback(() => {
-  if (dragState.isPending || dragState.isDragging) {
-    dragHandlers.onMouseUp();
-  }
-  if (!dragState.isDragging) {
-    onScrollMouseUp();
-  }
-}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseUp]);
-
-const handleMouseLeave = useCallback(() => {
-  if (dragState.isPending || dragState.isDragging) {
-    dragHandlers.onMouseLeave();
-  }
-  if (!dragState.isDragging) {
-    onScrollMouseLeave();
-  }
-}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseLeave]);
+  const {
+    tabBarRef,
+    dragState,
+    containerHandlers,
+    tabHandlers,
+    wasRecentDrag,
+  } = useTabBarInteraction(onTabReorder);
 
   const handleTabClick = (tabId: string) => {
     if (wasRecentDrag() || dragState.isDragging) return;
@@ -144,7 +63,6 @@ const handleMouseLeave = useCallback(() => {
   };
 
   const handleMiddleClick = (e: React.MouseEvent, tabId: string) => {
-    // Middle mouse button is button 1
     if (e.button === 1) {
       e.preventDefault();
       onTabClose(tabId);
@@ -169,10 +87,10 @@ const handleMouseLeave = useCallback(() => {
         className={`${classes.tabBar} ${dragState.isDragging ? classes.tabBarDragging : ''}`}
         ref={tabBarRef}
         role="tablist"
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
+        onMouseDown={containerHandlers.onMouseDown}
+        onMouseLeave={containerHandlers.onMouseLeave}
+        onMouseUp={containerHandlers.onMouseUp}
+        onMouseMove={containerHandlers.onMouseMove}
       >
         {tabs.map((tab, index) => (
           <div
@@ -183,11 +101,11 @@ const handleMouseLeave = useCallback(() => {
             aria-selected={tab.id === activeTabId}
             onClick={() => handleTabClick(tab.id)}
             onAuxClick={(e) => handleMiddleClick(e, tab.id)}
-            onMouseDown={(e) => dragHandlers.onMouseDown(e, index)}
-            onTouchStart={(e) => dragHandlers.onTouchStart(e, index)}
-            onTouchMove={dragHandlers.onTouchMove}
-            onTouchEnd={dragHandlers.onTouchEnd}
-            onTouchCancel={dragHandlers.onTouchCancel}
+            onMouseDown={(e) => tabHandlers.onMouseDown(e, index)}
+            onTouchStart={(e) => tabHandlers.onTouchStart(e, index)}
+            onTouchMove={tabHandlers.onTouchMove}
+            onTouchEnd={tabHandlers.onTouchEnd}
+            onTouchCancel={tabHandlers.onTouchCancel}
           >
             <div>{tab.title}</div>
             <div className={classes.tabButtons}>

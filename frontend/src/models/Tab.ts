@@ -1,4 +1,4 @@
-import React from 'react';
+import type { Dispatch } from 'react';
 
 export interface Tab {
   id: string;
@@ -20,5 +20,5 @@ export type Action =
 
 export type TabContextType = {
   state: State;
-  dispatch: React.Dispatch<Action>;
+  dispatch: Dispatch<Action>;
 };
