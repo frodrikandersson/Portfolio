@@ -63,6 +63,14 @@ const {
     onTabClick(tabId);
   };
 
+  const handleMiddleClick = (e: React.MouseEvent, tabId: string) => {
+    // Middle mouse button is button 1
+    if (e.button === 1) {
+      e.preventDefault();
+      onTabClose(tabId);
+    }
+  };
+
   return (
     <div className={classes.editorTabs}>
       <div
@@ -81,6 +89,7 @@ const {
             role="tab"
             aria-selected={tab.id === activeTabId}
             onClick={() => handleTabClick(tab.id)}
+            onAuxClick={(e) => handleMiddleClick(e, tab.id)}
           >
             <div>{tab.title}</div>
             <div className={classes.tabButtons}>
