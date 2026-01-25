@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import classes from './LoginForm.module.css';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useAsync } from '../../hooks/useAsync';
 import { publicLoginUser } from '../../services/usersService';
 import { useAuth } from '../../contexts/AuthContext';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+
+const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -62,18 +64,20 @@ export const LoginForm = () => {
       <div className={classes.divider}>or</div>
 
       <div className={classes.googleLogin}>
-        <GoogleLogin
-          onSuccess={async (credentialResponse) => {
-            const idToken = credentialResponse.credential;
-            if (!idToken) return;
-            try {
-              await handleGoogleLogin(idToken);
-            } catch {
-              // Error handled by handleAuth
-            }
-          }}
-          onError={() => {}}
-        />
+        <GoogleOAuthProvider clientId={CLIENT_ID}>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              const idToken = credentialResponse.credential;
+              if (!idToken) return;
+              try {
+                await handleGoogleLogin(idToken);
+              } catch {
+                // Error handled by handleAuth
+              }
+            }}
+            onError={() => {}}
+          />
+        </GoogleOAuthProvider>
       </div>
 
       {error && <p className={classes.error}>{error}</p>}
