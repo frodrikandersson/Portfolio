@@ -2,6 +2,7 @@ import React from 'react';
 import classes from './MainContent.module.css';
 import { EditorTabs } from '../EditorTabs/EditorTabs';
 import { useTabs } from '../../contexts/TabContext';
+import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
 
 export const MainContent: React.FC = () => {
   const { state, dispatch } = useTabs();
@@ -13,7 +14,10 @@ export const MainContent: React.FC = () => {
         
         <div className={classes.emptyState}>
           <div className={classes.wrapper}>
-            <img src="/gif/movingLogo.webp" alt="No open tabs" />
+            <ResponsiveImage
+              coverImage="https://files.quilcount.store/media/media-1769317602357-675056990.webp"
+              alt="No open tabs"
+            />
             <p>No files open. Start by opening or creating a new tab.</p>
           </div>
         </div>
