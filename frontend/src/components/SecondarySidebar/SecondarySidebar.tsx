@@ -34,15 +34,14 @@ const handleOpenTab = (
       <h2 className={classes.sidebarTitle}>{sidebarType ?? ''}</h2>
       <ul className={classes.menuList}>
         {menuItems.map(({ id, title, componentName, label, props }) => (
-          <li
-            key={id}
-            className={classes.menuItem}
-            onClick={() => handleOpenTab(id, title, componentName, props)} // <-- fixed
-            tabIndex={0}
-            role="button"
-            onKeyDown={(e) => e.key === 'Enter' && handleOpenTab(id, title, componentName, props)} // <-- fixed
-          >
-            {label}
+          <li key={id} className={classes.menuItem}>
+            <button
+              type="button"
+              className={classes.menuButton}
+              onClick={() => handleOpenTab(id, title, componentName, props)}
+            >
+              {label}
+            </button>
           </li>
         ))}
       </ul>

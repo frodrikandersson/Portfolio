@@ -38,18 +38,26 @@
 
 .menuItem {
   display: flex;
+}
+
+.menuButton {
+  display: flex;
   align-items: center;
+  width: 100%;
   padding: 8px 20px;
   font-size: 0.95rem;
+  font-family: inherit;
   color: var(--text-color-soft);
-  cursor: pointer;
+  background: none;
+  border: none;
   border-left: 3px solid transparent;
-  outline-offset: -2px;
+  cursor: pointer;
+  text-align: left;
   user-select: none;
 }
 
-.menuItem:hover,
-.menuItem:focus {
+.menuButton:hover,
+.menuButton:focus {
   background-color: var(--bg-color-focus);
   color: var(--text-color-dark);
   outline: none;
