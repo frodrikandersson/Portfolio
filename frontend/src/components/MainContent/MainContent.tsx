@@ -3,9 +3,11 @@ import classes from './MainContent.module.css';
 import { EditorTabs } from '../EditorTabs/EditorTabs';
 import { useTabs } from '../../contexts/TabContext';
 import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
+import { useTabKeyboardShortcuts } from '../../hooks/useTabKeyboardShortcuts';
 
 export const MainContent: React.FC = () => {
   const { state, dispatch } = useTabs();
+  useTabKeyboardShortcuts();
 
   if (state.tabs.length === 0) {
     return (
