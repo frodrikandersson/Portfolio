@@ -17,6 +17,8 @@ export const MainContent: React.FC = () => {
             <ResponsiveImage
               coverImage="https://files.quilcount.store/media/media-1769317602357-675056990.webp"
               alt="No open tabs"
+              loading="eager"
+              fetchPriority="high"
             />
             <p>No files open. Start by opening or creating a new tab.</p>
           </div>

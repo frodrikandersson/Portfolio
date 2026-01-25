@@ -56,6 +56,15 @@
       }
     </script>
 
+    <!-------------------- Preconnect to critical origins -------------------->
+    <link rel="preconnect" href="https://api.quilcount.store" crossorigin />
+    <link rel="preconnect" href="https://files.quilcount.store" crossorigin />
+
+    <!-------------------- Preload LCP assets -------------------->
+    <link rel="preload" as="image" href="https://files.quilcount.store/media/media-1769317602357-675056990.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/glitter/Group_1.png" />
+    <link rel="preload" as="image" href="/glitter/particle_mask_inverted.png" />
+
     <!-------------------- Fonts (async loading) -------------------->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

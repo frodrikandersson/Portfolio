@@ -8,6 +8,7 @@ interface ResponsiveImageProps {
   sizes?: string;
   onClick?: () => void;
   loading?: 'lazy' | 'eager';
+  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
 export const ResponsiveImage = ({
@@ -17,6 +18,7 @@ export const ResponsiveImage = ({
   sizes,
   onClick,
   loading = 'lazy',
+  fetchPriority,
 }: ResponsiveImageProps) => {
   const urls = getCoverImageUrls(coverImage);
   if (!urls) return null;
@@ -30,6 +32,7 @@ export const ResponsiveImage = ({
       className={className}
       onClick={onClick}
       loading={loading}
+      fetchPriority={fetchPriority}
     />
   );
 };
