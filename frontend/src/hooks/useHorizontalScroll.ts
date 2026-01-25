@@ -35,6 +35,12 @@ export function useHorizontalScroll<T extends HTMLElement>() {
     isDragging.current = false;
   }, []);
 
+  // Reset scroll state - call this when something else takes over (like tab drag)
+  const reset = useCallback(() => {
+    isDragging.current = false;
+    hasDragged.current = false;
+  }, []);
+
   // Check if the last interaction was a drag (call this in click handlers)
   const wasRecentDrag = useCallback(() => {
     const wasDrag = hasDragged.current;
@@ -50,5 +56,6 @@ export function useHorizontalScroll<T extends HTMLElement>() {
     onMouseLeave: endDrag,
     onMouseUp: endDrag,
     wasRecentDrag,
+    reset,
   };
 }

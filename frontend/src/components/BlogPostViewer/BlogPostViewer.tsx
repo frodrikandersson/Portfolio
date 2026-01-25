@@ -1,6 +1,7 @@
 import { useBlog } from '../../contexts/BlogContext';
 import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
 import { SEO } from '../SEO/SEO';
+import { getPostDateInfo } from '../../utils/formatPostDate';
 import classes from './BlogPostViewer.module.css';
 
 interface BlogPostViewerProps {
@@ -15,6 +16,8 @@ export const BlogPostViewer = ({ postId }: BlogPostViewerProps) => {
 
   const post = blogPosts.find(p => p._id === postId);
   if (!post) return <div>Post not found</div>;
+
+  const dateInfo = getPostDateInfo(post.publishedAt, post.updatedAt, post.createdAt);
 
   return (
     <div className={classes.post}>
@@ -32,10 +35,20 @@ export const BlogPostViewer = ({ postId }: BlogPostViewerProps) => {
         />
       )}
 
-      <h1 className={classes.title}>{post.title}</h1>
+      <h1 className={classes.title}>
+        {dateInfo.badge && (
+          <span className={`${classes.badge} ${classes[dateInfo.badge]}`}>
+            {dateInfo.badge.toUpperCase()}
+          </span>
+        )}
+        {post.title}
+      </h1>
 
       <div className={classes.meta}>
-        <span>Published: {post.isPublished && post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}</span>
+        <span>Published: {post.isPublished ? dateInfo.fullDate : 'Draft'}</span>
+        {dateInfo.updatedFullDate && (
+          <span> | Updated: {dateInfo.updatedFullDate}</span>
+        )}
         <span> | Category: {post.category || 'Uncategorized'}</span>
         <span> | Views: {post.views ?? 0}</span>
       </div>

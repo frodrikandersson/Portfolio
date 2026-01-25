@@ -1,6 +1,7 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useBlog } from "../contexts/BlogContext";
 import type { SidebarMenuItem } from "../models/Sidebar";
+import { getPostDateInfo } from "../utils/formatPostDate";
 
 export const useSidebarMenus = (): {
   [key: string]: SidebarMenuItem[];
@@ -54,13 +55,18 @@ export const useSidebarMenus = (): {
             },
           ]
         : []),
-      ...blogPosts.map((post) => ({
-        id: `blog-${post._id}`,
-        title: `${post.title}.tsx`,
-        componentName: "BlogPostPage",
-        label: post.title,
-        props: { postId: post._id },
-      })),
+      ...blogPosts.map((post) => {
+        const dateInfo = getPostDateInfo(post.publishedAt, post.updatedAt, post.createdAt);
+        return {
+          id: `blog-${post._id}`,
+          title: `${post.title}.tsx`,
+          componentName: "BlogPostPage",
+          label: post.title,
+          props: { postId: post._id },
+          badge: dateInfo.badge,
+          relativeDate: dateInfo.relativeDate,
+        };
+      }),
     ],
     support: [
       {

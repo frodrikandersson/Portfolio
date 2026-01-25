@@ -44,6 +44,15 @@ function tabReducer(state: State, action: Action): State {
         ...state,
         activeTabId: action.id,
       };
+    case 'REORDER_TABS': {
+      const newTabs = [...state.tabs];
+      const [movedTab] = newTabs.splice(action.fromIndex, 1);
+      newTabs.splice(action.toIndex, 0, movedTab);
+      return {
+        ...state,
+        tabs: newTabs,
+      };
+    }
     default:
       return state;
   }

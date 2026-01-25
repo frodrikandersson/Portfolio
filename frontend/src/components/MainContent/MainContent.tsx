@@ -51,6 +51,7 @@ export const MainContent: React.FC = () => {
           activeTabId={state.activeTabId}
           onTabClick={(id) => dispatch({ type: 'SET_ACTIVE', id })}
           onTabClose={(id) => dispatch({ type: 'CLOSE_TAB', id })}
+          onTabReorder={(fromIndex, toIndex) => dispatch({ type: 'REORDER_TABS', fromIndex, toIndex })}
         />
       </section>
     </main>

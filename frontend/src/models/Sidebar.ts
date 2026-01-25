@@ -12,4 +12,6 @@ export interface SidebarMenuItem {
   componentName: string;
   label: string;
   props?: Record<string, unknown>;
+  badge?: 'new' | 'updated' | null;
+  relativeDate?: string;
 }

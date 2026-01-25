@@ -33,14 +33,24 @@ const handleOpenTab = (
     <aside className={classes.secondarySidebar}>
       <h2 className={classes.sidebarTitle}>{sidebarType ?? ''}</h2>
       <ul className={classes.menuList}>
-        {menuItems.map(({ id, title, componentName, label, props }) => (
+        {menuItems.map(({ id, title, componentName, label, props, badge, relativeDate }) => (
           <li key={id} className={classes.menuItem}>
             <button
               type="button"
               className={classes.menuButton}
               onClick={() => handleOpenTab(id, title, componentName, props)}
             >
-              {label}
+              <span className={classes.menuLabel}>
+                {badge && (
+                  <span className={`${classes.badge} ${classes[badge]}`}>
+                    {badge.toUpperCase()}
+                  </span>
+                )}
+                {label}
+              </span>
+              {relativeDate && (
+                <span className={classes.menuDate}>{relativeDate}</span>
+              )}
             </button>
           </li>
         ))}

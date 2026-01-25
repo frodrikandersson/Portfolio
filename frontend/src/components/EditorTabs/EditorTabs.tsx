@@ -1,7 +1,8 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect } from 'react';
 import classes from './EditorTabs.module.css';
 import type { Tab } from '../../models/Tab';
 import { useHorizontalScroll } from '../../hooks/useHorizontalScroll';
+import { useLongPressDrag } from '../../hooks/useLongPressDrag';
 
 const HomePage = lazy(() => import('../../pages/HomePage').then(m => ({ default: m.HomePage })));
 const AboutPage = lazy(() => import('../../pages/AboutPage').then(m => ({ default: m.AboutPage })));
@@ -21,8 +22,8 @@ interface EditorTabsProps {
   tabs: Tab[];
   activeTabId: string;
   onTabClick: (tabId: string) => void;
-  onTabDrop?: (tab: Tab) => void;
   onTabClose: (tabId: string) => void;
+  onTabReorder: (fromIndex: number, toIndex: number) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,19 +48,77 @@ export const EditorTabs: React.FC<EditorTabsProps> = ({
   activeTabId,
   onTabClick,
   onTabClose,
+  onTabReorder,
 }) => {
 
 const {
-  containerRef: tabBarRef,
-  onMouseDown,
-  onMouseMove,
-  onMouseLeave,
-  onMouseUp,
+  containerRef: scrollRef,
+  onMouseDown: onScrollMouseDown,
+  onMouseMove: onScrollMouseMove,
+  onMouseLeave: onScrollMouseLeave,
+  onMouseUp: onScrollMouseUp,
   wasRecentDrag,
+  reset: resetScroll,
 } = useHorizontalScroll<HTMLDivElement>();
 
+const {
+  containerRef: dragRef,
+  dragState,
+  handlers: dragHandlers,
+} = useLongPressDrag<HTMLDivElement>(onTabReorder);
+
+// When drag mode activates, reset scroll state to prevent "catch up"
+useEffect(() => {
+  if (dragState.isDragging) {
+    resetScroll();
+  }
+}, [dragState.isDragging, resetScroll]);
+
+// Combine refs
+const tabBarRef = useCallback((node: HTMLDivElement | null) => {
+  scrollRef.current = node;
+  dragRef.current = node;
+}, [scrollRef, dragRef]);
+
+// Combined mouse handlers
+const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  // Always init scroll - it will be reset if drag mode activates
+  if (!dragState.isDragging) {
+    onScrollMouseDown(e);
+  }
+}, [dragState.isDragging, onScrollMouseDown]);
+
+const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  // Always call drag handler during pending/dragging to detect movement
+  if (dragState.isPending || dragState.isDragging) {
+    dragHandlers.onMouseMove(e);
+  }
+  // Only scroll if not in drag mode
+  if (!dragState.isDragging) {
+    onScrollMouseMove(e);
+  }
+}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseMove]);
+
+const handleMouseUp = useCallback(() => {
+  if (dragState.isPending || dragState.isDragging) {
+    dragHandlers.onMouseUp();
+  }
+  if (!dragState.isDragging) {
+    onScrollMouseUp();
+  }
+}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseUp]);
+
+const handleMouseLeave = useCallback(() => {
+  if (dragState.isPending || dragState.isDragging) {
+    dragHandlers.onMouseLeave();
+  }
+  if (!dragState.isDragging) {
+    onScrollMouseLeave();
+  }
+}, [dragState.isPending, dragState.isDragging, dragHandlers, onScrollMouseLeave]);
+
   const handleTabClick = (tabId: string) => {
-    if (wasRecentDrag()) return;
+    if (wasRecentDrag() || dragState.isDragging) return;
     onTabClick(tabId);
   };
 
@@ -71,25 +130,43 @@ const {
     }
   };
 
+  const getTabClassName = (tab: Tab, index: number) => {
+    let className = classes.tab;
+    if (tab.id === activeTabId) className += ` ${classes.active}`;
+    if (dragState.isDragging) {
+      if (dragState.draggedIndex === index) className += ` ${classes.dragging}`;
+      if (dragState.dragOverIndex === index && dragState.draggedIndex !== index) {
+        className += ` ${classes.dragOver}`;
+      }
+    }
+    return className;
+  };
+
   return (
     <div className={classes.editorTabs}>
       <div
-        className={classes.tabBar}
+        className={`${classes.tabBar} ${dragState.isDragging ? classes.tabBarDragging : ''}`}
         ref={tabBarRef}
         role="tablist"
-        onMouseDown={onMouseDown}
-        onMouseLeave={onMouseLeave}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
       >
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <div
             key={tab.id}
-            className={`${classes.tab} ${tab.id === activeTabId ? classes.active : ''}`}
+            data-tab-index={index}
+            className={getTabClassName(tab, index)}
             role="tab"
             aria-selected={tab.id === activeTabId}
             onClick={() => handleTabClick(tab.id)}
             onAuxClick={(e) => handleMiddleClick(e, tab.id)}
+            onMouseDown={(e) => dragHandlers.onMouseDown(e, index)}
+            onTouchStart={(e) => dragHandlers.onTouchStart(e, index)}
+            onTouchMove={dragHandlers.onTouchMove}
+            onTouchEnd={dragHandlers.onTouchEnd}
+            onTouchCancel={dragHandlers.onTouchCancel}
           >
             <div>{tab.title}</div>
             <div className={classes.tabButtons}>
