@@ -49,6 +49,10 @@
   background: #ddd;
 }
 
+.tabBar::-webkit-scrollbar-button {
+  display: none;
+}
+
 .tab {
   display: flex;
   align-items: center;
