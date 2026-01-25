@@ -1,6 +1,8 @@
 import { useBlog } from '../../contexts/BlogContext';
 import { BlogPostForm } from '../BlogPostForm/BlogPostForm';
 import { useBlogPostEditor } from '../../hooks/useBlogPostEditor';
+import { uploadBlogCover } from '../../services/blogService';
+import { adminLinkMediaToEntity } from '../../services/mediaService';
 import classes from './BlogPostCreator.module.css';
 
 export const BlogPostCreator = () => {
@@ -10,7 +12,8 @@ export const BlogPostCreator = () => {
     title,
     content,
     excerpt,
-    coverImage,
+    coverImageFile,
+    selectedMedia,
     tags,
     category,
     isPublished,
@@ -27,7 +30,8 @@ export const BlogPostCreator = () => {
       title: '',
       content: '',
       excerpt: '',
-      coverImage: '',
+      coverImageFile: null,
+      selectedMedia: null,
       tags: '',
       category: '',
       isPublished: true,
@@ -43,7 +47,6 @@ export const BlogPostCreator = () => {
       content,
       slug: title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
       excerpt,
-      coverImage,
       tags: tags.split(',').map((t: string) => t.trim()).filter(Boolean),
       category,
       authorId: 'admin',
@@ -54,7 +57,14 @@ export const BlogPostCreator = () => {
     };
 
     try {
-      await addPost(newPost);
+      const created = await addPost(newPost);
+      if (created._id) {
+        if (selectedMedia) {
+          await adminLinkMediaToEntity(selectedMedia._id, 'blogpost', created._id, 'coverImage');
+        } else if (coverImageFile) {
+          await uploadBlogCover(created._id, coverImageFile);
+        }
+      }
       resetForm();
     } catch {
       // Error state handled by BlogContext
@@ -68,17 +78,20 @@ export const BlogPostCreator = () => {
       title,
       content,
       excerpt,
-      coverImage,
       tags: tags.split(',').map((t: string) => t.trim()).filter(Boolean),
       category,
       isPublished,
       commentsEnabled,
       slug: title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-'),
-      updatedAt: new Date(),
     };
 
     try {
       await updatePost(editingPostId, updatedPost);
+      if (selectedMedia) {
+        await adminLinkMediaToEntity(selectedMedia._id, 'blogpost', editingPostId, 'coverImage');
+      } else if (coverImageFile) {
+        await uploadBlogCover(editingPostId, coverImageFile);
+      }
       resetForm();
     } catch {
       // Error state handled by BlogContext
@@ -97,8 +110,10 @@ export const BlogPostCreator = () => {
         setContent={set('content')}
         excerpt={excerpt}
         setExcerpt={set('excerpt')}
-        coverImage={coverImage}
-        setCoverImage={set('coverImage')}
+        coverImageFile={coverImageFile}
+        setCoverImageFile={set('coverImageFile')}
+        selectedMedia={selectedMedia}
+        setSelectedMedia={set('selectedMedia')}
         tags={tags}
         setTags={set('tags')}
         category={category}

@@ -1,4 +1,6 @@
 import { useBlog } from '../../contexts/BlogContext';
+import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
+import { SEO } from '../SEO/SEO';
 import classes from './BlogPostViewer.module.css';
 
 interface BlogPostViewerProps {
@@ -16,8 +18,18 @@ export const BlogPostViewer = ({ postId }: BlogPostViewerProps) => {
 
   return (
     <div className={classes.post}>
+      <SEO
+        title={post.title}
+        description={post.excerpt || post.content?.slice(0, 160)}
+        type="article"
+      />
       {post.coverImage && (
-        <img src={post.coverImage} alt={post.title} className={classes.coverImage} loading="lazy" />
+        <ResponsiveImage
+          coverImage={post.coverImage}
+          alt={post.title}
+          className={classes.coverImage}
+          sizes="(max-width: 768px) 100vw, 800px"
+        />
       )}
 
       <h1 className={classes.title}>{post.title}</h1>

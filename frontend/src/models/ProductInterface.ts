@@ -1,3 +1,10 @@
+export interface CoverImageData {
+  baseName: string;
+  originalExt: string;
+  widths: number[];
+  path: string;
+}
+
 export interface IProductFrontend {
   _id: string;
   title: string;
@@ -6,7 +13,7 @@ export interface IProductFrontend {
   price: number;
   category: string;
   platform: string;
-  coverImage?: string;
+  coverImage?: string | CoverImageData;
   isPublished: boolean;
   downloadCount: number;
   createdAt: string;

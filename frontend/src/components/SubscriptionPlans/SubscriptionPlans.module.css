@@ -23,7 +23,7 @@
 }
 
 .errorText {
-  color: #e53935;
+  color: var(--color-error);
   margin-bottom: 1rem;
   text-align: center;
 }
@@ -108,7 +108,7 @@
 
 .features li::before {
   content: "\2713 ";
-  color: #4caf50;
+  color: var(--color-success);
   font-weight: bold;
   margin-right: 0.5rem;
 }
@@ -122,8 +122,7 @@
   font-size: 1rem;
   cursor: pointer;
   background-color: var(--logo-color-blue);
-  color: #f5f5f5;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: var(--text-on-logo-blue);
   transition: opacity 0.2s;
 }
 
@@ -157,7 +156,7 @@
 }
 
 .statusActive {
-  color: #4caf50;
+  color: var(--color-success);
   font-weight: 600;
 }
 

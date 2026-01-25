@@ -1,7 +1,6 @@
 import { useUserLibrary } from '../../hooks/useUserLibrary';
+import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
 import classes from './UserLibrary.module.css';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export const UserLibrary = () => {
   const { purchases, loading, error, downloadingId, handleDownload } = useUserLibrary();
@@ -23,7 +22,11 @@ export const UserLibrary = () => {
           {purchases.map(p => (
             <div key={p._id} className={classes.card}>
               {p.product?.coverImage && (
-                <img src={`${API_URL}${p.product.coverImage}`} alt={p.product.title} loading="lazy" />
+                <ResponsiveImage
+                  coverImage={p.product.coverImage}
+                  alt={p.product.title || 'Product'}
+                  sizes="(max-width: 600px) 100vw, 260px"
+                />
               )}
               <h3>{p.product?.title || 'Unknown Product'}</h3>
               <div className={classes.meta}>

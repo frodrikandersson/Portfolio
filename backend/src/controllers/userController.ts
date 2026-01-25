@@ -7,6 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { env } from '../config/env';
 import { setSessionCookie, clearSessionCookie } from '../utils/sessionCookie';
+import { generateImageVariants, cleanupVariants, cleanupOriginal, CoverImageData } from '../utils/imageVariants';
+import { getUploadDir } from '../middlewares/imageUpload';
+import { createOrUpdateMediaRecord, removeMediaUsageRef } from './mediaController';
+import path from 'path';
 
 // Public
 
@@ -235,5 +239,54 @@ export const updateUserRole = async (req: Request, res: Response): Promise<void>
   } catch (err) {
     console.error('Error updating user role:', err);
     res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const uploadAvatar = async (req: Request, res: Response): Promise<void> => {
+  const user = req.user;
+
+  if (!user?._id) {
+    res.status(401).json({ message: 'User not authenticated' });
+    return;
+  }
+
+  if (!req.file) {
+    res.status(400).json({ message: 'No file uploaded' });
+    return;
+  }
+
+  const userId = user._id.toString();
+
+  try {
+    const usersCollection = await getCollection<IUser>('users');
+    const existingUser = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+    // Clean up old avatar variants
+    if (existingUser?.picture && typeof existingUser.picture === 'object') {
+      const oldData = existingUser.picture as CoverImageData;
+      const avatarDir = getUploadDir('avatars');
+      await removeMediaUsageRef(oldData.baseName, 'user', userId);
+      cleanupVariants(avatarDir, oldData.baseName, oldData.widths);
+      cleanupOriginal(avatarDir, oldData.baseName, oldData.originalExt);
+    }
+
+    const avatarDir = getUploadDir('avatars');
+    const filePath = path.join(avatarDir, req.file.filename);
+
+    const imageData = await generateImageVariants(filePath, avatarDir, '/uploads/avatars/');
+
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { picture: imageData, updatedAt: new Date() } }
+    );
+
+    // Create media record
+    const userName = `${existingUser?.firstName || ''} ${existingUser?.lastName || ''}`.trim();
+    await createOrUpdateMediaRecord(imageData, req.file, 'user', userId, 'picture', userId, userName || 'Avatar');
+
+    res.json({ picture: imageData });
+  } catch (err) {
+    console.error('Error uploading avatar:', err);
+    res.status(500).json({ message: 'Failed to upload avatar' });
   }
 };

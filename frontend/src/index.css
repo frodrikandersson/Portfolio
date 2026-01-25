@@ -13,7 +13,8 @@ html {
 html.light {
   --bg-color-bright: #ffffff;
   --bg-color-dark: #f5f5f5;
-  --bg-color-opposite: #181818; 
+  --bg-color-light: #fafafa;
+  --bg-color-opposite: #181818;
   --bg-color-focus: #cacaca;
   --bg-color-arrow: #6969691a;
   --text-color-dark: #222222;
@@ -24,6 +25,10 @@ html.light {
   --logo-color-pink: #c47aff;
   --logo-color-blue: #54c9de;
   --logo-color-blue-hover: #3794ff;
+  --color-error: #d32f2f;
+  --color-error-bg: rgba(211, 47, 47, 0.08);
+  --color-success: #388e3c;
+  --color-success-bg: rgba(56, 142, 60, 0.08);
   background-color: var(--bg-color-bright);
   color: var(--text-color-dark);
 }
@@ -32,7 +37,8 @@ html.light {
 html.dark {
   --bg-color-bright: #1f1f1f;
   --bg-color-dark: #181818;
-  --bg-color-opposite: #f5f5f5; 
+  --bg-color-light: #252525;
+  --bg-color-opposite: #f5f5f5;
   --bg-color-focus: #333;
   --bg-color-arrow: #acacac1a;
   --text-color-dark: #eeeeee;
@@ -43,6 +49,10 @@ html.dark {
   --logo-color-pink: #b46bdf;
   --logo-color-blue: #42becc;
   --logo-color-blue-hover: #3794ff;
+  --color-error: #ef5350;
+  --color-error-bg: rgba(239, 83, 80, 0.12);
+  --color-success: #66bb6a;
+  --color-success-bg: rgba(102, 187, 106, 0.12);
   background-color: var(--bg-color-bright);
   color: var(--text-color-dark);
 }

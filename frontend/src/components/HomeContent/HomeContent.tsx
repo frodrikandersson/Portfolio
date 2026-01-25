@@ -1,4 +1,5 @@
 import { useTabs } from '../../contexts/TabContext';
+import { SEO } from '../SEO/SEO';
 import classes from './HomeContent.module.css';
 
 export const HomeContent = () => {
@@ -14,6 +15,10 @@ export const HomeContent = () => {
 
   return (
     <div className={classes.container}>
+      <SEO
+        title="Home"
+        description="Browse plugins, tools, and templates for WordPress, Figma, VS Code, and more. Purchase once, use forever, or subscribe for full access."
+      />
       <section className={classes.section}>
         <h2>Welcome to My Plugin Store</h2>
         <p className={classes.intro}>

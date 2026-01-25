@@ -15,6 +15,7 @@ import blogRoutes from './routes/blogRoutes';
 import consentRoutes from './routes/consentRoutes';
 import productRoutes from './routes/productRoutes';
 import subscriptionRoutes from './routes/subscriptionRoutes';
+import mediaRoutes from './routes/mediaRoutes';
 import { handleStripeWebhook } from './controllers/stripeWebhookController';
 
 const app = express();
@@ -65,6 +66,7 @@ app.use('/blogs', blogRoutes);
 app.use('/consents', consentRoutes);
 app.use('/products', productRoutes);
 app.use('/subscriptions', subscriptionRoutes);
+app.use('/media', mediaRoutes);
 
 app.use(errorHandler);
 

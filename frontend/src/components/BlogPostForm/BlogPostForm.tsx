@@ -1,4 +1,8 @@
+import { useState } from 'react';
 import classes from '../BlogPostCreator/BlogPostCreator.module.css';
+import { MediaPickerModal } from '../MediaPickerModal/MediaPickerModal';
+import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
+import type { IMediaFrontend } from '../../models/MediaInterface';
 
 type BlogPostFormProps = {
   title: string;
@@ -7,8 +11,10 @@ type BlogPostFormProps = {
   setContent: (value: string) => void;
   excerpt: string;
   setExcerpt: (value: string) => void;
-  coverImage: string;
-  setCoverImage: (value: string) => void;
+  coverImageFile: File | null;
+  setCoverImageFile: (file: File | null) => void;
+  selectedMedia: IMediaFrontend | null;
+  setSelectedMedia: (media: IMediaFrontend | null) => void;
   tags: string;
   setTags: (value: string) => void;
   category: string;
@@ -28,8 +34,10 @@ export const BlogPostForm = ({
   setContent,
   excerpt,
   setExcerpt,
-  coverImage,
-  setCoverImage,
+  coverImageFile,
+  setCoverImageFile,
+  selectedMedia,
+  setSelectedMedia,
   tags,
   setTags,
   category,
@@ -41,6 +49,17 @@ export const BlogPostForm = ({
   onSubmit,
   submitLabel,
 }: BlogPostFormProps) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const handleMediaSelect = (media: IMediaFrontend) => {
+    setSelectedMedia(media);
+    setCoverImageFile(null);
+  };
+
+  const handleClearMedia = () => {
+    setSelectedMedia(null);
+  };
+
   return (
     <div className={classes.CreatorContainer}>
       <div className={classes.Field}>
@@ -97,13 +116,44 @@ export const BlogPostForm = ({
       </div>
 
       <div className={classes.Field}>
-        <label className={classes.Label}>Cover Image URL</label>
-        <input
-          className={classes.Input}
-          value={coverImage}
-          onChange={e => setCoverImage(e.target.value)}
-          placeholder="https://..."
-        />
+        <label className={classes.Label}>Cover Image</label>
+        {selectedMedia ? (
+          <div className={classes.mediaPreview}>
+            <ResponsiveImage
+              coverImage={selectedMedia}
+              alt={selectedMedia.title}
+              className={classes.mediaPreviewImage}
+              sizes="60px"
+            />
+            <span className={classes.mediaPreviewInfo}>{selectedMedia.title}</span>
+            <button
+              type="button"
+              className={classes.mediaPreviewClear}
+              onClick={handleClearMedia}
+            >
+              &times;
+            </button>
+          </div>
+        ) : coverImageFile ? (
+          <div className={classes.mediaPreview}>
+            <span className={classes.mediaPreviewInfo}>{coverImageFile.name}</span>
+            <button
+              type="button"
+              className={classes.mediaPreviewClear}
+              onClick={() => setCoverImageFile(null)}
+            >
+              &times;
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className={classes.mediaPickerBtn}
+            onClick={() => setPickerOpen(true)}
+          >
+            Select Cover Image
+          </button>
+        )}
       </div>
 
       <div className={classes.CheckboxRow}>
@@ -130,6 +180,13 @@ export const BlogPostForm = ({
           {submitLabel}
         </button>
       </div>
+
+      <MediaPickerModal
+        isOpen={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleMediaSelect}
+        title="Select Cover Image"
+      />
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import { ObjectId } from "mongodb";
+import { CoverImageData } from "../utils/imageVariants";
 
 export interface IUser extends Document {
     _id: ObjectId | string;
     firstName: string;
     lastName: string;
-    picture?: string;
+    picture?: string | CoverImageData;
     googleId?: string;
     email: string;
     passwordHash: string;
@@ -20,7 +21,7 @@ export interface IUser extends Document {
 export interface INewUser {
     firstName: string;
     lastName: string;
-    picture?: string;
+    picture?: string | CoverImageData;
     googleId?: string;
     email: string;
     passwordHash?: string;

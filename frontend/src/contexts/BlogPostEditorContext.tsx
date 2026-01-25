@@ -1,13 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, type Dispatch, type SetStateAction } from 'react';
 import type { IBlogPost } from '../models/BlogPostInterface';
+import type { IMediaFrontend } from '../models/MediaInterface';
 
 interface EditorState {
   editingPostId: string | null;
   title: string;
   content: string;
   excerpt: string;
-  coverImage: string;
+  coverImageFile: File | null;
+  selectedMedia: IMediaFrontend | null;
   tags: string;
   category: string;
   isPublished: boolean;
@@ -24,7 +26,8 @@ const defaultEditorState: EditorState = {
   title: '',
   content: '',
   excerpt: '',
-  coverImage: '',
+  coverImageFile: null,
+  selectedMedia: null,
   tags: '',
   category: '',
   isPublished: true,
@@ -42,7 +45,8 @@ export const BlogPostEditorProvider = ({ children }: { children: React.ReactNode
       title: post.title ?? '',
       content: post.content ?? '',
       excerpt: post.excerpt ?? '',
-      coverImage: post.coverImage ?? '',
+      coverImageFile: null,
+      selectedMedia: null,
       tags: (post.tags || []).join(', '),
       category: post.category ?? '',
       isPublished: post.isPublished ?? true,

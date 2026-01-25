@@ -7,9 +7,12 @@ import path from 'path';
 import fs from 'fs';
 import { env } from '../config/env';
 import { sanitizeSlug } from '../utils/slugUtils';
+import { generateImageVariants, cleanupVariants, cleanupOriginal, CoverImageData } from '../utils/imageVariants';
+import { createOrUpdateMediaRecord, removeMediaUsageRef } from './mediaController';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+const uploadsProductDir = path.join(__dirname, '..', '..', 'uploads', 'products');
 
 const MAX_TITLE_LENGTH = 200;
 const MAX_DESCRIPTION_LENGTH = 5000;
@@ -400,6 +403,19 @@ export const deleteProduct = async (req: Request, res: Response) => {
       fs.unlinkSync(filePath);
     }
 
+    // Clean up cover image and variants
+    if (product.coverImage) {
+      if (typeof product.coverImage === 'object') {
+        const cover = product.coverImage as CoverImageData;
+        await removeMediaUsageRef(cover.baseName, 'product', id);
+        cleanupOriginal(uploadsProductDir, cover.baseName, cover.originalExt);
+        cleanupVariants(uploadsProductDir, cover.baseName, cover.widths);
+      } else {
+        const coverPath = path.join(uploadsProductDir, path.basename(product.coverImage));
+        if (fs.existsSync(coverPath)) fs.unlinkSync(coverPath);
+      }
+    }
+
     await collection.deleteOne({ _id: new ObjectId(id) });
     res.json({ message: 'Product deleted' });
   } catch (err) {
@@ -410,20 +426,58 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
 export const uploadCoverImage = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const user = req.user;
   if (!ObjectId.isValid(id)) { res.status(400).json({ message: 'Invalid ID' }); return; }
   if (!req.file) { res.status(400).json({ message: 'Image required' }); return; }
 
   try {
     const collection = await getCollection<IProduct>('products');
-    const coverUrl = `/uploads/products/${req.file.filename}`;
+
+    // Clean up old cover image variants if they exist
+    const existing = await collection.findOne({ _id: new ObjectId(id) });
+    if (existing?.coverImage) {
+      if (typeof existing.coverImage === 'object') {
+        const old = existing.coverImage as CoverImageData;
+        // Remove old media usage reference
+        await removeMediaUsageRef(old.baseName, 'product', id);
+        cleanupOriginal(uploadsProductDir, old.baseName, old.originalExt);
+        cleanupVariants(uploadsProductDir, old.baseName, old.widths);
+      } else {
+        const oldFile = path.join(uploadsProductDir, path.basename(existing.coverImage));
+        if (fs.existsSync(oldFile)) fs.unlinkSync(oldFile);
+      }
+    }
+
+    // Generate responsive variants
+    const coverData = await generateImageVariants(req.file.path, uploadsProductDir, '/uploads/products/');
+
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { coverImage: coverUrl, updatedAt: new Date() } }
+      { $set: { coverImage: coverData, updatedAt: new Date() } }
     );
     if (result.matchedCount === 0) { res.status(404).json({ message: 'Product not found' }); return; }
-    res.json({ coverImage: coverUrl });
+
+    // Create media record
+    if (user) {
+      await createOrUpdateMediaRecord(coverData, req.file, 'product', id, 'coverImage', user._id.toString(), existing?.title);
+    }
+
+    res.json({ coverImage: coverData });
   } catch (err) {
     console.error('Error uploading cover:', err);
+    // Fallback: if variant generation fails, save just the original URL
+    if (req.file) {
+      const fallbackUrl = `/uploads/products/${req.file.filename}`;
+      try {
+        const collection = await getCollection<IProduct>('products');
+        await collection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { coverImage: fallbackUrl, updatedAt: new Date() } }
+        );
+        res.json({ coverImage: fallbackUrl });
+        return;
+      } catch { /* fall through */ }
+    }
     res.status(500).json({ message: 'Failed to upload cover image' });
   }
 };

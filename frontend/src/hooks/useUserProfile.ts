@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react';
-import { privateGetCurrentUser, privateUpdateUser } from '../services/usersService';
-import { fileToBase64 } from '../utils/fileToBase64';
-import { useAsync } from './useAsync';
+import { privateGetCurrentUser, privateUpdateUser, privateUploadAvatar } from '../services/usersService';
 import type { IUser } from '../models/usersInterface';
 
 export interface ProfileFormData {
   firstName: string;
   lastName: string;
-  picture: string;
   pictureFile?: File;
 }
 
 export const useUserProfile = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProfileFormData>({
     firstName: '',
     lastName: '',
-    picture: '',
   });
-
-  const { execute: updateUser, loading, error } = useAsync(privateUpdateUser);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,7 +27,6 @@ export const useUserProfile = () => {
           setFormData({
             firstName: data.firstName,
             lastName: data.lastName,
-            picture: data.picture,
           });
         }
       } catch {
@@ -42,19 +37,26 @@ export const useUserProfile = () => {
   }, []);
 
   const handleUpdate = async () => {
-    let pictureData = formData.picture;
-    if (formData.pictureFile) {
-      pictureData = await fileToBase64(formData.pictureFile);
-    }
+    setLoading(true);
+    setError(null);
     try {
-      const updatedUser = await updateUser({
-        ...formData,
-        picture: pictureData,
+      const updatedUser = await privateUpdateUser({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
       });
+
+      if (formData.pictureFile) {
+        const { picture } = await privateUploadAvatar(formData.pictureFile);
+        updatedUser.picture = picture;
+      }
+
       setUser(updatedUser);
+      setFormData({ firstName: updatedUser.firstName, lastName: updatedUser.lastName });
       setEditing(false);
-    } catch {
-      // Error displayed via useAsync error state
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update profile');
+    } finally {
+      setLoading(false);
     }
   };
 

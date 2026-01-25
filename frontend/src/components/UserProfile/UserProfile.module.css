@@ -91,7 +91,7 @@
 }
 
 .errorText {
-  color: #e53935;
+  color: var(--color-error);
   margin-top: 0.5rem;
 }
 

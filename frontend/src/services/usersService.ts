@@ -1,5 +1,6 @@
 import { apiFetch, API_URL } from './api';
 import type { IUser } from '../models/usersInterface';
+import type { CoverImageData } from '../models/ProductInterface';
 
 export interface ICurrentUser extends IUser {
   role: string;
@@ -39,9 +40,18 @@ export const privateGetCurrentUser = async () => {
   return apiFetch<ICurrentUser>(`/users/private/me`);
 };
 
-export const privateUpdateUser = async (formData: { firstName: string; lastName: string; picture: string }) => {
+export const privateUpdateUser = async (formData: { firstName: string; lastName: string }) => {
   return apiFetch<IUser>('/users/private/update', {
     method: 'PATCH',
+    body: formData,
+  });
+};
+
+export const privateUploadAvatar = async (file: File) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  return apiFetch<{ picture: CoverImageData }>('/users/private/avatar', {
+    method: 'POST',
     body: formData,
   });
 };

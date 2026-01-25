@@ -3,6 +3,9 @@ import { getCollection } from '../config/db';
 import { ObjectId } from 'mongodb';
 import { IBlogPost } from '../interfaces/BlogInterface';
 import { sanitizeSlug } from '../utils/slugUtils';
+import { generateImageVariants, cleanupVariants, cleanupOriginal, CoverImageData } from '../utils/imageVariants';
+import { getUploadDir } from '../middlewares/imageUpload';
+import { createOrUpdateMediaRecord, removeMediaUsageRef } from './mediaController';
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -102,13 +105,23 @@ export const deleteBlogPost = async (req: Request, res: Response) => {
 
   try {
     const collection = await getCollection<IBlogPost>('blogposts');
-    const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    const post = await collection.findOne({ _id: new ObjectId(id) });
 
-    if (result.deletedCount === 0) {
+    if (!post) {
       res.status(404).json({ message: 'Post not found' });
       return;
     }
 
+    // Clean up cover image if exists
+    if (post.coverImage && typeof post.coverImage === 'object') {
+      const cover = post.coverImage as CoverImageData;
+      const blogsUploadDir = getUploadDir('blogs');
+      await removeMediaUsageRef(cover.baseName, 'blogpost', id);
+      cleanupOriginal(blogsUploadDir, cover.baseName, cover.originalExt);
+      cleanupVariants(blogsUploadDir, cover.baseName, cover.widths);
+    }
+
+    await collection.deleteOne({ _id: new ObjectId(id) });
     res.json({ message: 'Blog post deleted' });
   } catch (err) {
     console.error('Error deleting blog post:', err);
@@ -160,5 +173,58 @@ export const updateBlogPost = async (req: Request, res: Response) => {
   } catch (err) {
     console.error('Error updating blog post:', err);
     res.status(500).json({ message: 'Failed to update blog post' });
+  }
+};
+
+export const uploadBlogCover = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = req.user;
+  if (!ObjectId.isValid(id)) { res.status(400).json({ message: 'Invalid ID' }); return; }
+  if (!req.file) { res.status(400).json({ message: 'Image required' }); return; }
+
+  const blogsUploadDir = getUploadDir('blogs');
+
+  try {
+    const collection = await getCollection<IBlogPost>('blogposts');
+
+    const existing = await collection.findOne({ _id: new ObjectId(id) });
+    if (!existing) { res.status(404).json({ message: 'Blog post not found' }); return; }
+
+    // Clean up old cover
+    if (existing.coverImage && typeof existing.coverImage === 'object') {
+      const old = existing.coverImage as CoverImageData;
+      await removeMediaUsageRef(old.baseName, 'blogpost', id);
+      cleanupOriginal(blogsUploadDir, old.baseName, old.originalExt);
+      cleanupVariants(blogsUploadDir, old.baseName, old.widths);
+    }
+
+    const coverData = await generateImageVariants(req.file.path, blogsUploadDir, '/uploads/blogs/');
+
+    await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { coverImage: coverData, updatedAt: new Date() } }
+    );
+
+    // Create media record
+    if (user) {
+      await createOrUpdateMediaRecord(coverData, req.file, 'blogpost', id, 'coverImage', user._id.toString(), existing.title);
+    }
+
+    res.json({ coverImage: coverData });
+  } catch (err) {
+    console.error('Error uploading blog cover:', err);
+    if (req.file) {
+      const fallbackUrl = `/uploads/blogs/${req.file.filename}`;
+      try {
+        const collection = await getCollection<IBlogPost>('blogposts');
+        await collection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { coverImage: fallbackUrl, updatedAt: new Date() } }
+        );
+        res.json({ coverImage: fallbackUrl });
+        return;
+      } catch { /* fall through */ }
+    }
+    res.status(500).json({ message: 'Failed to upload blog cover' });
   }
 };

@@ -10,7 +10,7 @@ import {
 
 interface BlogContextType {
   blogPosts: IBlogPost[];
-  addPost: (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  addPost: (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>) => Promise<IBlogPost>;
   updatePost: (id: string, updatedPost: Partial<IBlogPost>) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
   loading: boolean;
@@ -40,12 +40,13 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const addPost = useCallback(
-    async (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>) => {
+    async (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IBlogPost> => {
       try {
         setLoading(true);
         const newPost = await privateCreateBlogPost(postData as Record<string, unknown>);
         setBlogPosts(prev => [...prev, newPost]);
         setError(null);
+        return newPost;
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed to add blog post');
         throw err;

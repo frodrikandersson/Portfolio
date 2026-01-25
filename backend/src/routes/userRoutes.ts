@@ -1,11 +1,11 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { getAllUsers, getLoggedInUser, getOneUserById, loginUser, logoutUser, registerUser, updateUserRole, updateUserProfile } from '../controllers/userController';
+import { getAllUsers, getLoggedInUser, getOneUserById, loginUser, logoutUser, registerUser, updateUserRole, updateUserProfile, uploadAvatar } from '../controllers/userController';
 import { isAuthenticated } from '../middlewares/auth';
 import { isAdmin } from '../middlewares/isAdmin';
 import { validate } from '../middlewares/validate';
 import { loginSchema, registerSchema, updateProfileSchema, updateRoleSchema } from '../validation/schemas';
-// import { upload } from '../middlewares/upload';
+import { avatarUpload } from '../middlewares/imageUpload';
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -27,6 +27,7 @@ router.post('/public/register', authLimiter, validate(registerSchema), registerU
 router.get('/private/me', isAuthenticated, getLoggedInUser);
 router.get('/private/:id', isAuthenticated, getOneUserById);
 router.patch('/private/update', isAuthenticated, validate(updateProfileSchema), updateUserProfile);
+router.post('/private/avatar', isAuthenticated, avatarUpload.single('avatar'), uploadAvatar);
 
 // Admin routes
 router.patch('/admin/:id/role', isAuthenticated, isAdmin, validate(updateRoleSchema), updateUserRole);

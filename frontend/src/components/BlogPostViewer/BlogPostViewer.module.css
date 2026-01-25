@@ -81,9 +81,9 @@
 .commentsDisabled {
   margin-top: 2rem;
   font-style: italic;
-  color: #b71c1c;
-  background-color: #ffebee;
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
   padding: 1rem;
-  border-left: 4px solid #e53935;
+  border-left: 4px solid var(--color-error);
   border-radius: 6px;
 }

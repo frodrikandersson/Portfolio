@@ -1,4 +1,7 @@
 import { ObjectId } from "mongodb";
+import type { CoverImageData } from "../utils/imageVariants";
+
+export type { CoverImageData };
 
 export interface IProduct {
   _id?: ObjectId | string;
@@ -9,7 +12,7 @@ export interface IProduct {
   category: string;
   platform: string;
   fileUrl: string; // filename in product-files directory
-  coverImage?: string;
+  coverImage?: string | CoverImageData;
   isPublished: boolean;
   downloadCount: number;
   createdAt: Date;

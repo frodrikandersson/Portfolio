@@ -4,10 +4,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useImageZoom } from '../../hooks/useImageZoom';
 import { useUserPurchaseStatus } from '../../hooks/useUserPurchaseStatus';
 import { useProductActions } from '../../hooks/useProductActions';
+import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
+import { SEO } from '../SEO/SEO';
+import { getCoverImageUrls } from '../../utils/coverImageUtils';
 import type { IProductFrontend } from '../../models/ProductInterface';
 import classes from './ProductGrid.module.css';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export const ProductGrid = () => {
   const [products, setProducts] = useState<IProductFrontend[]>([]);
@@ -36,6 +37,10 @@ export const ProductGrid = () => {
 
   return (
     <div className={classes.container}>
+      <SEO
+        title="Products"
+        description="Browse and purchase plugins, tools, and templates for WordPress, Figma, VS Code, and more platforms."
+      />
       <div className={classes.header}>
         <h2>Products</h2>
         <p>Browse plugins, tools, and templates. Purchase once, use forever.</p>
@@ -55,12 +60,15 @@ export const ProductGrid = () => {
             return (
               <div key={product._id} className={classes.card}>
                 {product.coverImage ? (
-                  <img
-                    src={`${API_URL}${product.coverImage}`}
+                  <ResponsiveImage
+                    coverImage={product.coverImage}
                     alt={product.title}
                     className={classes.cover}
-                    loading="lazy"
-                    onClick={() => openModal(`${API_URL}${product.coverImage}`)}
+                    sizes="(max-width: 600px) 100vw, 280px"
+                    onClick={() => {
+                      const urls = getCoverImageUrls(product.coverImage);
+                      if (urls) openModal(urls.originalSrc);
+                    }}
                   />
                 ) : (
                   <div className={classes.coverPlaceholder}>

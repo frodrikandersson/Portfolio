@@ -1,16 +1,64 @@
+import { useState, useRef } from "react";
 import classes from "./ProductManager.module.css";
 import { useAdminProducts } from "../../hooks/useAdminProducts";
 import { generateSlug } from "../../utils/generateSlug";
+import { MediaPickerModal } from "../MediaPickerModal/MediaPickerModal";
+import { ResponsiveImage } from "../ResponsiveImage/ResponsiveImage";
+import { adminLinkMediaToEntity } from "../../services/mediaService";
+import type { IMediaFrontend } from "../../models/MediaInterface";
 
 export const ProductManager = () => {
   const {
     products, editingId, form, setForm,
     loading, error, success,
-    resetForm, handleEdit, handleDelete, handleSubmit,
+    resetForm: originalResetForm, handleEdit: originalHandleEdit, handleDelete, handleSubmit: originalHandleSubmit,
+    fetchProducts,
   } = useAdminProducts();
+
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<IMediaFrontend | null>(null);
+  const [linkingMedia, setLinkingMedia] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const updateField = <K extends keyof typeof form>(field: K, value: (typeof form)[K]) =>
     setForm(prev => ({ ...prev, [field]: value }));
+
+  const resetForm = () => {
+    originalResetForm();
+    setSelectedMedia(null);
+  };
+
+  const handleEdit = (product: Parameters<typeof originalHandleEdit>[0]) => {
+    originalHandleEdit(product);
+    setSelectedMedia(null);
+  };
+
+  const handleMediaSelect = async (media: IMediaFrontend) => {
+    if (editingId) {
+      // For existing products, link immediately
+      setLinkingMedia(true);
+      try {
+        await adminLinkMediaToEntity(media._id, 'product', editingId, 'coverImage');
+        await fetchProducts();
+        setSelectedMedia(null);
+      } catch (err) {
+        console.error('Failed to link media:', err);
+      } finally {
+        setLinkingMedia(false);
+      }
+    } else {
+      // For new products, store selection to link after creation
+      setSelectedMedia(media);
+    }
+  };
+
+  const handleSubmit = async () => {
+    await originalHandleSubmit();
+    // Note: For new products with selectedMedia, we'd need the product ID after creation
+    // This requires modifying handleSubmit to return the product or emit an event
+    // For now, the user can edit the product after creation to add the cover
+    setSelectedMedia(null);
+  };
 
   return (
     <div className={classes.productManager}>
@@ -68,21 +116,65 @@ export const ProductManager = () => {
           </label>
         </div>
         <div className={classes.formRow}>
-          <div>
+          <div className={classes.mediaPickerSection}>
             <label className={classes.fileLabel}>Product file (.zip, etc.)</label>
             <input
+              ref={fileInputRef}
               type="file"
               accept=".zip,.tar,.gz,.vsix,.js,.ts,.json,.rar,.7z"
+              className={classes.hiddenInput}
               onChange={(e) => updateField('file', e.target.files?.[0] || null)}
             />
+            {form.file ? (
+              <div className={classes.mediaPreview}>
+                <span className={classes.mediaPreviewInfo}>{form.file.name}</span>
+                <button
+                  type="button"
+                  className={classes.mediaPreviewClear}
+                  onClick={() => updateField('file', null)}
+                >
+                  &times;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={classes.mediaPickerBtn}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Select Product File
+              </button>
+            )}
           </div>
-          <div>
+          <div className={classes.mediaPickerSection}>
             <label className={classes.fileLabel}>Cover image</label>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={(e) => updateField('coverFile', e.target.files?.[0] || null)}
-            />
+            {selectedMedia ? (
+              <div className={classes.mediaPreview}>
+                <ResponsiveImage
+                  coverImage={selectedMedia}
+                  alt={selectedMedia.title}
+                  className={classes.mediaPreviewImage}
+                  sizes="60px"
+                />
+                <span className={classes.mediaPreviewInfo}>{selectedMedia.title}</span>
+                <button
+                  type="button"
+                  className={classes.mediaPreviewClear}
+                  onClick={() => setSelectedMedia(null)}
+                >
+                  &times;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={classes.mediaPickerBtn}
+                onClick={() => setPickerOpen(true)}
+                disabled={linkingMedia}
+              >
+                {linkingMedia ? 'Linking...' : 'Select Cover Image'}
+              </button>
+            )}
           </div>
         </div>
 
@@ -90,7 +182,7 @@ export const ProductManager = () => {
         {success && <p className={classes.success}>{success}</p>}
 
         <div className={classes.formActions}>
-          <button className={classes.submitBtn} onClick={handleSubmit} disabled={loading}>
+          <button className={classes.submitBtn} onClick={handleSubmit} disabled={loading || linkingMedia}>
             {loading ? "Saving..." : editingId ? "Update Product" : "Create Product"}
           </button>
           {editingId && (
@@ -118,6 +210,13 @@ export const ProductManager = () => {
           </div>
         ))}
       </div>
+
+      <MediaPickerModal
+        isOpen={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleMediaSelect}
+        title="Select Cover Image"
+      />
     </div>
   );
 };

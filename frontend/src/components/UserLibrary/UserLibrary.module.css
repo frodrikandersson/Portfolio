@@ -11,7 +11,7 @@
 }
 
 .errorText {
-  color: #e53935;
+  color: var(--color-error);
   margin-bottom: 1rem;
 }
 
@@ -62,7 +62,7 @@
   margin-top: auto;
   padding: 0.5rem 1.25rem;
   background-color: var(--logo-color-blue);
-  color: #fff;
+  color: var(--text-on-logo-blue);
   border: none;
   border-radius: 6px;
   cursor: pointer;

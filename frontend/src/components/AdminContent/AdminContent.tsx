@@ -4,9 +4,11 @@ import { BlogPostEditorProvider } from '../../contexts/BlogPostEditorContext';
 import { BlogPostCreator } from '../BlogPostCreator/BlogPostCreator';
 import { ShowBlogPosts } from '../ShowBlogPosts/ShowBlogPosts';
 import { ProductManager } from '../ProductManager/ProductManager';
+import { MediaLibrary } from '../MediaLibrary/MediaLibrary';
+import { SEO } from '../SEO/SEO';
 import classes from './AdminContent.module.css';
 
-type AdminTab = 'blog' | 'products';
+type AdminTab = 'blog' | 'products' | 'media';
 
 export const AdminContent = () => {
   const { role } = useAuth();
@@ -25,6 +27,7 @@ export const AdminContent = () => {
 
   return (
     <div className={classes.container}>
+      <SEO title="Admin Dashboard" noIndex />
       <div className={classes.header}>
         <h2>Admin Dashboard</h2>
       </div>
@@ -41,6 +44,12 @@ export const AdminContent = () => {
         >
           Products
         </button>
+        <button
+          className={`${classes.tab} ${activeTab === 'media' ? classes.tabActive : ''}`}
+          onClick={() => setActiveTab('media')}
+        >
+          Media
+        </button>
       </div>
       <div className={classes.content}>
         {activeTab === 'blog' && (
@@ -50,6 +59,7 @@ export const AdminContent = () => {
           </BlogPostEditorProvider>
         )}
         {activeTab === 'products' && <ProductManager />}
+        {activeTab === 'media' && <MediaLibrary />}
       </div>
     </div>
   );

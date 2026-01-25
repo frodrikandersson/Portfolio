@@ -92,10 +92,62 @@
   border-radius: 4px;
   cursor: pointer;
   background-color: var(--logo-color-blue);
-  color: #fff;
+  color: var(--text-on-logo-blue);
   transition: opacity 0.2s;
 }
 
 .Button:hover {
   opacity: 0.85;
+}
+
+.mediaPickerBtn {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-color-focus);
+  color: var(--text-color-dark);
+  border: 1px dashed var(--line-color);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.mediaPickerBtn:hover {
+  border-color: var(--logo-color-blue);
+  background-color: var(--bg-color-light);
+}
+
+.mediaPreview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background-color: var(--bg-color-focus);
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.mediaPreviewImage {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.mediaPreviewInfo {
+  font-size: 0.85rem;
+  color: var(--text-color-dark);
+}
+
+.mediaPreviewClear {
+  padding: 0.25rem 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-color-soft);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.mediaPreviewClear:hover {
+  color: var(--color-error);
 }
