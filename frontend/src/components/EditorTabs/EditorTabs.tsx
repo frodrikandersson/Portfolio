@@ -55,7 +55,13 @@ const {
   onMouseMove,
   onMouseLeave,
   onMouseUp,
+  wasRecentDrag,
 } = useHorizontalScroll<HTMLDivElement>();
+
+  const handleTabClick = (tabId: string) => {
+    if (wasRecentDrag()) return;
+    onTabClick(tabId);
+  };
 
   return (
     <div className={classes.editorTabs}>
@@ -74,7 +80,7 @@ const {
             className={`${classes.tab} ${tab.id === activeTabId ? classes.active : ''}`}
             role="tab"
             aria-selected={tab.id === activeTabId}
-            onClick={() => onTabClick(tab.id)}
+            onClick={() => handleTabClick(tab.id)}
           >
             <div>{tab.title}</div>
             <div className={classes.tabButtons}>
