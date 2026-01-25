@@ -18,7 +18,21 @@ function tabReducer(state: State, action: Action): State {
     }
     case 'CLOSE_TAB': {
       const remaining = state.tabs.filter((tab) => tab.id !== action.id);
-      const newActiveTabId = state.activeTabId === action.id && remaining.length > 0 ? remaining[0].id : '';
+
+      let newActiveTabId = state.activeTabId;
+
+      // Only change active tab if we're closing the active tab
+      if (state.activeTabId === action.id) {
+        if (remaining.length > 0) {
+          // Find the index of the closed tab to pick an adjacent one
+          const closedIndex = state.tabs.findIndex((tab) => tab.id === action.id);
+          // Prefer the tab to the right, otherwise the one to the left
+          const newIndex = Math.min(closedIndex, remaining.length - 1);
+          newActiveTabId = remaining[newIndex].id;
+        } else {
+          newActiveTabId = '';
+        }
+      }
 
       return {
         tabs: remaining,
