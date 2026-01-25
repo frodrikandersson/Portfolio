@@ -16,7 +16,8 @@ export function getCoverImageUrls(
   // Legacy string format
   if (typeof coverImage === 'string') {
     let fullUrl = coverImage;
-    if (coverImage.startsWith('http')) {
+    if (coverImage.startsWith('http') || coverImage.startsWith('data:')) {
+      // Full URL or data URL - use as-is
       fullUrl = coverImage;
     } else if (coverImage.startsWith('/uploads')) {
       fullUrl = `${API_URL}${coverImage}`;
