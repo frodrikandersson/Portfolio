@@ -26,7 +26,7 @@ export const AboutContent = () => {
       />
       <section className={classes.hero}>
         <ResponsiveImage
-          coverImage="media/media-1769302629163-539506047.png"
+          coverImage="media/media-1769317381966-40269923.png"
           alt="QuilCount avatar"
           className={classes.avatar}
           sizes="150px"
