@@ -261,6 +261,22 @@ export const deleteMedia = async (req: Request, res: Response) => {
       return;
     }
 
+    // If force deleting, clear references from all entities using this media
+    if (force && media.usageRefs.length > 0) {
+      for (const ref of media.usageRefs) {
+        const collectionName = ref.entityType === 'product' ? 'products'
+          : ref.entityType === 'blogpost' ? 'blogposts'
+          : 'users';
+        const fieldName = ref.field || (ref.entityType === 'user' ? 'picture' : 'coverImage');
+
+        const entityCollection = await getCollection(collectionName);
+        await entityCollection.updateOne(
+          { _id: new ObjectId(ref.entityId) },
+          { $unset: { [fieldName]: '' }, $set: { updatedAt: new Date() } }
+        );
+      }
+    }
+
     // Delete files from disk
     const uploadDir = getUploadDir(media.path.replace('/uploads/', '').replace('/', ''));
     cleanupOriginal(uploadDir, media.baseName, media.originalExt);
