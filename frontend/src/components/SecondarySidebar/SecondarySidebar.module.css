@@ -102,3 +102,73 @@
   color: var(--text-color-secondary, #888);
   opacity: 0.7;
 }
+
+.statusItem {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 8px 20px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-color-secondary, #888);
+  /* Held back briefly so a warm API doesn't flash this on every page load. */
+  opacity: 0;
+  animation: statusFadeIn 0.2s ease-out 0.5s forwards;
+}
+
+@keyframes statusFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.statusText {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.spinner {
+  flex-shrink: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: spinnerSpin 0.7s linear infinite;
+}
+
+@keyframes spinnerSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.retryButton {
+  padding: 3px 10px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--text-color-dark);
+  background: none;
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.retryButton:hover,
+.retryButton:focus {
+  background-color: var(--bg-color-focus);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusItem {
+    opacity: 1;
+    animation: none;
+  }
+
+  .spinner {
+    animation: none;
+  }
+}

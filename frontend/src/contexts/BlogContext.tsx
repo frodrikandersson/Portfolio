@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
 import type { IBlogPost } from '../models/BlogPostInterface';
 import {
   publicGetAllBlogPosts,
@@ -7,6 +7,7 @@ import {
   privateUpdateBlogPost,
   privateDeleteBlogPost
 } from '../services/blogService';
+import { useRetryingFetch } from '../hooks/useRetryingFetch';
 
 interface BlogContextType {
   blogPosts: IBlogPost[];
@@ -15,29 +16,23 @@ interface BlogContextType {
   deletePost: (id: string) => Promise<void>;
   loading: boolean;
   error: string | null;
+  retry: () => void;
 }
 
 const BlogContext = createContext<BlogContextType | undefined>(undefined);
 
-export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [blogPosts, setBlogPosts] = useState<IBlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const fetchBlogPosts = () => publicGetAllBlogPosts().then(data => data.posts || []);
 
-  useEffect(() => {
-    setLoading(true);
-    publicGetAllBlogPosts()
-      .then(data => {
-        setBlogPosts(data.posts || []);
-        setError(null);
-      })
-      .catch(err => {
-        setError(err.message || 'Failed to load blog posts');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const {
+    data: blogPosts,
+    setData: setBlogPosts,
+    loading,
+    setLoading,
+    error,
+    setError,
+    retry,
+  } = useRetryingFetch<IBlogPost[]>(fetchBlogPosts, [], 'Failed to load blog posts');
 
   const addPost = useCallback(
     async (postData: Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt'>): Promise<IBlogPost> => {
@@ -54,7 +49,7 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
       }
     },
-    []
+    [setBlogPosts, setError, setLoading]
   );
 
   const updatePost = useCallback(
@@ -73,7 +68,7 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
       }
     },
-    []
+    [setBlogPosts, setError, setLoading]
   );
 
   const deletePost = useCallback(
@@ -90,12 +85,12 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
       }
     },
-    []
+    [setBlogPosts, setError, setLoading]
   );
 
   const value = useMemo(
-    () => ({ blogPosts, addPost, updatePost, deletePost, loading, error }),
-    [blogPosts, addPost, updatePost, deletePost, loading, error]
+    () => ({ blogPosts, addPost, updatePost, deletePost, loading, error, retry }),
+    [blogPosts, addPost, updatePost, deletePost, loading, error, retry]
   );
 
   return (

@@ -1,39 +1,38 @@
-import { useState, useEffect } from 'react';
 import { publicGetAllProducts } from '../../services/productService';
 import { useAuth } from '../../contexts/AuthContext';
 import { useImageZoom } from '../../hooks/useImageZoom';
 import { useUserPurchaseStatus } from '../../hooks/useUserPurchaseStatus';
 import { useProductActions } from '../../hooks/useProductActions';
+import { useRetryingFetch } from '../../hooks/useRetryingFetch';
 import { ResponsiveImage } from '../ResponsiveImage/ResponsiveImage';
 import { SEO } from '../SEO/SEO';
 import { getCoverImageUrls } from '../../utils/coverImageUtils';
 import type { IProductFrontend } from '../../models/ProductInterface';
 import classes from './ProductGrid.module.css';
 
+const fetchProducts = () => publicGetAllProducts().then(data => data.products || []);
+
 export const ProductGrid = () => {
-  const [products, setProducts] = useState<IProductFrontend[]>([]);
-  const [loading, setLoading] = useState(true);
   const { isLoggedIn } = useAuth();
+
+  const {
+    data: products,
+    loading,
+    error: loadError,
+    retry: retryProducts,
+  } = useRetryingFetch<IProductFrontend[]>(fetchProducts, [], 'Failed to load products');
 
   const { hasSubscription, purchasedIds } = useUserPurchaseStatus(isLoggedIn);
   const { handleBuy, handleDownload, actionLoading, error } = useProductActions();
   const { modalImage, zoom, origin, openModal, closeModal, handleTouchStart, handleTouchMove, handleTouchEnd } = useImageZoom();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await publicGetAllProducts();
-        setProducts(data.products);
-      } catch {
-        // Error handled silently
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  if (loading) return <div className={classes.container}>Loading products...</div>;
+  if (loading) {
+    return (
+      <div className={classes.container}>
+        Loading products… the server may need a moment to wake up.
+      </div>
+    );
+  }
 
   return (
     <div className={classes.container}>
@@ -51,7 +50,16 @@ export const ProductGrid = () => {
 
       {error && <p className={classes.errorText}>{error}</p>}
 
-      {products.length === 0 ? (
+      {loadError ? (
+        // Never fall through to the "no products yet" copy here — the list is
+        // empty because the request failed, not because there is nothing to show.
+        <p className={classes.emptyText}>
+          Couldn't load products.{' '}
+          <button type="button" className={classes.retryButton} onClick={retryProducts}>
+            Try again
+          </button>
+        </p>
+      ) : products.length === 0 ? (
         <p className={classes.emptyText}>No products available yet. Check back soon!</p>
       ) : (
         <div className={classes.grid}>
