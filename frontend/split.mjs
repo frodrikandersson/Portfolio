@@ -1,0 +1,26 @@
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const t = await (await fetch('http://127.0.0.1:9222/json/list')).json();
+const ws = new WebSocket(t.find(x => x.type === 'page').webSocketDebuggerUrl);
+await new Promise(r => ws.addEventListener('open', r, { once: true }));
+let id = 1; const p = new Map(); const errs = [];
+ws.addEventListener('message', e => { const m = JSON.parse(e.data);
+  if (m.method === 'Runtime.exceptionThrown') errs.push(m.params.exceptionDetails?.exception?.description ?? 'throw');
+  if (m.id && p.has(m.id)) { const { resolve, reject } = p.get(m.id); p.delete(m.id); m.error ? reject(new Error(JSON.stringify(m.error))) : resolve(m.result); } });
+const send = (me, pa = {}) => { const i = id++; ws.send(JSON.stringify({ id: i, method: me, params: pa })); return new Promise((a, b) => p.set(i, { resolve: a, reject: b })); };
+await send('Runtime.enable'); await send('Page.enable');
+const ev = async x => { const r = await send('Runtime.evaluate', { expression: x, returnByValue: true, awaitPromise: true }); return r.exceptionDetails ? 'THREW' : r.result.value; };
+const URL='http://localhost:5173/';
+await send('Page.navigate',{url:URL}); await sleep(2500);
+await ev('localStorage.removeItem("whiteoutCardsOpen");localStorage.removeItem("whiteoutCardsIgnored");localStorage.removeItem("whiteoutInventory");');
+await ev('localStorage.setItem("editorTabsState", JSON.stringify({tabs:[{id:"whiteout-calculator",title:"Calculator.tsx",componentName:"WhiteoutCalculatorPage",props:{}}],activeTabId:"whiteout-calculator"}))');
+await send('Page.navigate',{url:URL}); await sleep(8000);
+console.log('cards:', await ev('(function(){return [].slice.call(document.querySelectorAll("button[class*=cardHeader] h3")).map(function(h){return h.textContent;}).join(", ");})()'));
+// Open everything and count the item fields per card.
+await ev('(function(){var hs=[].slice.call(document.querySelectorAll("button[class*=cardHeader]")); for(var i=0;i<hs.length;i++){ if(hs[i].getAttribute("aria-expanded")!=="true") hs[i].click(); } return 1;})()');
+await sleep(2500);
+console.log('\nitem fields per card:');
+console.log(await ev('(function(){var hs=[].slice.call(document.querySelectorAll("button[class*=cardHeader]")); return hs.map(function(h){var sec=h.closest("section"); var n=sec.querySelectorAll("input").length; return "  "+h.querySelector("h3").textContent.padEnd(22)+n+" inputs";}).join("\n");})()'));
+console.log('\ngems icon loads:', await ev('(function(){var i=[].slice.call(document.querySelectorAll("img")).filter(function(x){return /gems/.test(x.src);}); if(!i.length) return "NO GEMS IMAGE"; return i[0].src.split("/").pop()+" naturalWidth="+i[0].naturalWidth;})()'));
+console.log('exceptions:', errs.length);
+if (errs.length) console.log(errs.slice(0,2).join('\n'));
+ws.close(); process.exit(0);

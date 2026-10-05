@@ -1,0 +1,1612 @@
+.panel {
+  --wo-ice: #2b8fc7;
+  --wo-frost: #eaf6ff;
+  --wo-surface: var(--bg-color-light);
+
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 10px;
+  color: var(--text-color-soft);
+}
+
+:global(html.dark) .panel {
+  --wo-ice: #7fd4ff;
+  --wo-frost: #16222b;
+  --wo-surface: #1c1c1c;
+}
+
+/* ---------- header ---------- */
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+/* The text block is sized by its content by default, so the lede's own cap was
+   deciding the width of the whole header and left the right half of the panel
+   empty. Growing it hands that decision to the cap below instead. */
+.panelHeader > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--text-color-dark);
+}
+
+/* Names the input side, matching .outputLabel on the answer side. */
+.panelLabel {
+  margin: 0 0 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wo-ice);
+}
+
+.lede {
+  margin: 0.25rem 0 0;
+  /* Was 52ch, which came out at 341px in a panel 813px wide: four lines down
+     a narrow column with half the panel blank beside it. The cap is still
+     here because a line that runs the full width of a wide screen is hard to
+     track back from, but it is now set above the width this panel actually
+     reaches, so in practice the text fills the room it has. */
+  max-width: min(96ch, 100%);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* ---------- input cards ---------- */
+
+/*
+ * One card per row.
+ *
+ * This was an auto-fit grid, which paired the narrow cards up two to a line
+ * while the wide ones spanned the lot. Collapsed, that read as a ragged mix of
+ * full-width and half-width bars with no meaning behind which was which: the
+ * width was a side effect of how much a card happened to contain when open.
+ * A single column makes the closed list a plain stack of equal bars.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.card {
+  padding: 0.9rem 1rem 1rem;
+  background-color: var(--wo-surface);
+  border: 1px solid var(--line-color);
+  border-radius: 8px;
+}
+
+.card h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-color-dark);
+  opacity: 0.75;
+}
+
+.buildingsCard {
+  grid-column: 1 / -1;
+}
+
+.fields {
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* The speedup durations and the percentage buffs are different kinds of input,
+   so give the second group room to breathe. */
+.fields + .fields {
+  margin-top: 1rem;
+}
+
+.buildings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+  gap: 0.6rem 0.75rem;
+}
+
+/* Building names are long, so stack the label above the select rather than
+   fighting for width beside it. Aligned to the end so every select sits on one
+   line across the row, whatever height the name above it took. */
+.buildings .field {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 0.2rem;
+}
+
+.buildings .fieldLabel {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  opacity: 0.85;
+}
+
+/* ---------- a single field ---------- */
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr 7.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.fieldHint {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-style: normal;
+  opacity: 0.55;
+}
+
+.input {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-color-dark);
+  background-color: var(--bg-color-bright);
+  border: 1px solid var(--line-color);
+  border-radius: 5px;
+}
+
+select.input {
+  text-align: left;
+  padding-right: 0.25rem;
+}
+
+.input:focus {
+  border-color: var(--wo-ice);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--wo-ice) 25%, transparent);
+  outline: none;
+}
+
+.inputInvalid {
+  border-color: var(--color-error);
+}
+
+/* Number spinners are noise here; shorthand entry replaces them. */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/* ---------- toggles ---------- */
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line-color);
+}
+
+.toggle,
+.inlineSelect {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--wo-ice);
+}
+
+.inlineSelect select {
+  padding: 0.25rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--text-color-dark);
+  background-color: var(--bg-color-bright);
+  border: 1px solid var(--line-color);
+  border-radius: 5px;
+}
+
+.cardNote {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+/* A note has no bottom margin, which is right when it closes a card but wrong
+   when inputs follow it: the explanation ended up sitting straight on top of
+   the fields it was explaining. Only the adjacent case gets the gap, so notes
+   that end a card keep their tight spacing. */
+.cardNote + .buildings,
+.cardNote + .fields,
+.cardNote + .itemGrid,
+.warnLine + .buildings,
+.warnLine + .fields,
+.warnLine + .itemGrid {
+  margin-top: 1rem;
+}
+
+/* ---------- result ---------- */
+
+/* ---------- output ----------
+
+   Everything above is the player telling the tool what they have. Everything
+   below is the tool answering. They used to sit in one panel and look the same,
+   which made it easy to read a result as a field. The answer side is amber and
+   the input side stays ice blue, so a glance is enough to tell them apart.
+
+   These tokens are redeclared here because this block is rendered next to the
+   event, outside .panel, so it no longer inherits them. */
+.output {
+  --wo-out: #a8621b;
+  --wo-out-tint: #fdf3e7;
+  --wo-ice: #a8621b;
+  --wo-frost: #fdf3e7;
+  --wo-surface: var(--bg-color-light);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color-soft);
+  line-height: 1.6;
+}
+
+:global(html.dark) .output {
+  --wo-out: #e0a24c;
+  --wo-out-tint: #2b2115;
+  --wo-ice: #e0a24c;
+  --wo-frost: #2b2115;
+  --wo-surface: #1c1c1c;
+}
+
+.result {
+  padding: 1rem;
+  background-color: var(--wo-surface);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--wo-out);
+  border-radius: 8px;
+}
+
+/* A plain label so the answer side is named, not just coloured. */
+.outputLabel {
+  margin: 1.5rem 0 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wo-out);
+}
+
+.resultHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.resultHeader h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-color-dark);
+}
+
+.limitChip {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error);
+  border-radius: 999px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  background-color: var(--bg-color-dark);
+  border-radius: 6px;
+}
+
+.stats dt {
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.stats dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color-dark);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.table th,
+.table td {
+  padding: 0.35rem 0.7rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-color-dark);
+  background-color: var(--bg-color-dark);
+  opacity: 0.9;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: var(--bg-color-dark);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.usage {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.78rem;
+}
+
+.usage li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--line-color);
+}
+
+.usage li:last-child {
+  border-bottom: none;
+}
+
+/* ---------- caveats ---------- */
+
+.caveats {
+  margin-top: 1rem;
+  font-size: 0.76rem;
+}
+
+.caveats summary {
+  cursor: pointer;
+  padding: 0.35rem 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  opacity: 0.7;
+}
+
+.caveats ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.caveats li + li {
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 768px) {
+  .field {
+    grid-template-columns: 1fr 5.5rem;
+    gap: 0.5rem;
+  }
+}
+
+/* ---------- hero-specific shards ---------- */
+
+.heroList {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+}
+
+/* Two lines on purpose.
+   This row lives in a card about 364px wide whatever the window does, and it
+   carries five controls. One line meant a 22px shard count; the earlier five
+   column grid also silently wrapped as soon as anything was added to it.
+   Now the art, the name and the remove button are a heading, and the three
+   controls that describe progress share the line beneath in equal thirds. */
+.heroRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.35rem 0.4rem;
+  align-items: center;
+  padding: 0.45rem 0.5rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+}
+
+/* The art and the hero's name, which together are the row's title. */
+.heroHead {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* Equal thirds so the three never squeeze one another, plus the remove button
+   on the end. It sits here rather than up beside the name so that the order on
+   screen and the order you tab through stay the same. */
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.heroStars,
+.heroTier {
+  padding-left: 0.3rem;
+  font-size: 0.72rem;
+}
+
+.heroTier:disabled {
+  opacity: 0.4;
+}
+
+.heroCeiling {
+  grid-column: 1 / -1;
+  font-size: 0.68rem;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+
+  .heroRow .heroStars,
+  .heroRow .heroTier,
+  .heroRow .heroRarity {
+    grid-column: span 1;
+  }
+
+  .heroRow .heroName {
+    grid-column: 1 / -1;
+  }
+}
+
+.heroName {
+  text-align: left;
+  min-width: 0;
+}
+
+.heroRarity {
+  padding-left: 0.3rem;
+  font-size: 0.78rem;
+}
+
+.heroCount {
+  text-align: right;
+}
+
+/* No steppers. They are there for nudging a value by one, which is not how
+   anyone reaches Mastery 14 or Relationship 87, and they crowd a control that
+   is already narrow. Hidden rather than swapped for a text input, so the field
+   keeps its numeric keyboard and its min/max. */
+.input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.input[type='number']::-webkit-outer-spin-button,
+.input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.heroRemove {
+  padding: 0.2rem;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-color-soft);
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.heroRemove:hover,
+.heroRemove:focus-visible {
+  color: var(--color-error);
+  background-color: var(--bg-color-dark);
+  outline: none;
+}
+
+.addHero {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.65rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--text-color-dark);
+  background: none;
+  border: 1px dashed var(--line-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.addHero:hover,
+.addHero:focus-visible {
+  border-style: solid;
+  border-color: var(--wo-ice);
+  outline: none;
+}
+
+/* ---------- hero skills ---------- */
+
+.heroSkills {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.heroSkill {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.heroSkillName {
+  font-weight: 600;
+  color: var(--text-color-dark);
+}
+
+.heroSkillIdle {
+  font-size: 0.72rem;
+  text-align: right;
+  opacity: 0.55;
+}
+
+.heroSkillLevel {
+  padding: 0.25rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--text-color-dark);
+  background-color: var(--bg-color-bright);
+  border: 1px solid var(--line-color);
+  border-radius: 5px;
+}
+
+.heroSkillLevel:focus {
+  border-color: var(--wo-ice);
+  outline: none;
+}
+
+/* ---------- troops ---------- */
+
+.troopTabs {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.troopTab {
+  padding: 0.3rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  color: var(--text-color-soft);
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.troopTab:hover,
+.troopTab:focus-visible {
+  border-color: var(--wo-ice);
+  outline: none;
+}
+
+.troopTabActive {
+  color: var(--text-color-dark);
+  background-color: var(--wo-frost);
+  border-color: var(--wo-ice);
+}
+
+.troopTop {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+
+/* ---------- research ---------- */
+
+.researchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.6rem 1rem;
+}
+
+.researchTree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.6rem 0.75rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+}
+
+.researchTree .inlineSelect {
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.researchTree .inlineSelect select {
+  min-width: 6.5rem;
+}
+
+
+/* ---------- duration entry ---------- */
+
+.duration {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: flex-end;
+}
+
+.durationPart {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.durationField {
+  width: 2.6rem;
+  padding: 0.3rem 0.3rem;
+  text-align: right;
+}
+
+.durationUnit {
+  font-size: 0.68rem;
+  opacity: 0.55;
+}
+
+@media (max-width: 768px) {
+  .duration {
+    justify-content: flex-start;
+  }
+
+  /* Three fixed 2.6rem boxes plus their d/h/m labels came to about 13px more
+     than a 400px screen has once the label column takes its share, so on a
+     phone the boxes share what is actually there instead. */
+  .durationPart {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .durationField {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* The backpack has around twenty-five items, which in the single-column .fields
+   grid makes a card taller than the screen twice over. Two columns where there
+   is room, collapsing to one on a phone. */
+/* min() in the floor is what keeps this from overflowing a container narrower
+   than the track: a bare minmax(270px, 1fr) lays out a 270px column whatever
+   room it has, which pushed the hero widget rows past the screen edge once the
+   portrait beside them took its share. */
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr));
+  gap: 0.5rem 1.5rem;
+}
+
+.itemGrid + .itemGrid {
+  margin-top: 0.75rem;
+}
+
+/* Item names run long, so let the label take the slack rather than squeezing
+   the number field or spilling the hint over it. */
+.itemGrid .field {
+  grid-template-columns: minmax(0, 1fr) 6.5rem;
+  gap: 0.5rem;
+}
+
+.itemGrid .fieldLabel {
+  flex-wrap: wrap;
+}
+
+/* The troop strip has three tabs and never needs to wrap. The widget strip has
+   one per generation, which is fifteen and counting, so it wraps onto as many
+   rows as it needs rather than running off the side of the card. */
+.genTabs {
+  flex-wrap: wrap;
+  row-gap: 0.3rem;
+}
+
+/* Sub-headings inside a card, for the backpack groups. */
+.groupHeading {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--wo-ice);
+}
+
+.groupHeading:first-of-type {
+  margin-top: 0.5rem;
+}
+
+/* A group that carries its own controls above the fields, like the widget
+   generation strip or the collapsible Sigil list. */
+.widgetBlock {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-color);
+}
+
+.widgetHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.widgetHeader .groupHeading {
+  margin: 0;
+}
+
+.widgetTotal {
+  font-size: 0.8rem;
+  color: var(--text-color-soft);
+}
+
+.widgetBadge {
+  margin-left: 0.35rem;
+  font-style: normal;
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+
+/* A text button that reads as a link, for showing and hiding a long list. */
+.linkButton {
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--wo-ice);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.linkButton:hover {
+  opacity: 0.8;
+}
+
+/* Cards size to their own content: an expanded expert would otherwise stretch
+   every collapsed card on its row to match. */
+.expertGrid {
+  align-items: start;
+}
+
+/* One hero's widget: the counts, the level, and what the two add up to. */
+/* A hero's widget row: the portrait on the left, every field and note to the
+   right of it. A hero with no art yet renders the fields alone, which is why
+   the portrait is a row child rather than a background on the wrapper.
+
+   The fields sit at the BOTTOM of the row. The portrait is much taller than
+   they are, so top aligning left them stranded up by the character's head with
+   a column of empty space underneath; against the feet they read as a caption
+   to the art rather than as a separate thing beside it. */
+.widgetHero {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--line-color);
+}
+
+.widgetHeroFields {
+  flex: 1;
+  min-width: 0;
+}
+
+/* On a phone there is no room for both side by side, so the portrait stacks
+   above its fields instead. That also frees the full width for the text, which
+   is why the art goes back up to its native size here rather than shrinking. */
+@media (max-width: 768px) {
+  .widgetHero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+}
+
+.widgetHero .cardNote {
+  margin-bottom: 0;
+}
+
+/* An expert's heading: the portrait, then the tick box and focus line beside
+   it. Centred rather than top aligned, because the text block is only two
+   short lines and against the top of a 4rem square it read as floating. */
+.expertHead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.expertHeadText {
+  flex: 1;
+  min-width: 0;
+}
+
+.expertHeadText .expertFocus {
+  margin-bottom: 0;
+}
+
+/* The relationship status line, which is derived rather than entered. */
+.expertStatus {
+  margin: 0.4rem 0 0.2rem;
+  font-size: 0.78rem;
+  color: var(--text-color-soft);
+}
+
+.expertFocus {
+  margin: 0.15rem 0 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-color-soft);
+}
+
+.expertEstimated {
+  font-style: normal;
+  opacity: 0.7;
+}
+
+.expertSkills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+  padding: 0.6rem;
+  border-radius: 6px;
+  background: var(--wo-frost);
+}
+
+.expertSkills .cardNote {
+  margin-bottom: 0;
+}
+
+/* The level field is a plain number input rather than an AmountInput, so it
+   needs the narrower sizing the inline selects use. */
+.inlineSelect .input {
+  width: 5.5rem;
+}
+
+/* ---------- item icons ---------- */
+
+/* A label holding an icon centres its row rather than aligning on the text
+   baseline. A baseline-aligned flex line sizes itself around the text, and an
+   icon taller than that then hangs below it, by more the larger it gets. Only
+   labels with an icon get this, so the hint on every other field keeps sitting
+   on the baseline where it belongs. */
+.fieldLabelIcon {
+  align-items: center;
+}
+
+/* The generation strip carries a chest icon ahead of its label, so those tabs
+   become flex rows. The troop tabs share the class and have no icon, where this
+   changes nothing. */
+.genTabs .troopTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* A usage row is flex, but the icon sits inside the label span rather than
+   being a row child, so it needs its own spacing. The stat figures are the
+   same shape. */
+.usage li img,
+.stats dd img {
+  margin-right: 0.35rem;
+}
+
+/* ---------- Chief Gear ---------- */
+
+/* Slot pickers hold long option text ("Mythic T2 (3 Star), part 2 of 4"), and a
+   select sizes itself to its widest option unless told not to. At 400px that
+   pushed the whole row past the edge, so the label gives up its column and the
+   select is capped at what is actually there. */
+.gearSlots .field {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.2rem;
+}
+
+.gearSlots .field select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (min-width: 769px) {
+  .gearSlots .field {
+    grid-template-columns: 1fr minmax(0, 18rem);
+    gap: 0.75rem;
+  }
+}
+
+/* A caution the player should read before acting, as opposed to a cardNote
+   which is background. Used for the Enhancement Material Exchange, where the
+   plan is telling you to do something that scores well today and costs you
+   later, so the reason has to be as visible as the instruction. */
+.warnLine {
+  margin: 0.6rem 0 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-color-dark);
+  background-color: var(--color-error-bg);
+  border-left: 3px solid var(--color-error);
+  border-radius: 4px;
+}
+
+/* ---------- hero gear ---------- */
+
+/* A hero wears exactly four pieces, so the count is fixed rather than fluid.
+   auto-fit left a lone Boots stranded on a second row, which read as an odd
+   one out instead of the fourth of a set. Explicit columns keep the set whole:
+   four across with room, two by two below that.
+
+   minmax(0, 1fr) rather than 1fr so a long select cannot push a track wider
+   than its share and overflow the card. */
+/* The card is the yardstick, not the window. See .gearGrid below. */
+.gearCard {
+  container-type: inline-size;
+}
+
+/* One column is the floor, and everything above it is an upgrade the card asks
+   for when it has the room. Asking the WINDOW was the bug: this panel is capped
+   at about 48.5rem however wide the window is, so a window query handed four
+   columns to a card that only ever had space for two. */
+.gearGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+@container (min-width: 30rem) {
+  .gearGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Four pieces across wants 58rem of card, which works out at about 14rem each.
+   Below that they were 181px and the controls came out of their boxes. */
+@container (min-width: 58rem) {
+  .gearGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Container queries are the mechanism; this keeps a browser without them on
+   the old window-based rules rather than on a single column forever. */
+@supports not (container-type: inline-size) {
+  .gearGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 480px) {
+    .gearGrid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+.gearPiece {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-radius: 6px;
+  /* Its own yardstick, so a narrow piece can stack its insides whatever the
+     column count happens to be. */
+  container-type: inline-size;
+}
+
+/* The slot name and its quality sit on one line, since together they are the
+   piece's identity and the fields below are its state. */
+.gearPieceHead {
+  display: grid;
+  grid-template-columns: 1fr 6.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line-color);
+}
+
+/* Under 15rem the name and the quality select cannot share a line: the select
+   is a fixed 6.5rem, which left the name about 77px and pushed it out of the
+   card. Same for the Mastery pair, which is two selects on one row. */
+@container (max-width: 15rem) {
+  .gearPieceHead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gearMastery {
+    grid-auto-flow: row;
+  }
+}
+
+/* The hint beside a label is allowed to wrap inside a gear piece. Elsewhere it
+   is two words on a wide row and shrinking it looks worse than letting it sit;
+   here the label and its hint are the widest thing in a narrow column. */
+.gearPiece .fieldHint {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.gearPiece .fieldLabel {
+  flex-wrap: wrap;
+}
+
+.gearSlotName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+}
+
+/* Inside a piece the label goes above its control: the labels here are two
+   words and the controls are wide selects, so side by side they fight. */
+.gearPiece .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  /* The base .field is a row and centres its children vertically. Turning it
+     into a column turns that same rule into HORIZONTAL centring, which left
+     every label and the Mastery pair floating in the middle of the card at
+     their content width. Stretch is what a column wants. */
+  align-items: stretch;
+}
+
+/* Mastery is one number in the game but two controls here, level and stage, so
+   they share a row to read as the single thing they are. */
+/* One column per control, equal widths. A fixed "1fr 1fr" left the level
+   select at half width whenever the stage picker was hidden, which is every
+   piece below Mastery 4, so it never lined up with the Enhancement field
+   above it. */
+.gearMastery {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.3rem;
+}
+
+.gearPieceNote {
+  margin: 0.15rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------- *
+ * The Research Center tree.
+ *
+ * Laid out the way the game lays it out: one row per tier step, with
+ * the one, two or three nodes of that row side by side and centred,
+ * so a player reading off their own screen can go straight down. The
+ * rows come from the data, not from this file.
+ * ---------------------------------------------------------------- */
+.treeBlock {
+  border-top: 1px solid var(--line-color);
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.treeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.treeToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.25rem 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-color);
+  cursor: pointer;
+  text-align: left;
+}
+
+.treeToggle:hover {
+  color: var(--logo-color-blue);
+}
+
+.treeCaret {
+  display: inline-block;
+  width: 1rem;
+  color: var(--text-color-soft);
+}
+
+.treeActions {
+  display: flex;
+  gap: 0.5rem;
+  flex: none;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  /* The Battle tree is 48 rows deep, so it scrolls inside the card rather
+     than pushing every other card off the page. */
+  max-height: 32rem;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid var(--line-color);
+  border-radius: 0.5rem;
+  background: var(--bg-color-dark);
+}
+
+.treeRow {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.treeNode {
+  position: relative;
+  flex: 0 1 11rem;
+  min-width: 8rem;
+}
+
+.treeNodeBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--line-color);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--text-color-soft);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  cursor: pointer;
+  text-align: center;
+}
+
+.treeNodeBody:hover:not(:disabled) {
+  border-color: var(--logo-color-blue);
+  color: var(--text-color);
+}
+
+.treeNodeBody:disabled {
+  cursor: default;
+}
+
+/* Started but not finished, which is most of a real account. */
+.treeNodeStarted .treeNodeBody {
+  border-color: color-mix(in srgb, var(--logo-color-blue) 55%, transparent);
+  color: var(--text-color);
+}
+
+.treeNodeFull .treeNodeBody {
+  border-color: color-mix(in srgb, var(--logo-color-blue) 85%, transparent);
+  background: color-mix(in srgb, var(--logo-color-blue) 14%, transparent);
+  color: var(--text-color);
+}
+
+.treeNodeName {
+  display: block;
+}
+
+.treeNodeLevel {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--logo-color-blue);
+}
+
+/* Top right, and only once there is something to take away, so the common
+   action is the whole tile and the rare one has to be aimed at. */
+.treeMinus {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line-color);
+  border-radius: 50%;
+  background: var(--bg-color-dark);
+  color: var(--text-color-soft);
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.treeMinus:hover {
+  border-color: var(--logo-color-blue);
+  color: var(--logo-color-blue);
+}
+
+@media (max-width: 1024px) {
+  .treeNode {
+    flex: 0 1 8.5rem;
+    min-width: 6.5rem;
+  }
+  .treeNodeBody {
+    font-size: 0.72rem;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Collapsible inventory cards.
+ *
+ * The whole top bar is the control, not a small caret, because the
+ * bar is what a player aims at and there are fifteen of these.
+ * ---------------------------------------------------------------- */
+/* The bar holds the collapse button and, when there is one, the warning.
+   They are siblings because a button cannot live inside a button. */
+.cardBar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cardWarning {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* The heading keeps its own look; only its margin moves, since the
+   button now owns the spacing below the bar. */
+.cardHeader h3 {
+  margin: 0;
+}
+
+.cardHeader:hover h3,
+.cardHeader:focus-visible h3 {
+  opacity: 1;
+  color: var(--logo-color-blue);
+}
+
+.cardCaret {
+  flex: none;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--text-color-dark);
+  opacity: 0.6;
+}
+
+.cardHeader:hover .cardCaret {
+  color: var(--logo-color-blue);
+  opacity: 1;
+}
+
+/* Restores the gap the h3 used to provide, but only when something is
+   actually shown below it: a closed card sits as a single tidy bar. */
+.cardBar:has(.cardHeader[aria-expanded='true']) {
+  margin-bottom: 0.75rem;
+}
+
+/* Caret plus any badge, kept together at the right of the bar. */
+.cardHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: none;
+}
+
+/*
+ * "Nothing entered here yet."
+ *
+ * Shown only on a CLOSED card, because an open one already shows its empty
+ * fields. Warning-coloured rather than error-coloured: an untouched card is
+ * not wrong, it is just a thing the planner will read as zero.
+ */
+.cardEmptyBadge {
+  display: grid;
+  place-items: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.22rem;
+  border-radius: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--wo-warn, #d8a657);
+  color: var(--wo-warn, #d8a657);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------- *
+ * Fields with nothing in them.
+ *
+ * Every empty numeric field shows its placeholder, because formatAmount
+ * returns "" for zero, so :placeholder-shown IS the signal. No state has
+ * to be threaded through fifteen cards and it updates as you type.
+ * Dropdowns cannot do that, so those carry .inputEmpty instead.
+ *
+ * AMBER, AND ONLY ON THE EDGE. These are not errors: a zero is often the
+ * truth, and a form where half the boxes glow red teaches you to ignore
+ * red. The left edge is enough to scan a column by, and the text stays
+ * at full contrast so the field is still easy to read and type into.
+ * ---------------------------------------------------------------- */
+.input:placeholder-shown,
+.inputEmpty {
+  border-color: color-mix(in srgb, var(--wo-warn, #d8a657) 45%, var(--line-color));
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--wo-warn, #d8a657) 70%, transparent);
+}
+
+/* Focus always wins: once you are typing in it, it is not a gap any more. */
+.input:placeholder-shown:focus {
+  border-color: var(--logo-color-blue);
+  box-shadow: none;
+}
+
+/*
+ * A card whose warning has been dismissed says nothing at all.
+ *
+ * Without this, "Ignore" would clear the badge and leave every field still
+ * glowing, which is most of what the player was trying to quieten.
+ */
+.cardQuiet .input:placeholder-shown,
+.cardQuiet .inputEmpty {
+  border-color: var(--line-color);
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------------- *
+ * Spent and left.
+ *
+ * Every plan here is the same sentence twice over: this much goes, this
+ * much stays. Colouring the two sides means a player can read a column
+ * of them without parsing the words each time.
+ *
+ * The project's own error and success tokens, which already carry a
+ * light and a dark value, so these stay readable in both themes rather
+ * than being two hardcoded hexes that work in one.
+ *
+ * The colour is never the only signal: every one of these sits beside
+ * the words "used" and "left", or under a heading that says which it
+ * is. Red and green alone would fail anyone who cannot tell them apart.
+ * ---------------------------------------------------------------- */
+.spend {
+  color: var(--color-error);
+  font-variant-numeric: tabular-nums;
+}
+
+.left {
+  color: var(--color-success);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * `.stats dd` sets a colour and is one step more specific than a bare class,
+ * so a dd carrying .spend kept the default grey. Matching its specificity is
+ * the fix; !important would work too and would be a worse thing to leave for
+ * the next person.
+ */
+.stats dd.spend {
+  color: var(--color-error);
+}
+
+.stats dd.left {
+  color: var(--color-success);
+}
+
+/* ---------------------------------------------------------------- *
+ * The "where do I find this?" question mark and its panel.
+ * ---------------------------------------------------------------- */
+.helpWrap {
+  position: relative;
+  display: inline-flex;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+
+.helpButton {
+  width: 1.05rem;
+  height: 1.05rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  /* Carries the accent at rest, not the faint text colour: a help button
+     nobody notices is the same as no help button. */
+  border: 1px solid color-mix(in srgb, var(--wo-ice) 55%, transparent);
+  border-radius: 50%;
+  background: none;
+  color: var(--wo-ice);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.helpButton:hover,
+.helpButton:focus-visible,
+.helpButton[aria-expanded='true'] {
+  border-color: var(--wo-ice);
+  background: color-mix(in srgb, var(--wo-ice) 18%, transparent);
+}
+
+/*
+ * Anchored to the button and lifted above the fields. Width is capped in
+ * characters rather than pixels so the line length stays readable whatever
+ * the card is doing around it.
+ */
+.helpPanel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  display: block;
+  width: max-content;
+  max-width: min(42ch, 78vw);
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line-color);
+  border-radius: 0.5rem;
+  background: var(--bg-color-dark);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 45%);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-color-soft);
+  white-space: normal;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.helpTitle {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.helpLine {
+  display: block;
+}
+
+.helpList {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+/* Bullets drawn here rather than by a list element, because the panel sits
+   inside the field's label and may only contain phrasing content. */
+.helpItem {
+  position: relative;
+  display: block;
+  margin: 0.3rem 0;
+  padding-left: 0.8rem;
+}
+
+.helpItem::before {
+  content: '\2022';
+  position: absolute;
+  left: 0.1rem;
+  color: var(--wo-ice);
+}
+
+.helpItem strong {
+  color: var(--text-color);
+}
+
+/* The sources to leave out, which is the half people get wrong. */
+.helpWarn {
+  display: block;
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line-color);
+  color: var(--wo-warn, #d8a657);
+}
+

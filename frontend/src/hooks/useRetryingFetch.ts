@@ -11,7 +11,7 @@ const RETRY_DELAYS_MS = [2000, 5000, 10000, 20000];
  * in the loading state between attempts so the UI can keep saying "still trying"
  * instead of rendering an empty list.
  *
- * `fetcher` must be stable across renders — define it outside the component.
+ * `fetcher` must be stable across renders: define it outside the component.
  *
  * `setData`, `setLoading` and `setError` are exposed for callers that also mutate
  * the resource (creating, updating, deleting) and need to reflect that locally.

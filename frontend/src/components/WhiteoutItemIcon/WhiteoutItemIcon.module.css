@@ -1,0 +1,88 @@
+/* The art is 128px square with transparent padding baked in, so it is scaled
+   right down and given a fixed box. flex-shrink is the important part: these
+   sit inside label rows that ellipsize, and without it a long name squashes the
+   icon into a sliver instead of truncating the text. */
+.icon {
+  flex-shrink: 0;
+  object-fit: contain;
+  /* An image's own baseline is its bottom edge, so left alone it hangs above
+     the text and the taller the icon the worse it reads. `middle` puts the
+     icon's centre on the text's centre instead, and holds at any size. Flex
+     rows ignore vertical-align, so those labels centre themselves: see
+     .fieldLabelIcon in the planner stylesheet. */
+  vertical-align: middle;
+  user-select: none;
+}
+
+.sm {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.md {
+  width: 1.65rem;
+  height: 1.65rem;
+}
+
+/* Hero portraits, beside the widget fields.
+   The art is 128x192, a 2:3 portrait on a transparent ground, so it takes a
+   fixed width and lets the height follow. flex-shrink is what stops a long
+   hero name squeezing it out of the row.
+
+   10.5rem is a little past the art's own 128px, so it upscales by about a
+   third. That is deliberate: at native size the character is too small to
+   recognise next to the text, which is the whole point of having it. */
+.portrait {
+  flex-shrink: 0;
+  width: 10.5rem;
+  height: auto;
+  align-self: flex-start;
+  user-select: none;
+}
+
+/* On a phone the row stacks, so the portrait is no longer competing with the
+   fields for width and can sit at its native 128px instead of being shrunk. */
+@media (max-width: 768px) {
+  .portrait {
+    width: 8rem;
+    align-self: flex-start;
+  }
+}
+
+/* Building art in the levels grid. The source is 512px square on a transparent
+   ground, so it is scaled right down and centred over its own label. The grid
+   cell is only 135px wide at its narrowest, which is what caps the size.
+
+   aspect-ratio rather than height:auto so the box is the same size before the
+   image loads, while it loads, and when there is no image at all. Without it
+   the cells for buildings with no art yet collapsed and pulled whole rows of
+   the grid out of line. */
+.building {
+  display: block;
+  width: 5.5rem;
+  max-width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  margin: 0 auto 0.15rem;
+  user-select: none;
+}
+
+/* Expert portraits, at the head of each expert's card.
+
+   Square art, 300 to 350px, so unlike the 2:3 hero portraits it reads as an
+   avatar rather than a standing figure. It sits beside the name and the focus
+   line, which together are about two lines tall, so 4rem lines its bottom up
+   with theirs without pushing the collapsed card taller than it was.
+
+   aspect-ratio for the same reason the building art has it: Cyrille has no
+   picture yet, and without a reserved box their card's name would sit 4rem to
+   the left of everyone else's on the same row. */
+.expertPortrait {
+  flex-shrink: 0;
+  display: block;
+  width: 4rem;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 8px;
+  user-select: none;
+}

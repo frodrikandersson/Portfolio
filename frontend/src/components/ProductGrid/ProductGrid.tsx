@@ -51,7 +51,7 @@ export const ProductGrid = () => {
       {error && <p className={classes.errorText}>{error}</p>}
 
       {loadError ? (
-        // Never fall through to the "no products yet" copy here — the list is
+        // Never fall through to the "no products yet" copy here. The list is
         // empty because the request failed, not because there is nothing to show.
         <p className={classes.emptyText}>
           Couldn't load products.{' '}

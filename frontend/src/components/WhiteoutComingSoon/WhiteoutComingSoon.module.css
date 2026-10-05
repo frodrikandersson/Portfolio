@@ -1,0 +1,85 @@
+.container {
+  --wo-ice: #2b8fc7;
+  --wo-frost: #eaf6ff;
+
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  height: 100%;
+  overflow-y: auto;
+  line-height: 1.7;
+  color: var(--text-color-soft);
+}
+
+:global(html.dark) .container {
+  --wo-ice: #7fd4ff;
+  --wo-frost: #16222b;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 0.6rem 0 0.4rem;
+  font-size: 1.8rem;
+  color: var(--text-color-dark);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wo-ice);
+  background-color: var(--wo-frost);
+  border: 1px solid var(--wo-ice);
+  border-radius: 3px;
+}
+
+.blurb {
+  margin: 0;
+  max-width: 60ch;
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-color-dark);
+  border: 1px solid var(--line-color);
+  border-left: 3px solid var(--wo-ice);
+  border-radius: 6px;
+}
+
+.section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  color: var(--text-color-dark);
+}
+
+.plannedList {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.backButton {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: var(--text-color-dark);
+  background: none;
+  border: 1px solid var(--line-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.backButton:hover,
+.backButton:focus {
+  background-color: var(--bg-color-focus);
+  outline: none;
+}

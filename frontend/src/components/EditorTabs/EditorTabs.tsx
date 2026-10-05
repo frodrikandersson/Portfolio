@@ -16,6 +16,10 @@ const ProfilePage = lazy(() => import('../../pages/ProfilePage').then(m => ({ de
 const RegisterPage = lazy(() => import('../../pages/RegisterPage').then(m => ({ default: m.RegisterPage })));
 const AdminPage = lazy(() => import('../../pages/AdminPage').then(m => ({ default: m.AdminPage })));
 const AuthPanel = lazy(() => import('../AuthPanel/AuthPanel').then(m => ({ default: m.AuthPanel })));
+const WhiteoutToolsPage = lazy(() => import('../../pages/WhiteoutToolsPage').then(m => ({ default: m.WhiteoutToolsPage })));
+const WhiteoutBattleSimPage = lazy(() => import('../../pages/WhiteoutBattleSimPage').then(m => ({ default: m.WhiteoutBattleSimPage })));
+const WhiteoutCalculatorPage = lazy(() => import('../../pages/WhiteoutCalculatorPage').then(m => ({ default: m.WhiteoutCalculatorPage })));
+const WhiteoutWardrobePage = lazy(() => import('../../pages/WhiteoutWardrobePage').then(m => ({ default: m.WhiteoutWardrobePage })));
 
 interface EditorTabsProps {
   tabs: Tab[];
@@ -40,6 +44,10 @@ const componentMap: Record<string, React.LazyExoticComponent<React.ComponentType
   BlogPostPage,
   LibraryPage,
   TermsOfServicePage,
+  WhiteoutToolsPage,
+  WhiteoutBattleSimPage,
+  WhiteoutCalculatorPage,
+  WhiteoutWardrobePage,
 };
 
 export const EditorTabs: React.FC<EditorTabsProps> = ({

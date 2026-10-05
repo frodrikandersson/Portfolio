@@ -109,6 +109,13 @@ export const useSidebarMenus = (): {
             },
           ]
         : []),
+      // Ungated on purpose: the tools are usable logged out, the saved presets are not.
+      {
+        id: "whiteout-tools",
+        title: "WhiteoutTools.tsx",
+        componentName: "WhiteoutToolsPage",
+        label: "Whiteout Tools",
+      },
       ...(isLoggedIn
         ? [
             {
