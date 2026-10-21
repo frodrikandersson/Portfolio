@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/rayyan",
+      "destination": "/rayyan/",
+      "permanent": false
+    },
+    {
       "source": "/(.*)",
       "has": [{ "type": "host", "value": "www.quilcount.store" }],
       "destination": "https://quilcount.store/$1",

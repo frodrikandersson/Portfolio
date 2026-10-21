@@ -272,7 +272,7 @@
       }
       .h-name {
         display: inline-block;
-        padding: 0 0.15em;
+        padding: 0.3em 0.15em;
         font-family: "Dancing Script", cursive;
         font-weight: 700;
         font-size: clamp(3.4rem, 17vw, 5.2rem);
@@ -750,12 +750,72 @@
         opacity: 0.65;
       }
 
+      /* ---------- the music ---------- */
+      .mute {
+        position: fixed;
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+        /* above #fx, which is 50 and covers the screen */
+        z-index: 60;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        padding: 0.5em 1.05em;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 216, 138, 0.4);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 216, 138, 0.16),
+          rgba(255, 160, 200, 0.12)
+        );
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        color: #fff4dc;
+        font-size: 0.95rem;
+        font-style: italic;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        opacity: 0.72;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+        animation: fadeUp 1.2s ease both 0.6s;
+      }
+      .mute:hover,
+      .mute:focus-visible {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+      /* Quieter once she has turned it off, so it stops asking for attention. */
+      .mute[aria-pressed="true"] {
+        color: var(--muted);
+        border-color: var(--line);
+        background: var(--glass);
+      }
+      .mute-ico {
+        display: inline-block;
+        animation: notebob 2.6s ease-in-out infinite;
+      }
+      .mute[aria-pressed="true"] .mute-ico {
+        animation: none;
+      }
+      @keyframes notebob {
+        50% {
+          transform: translateY(-3px) rotate(-7deg);
+        }
+      }
+      /* The intro owns the screen until she taps, so nothing floats over it. */
+      body.locked .mute {
+        display: none;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .aurora::before,
         .aurora::after,
         .h-name,
         .orb,
         .hog-emoji,
+        .mute-ico,
         .ring,
         .q.final.on {
           animation: none !important;
@@ -851,6 +911,12 @@
         <button class="again" id="again">↺ read it again</button>
       </section>
     </main>
+
+    <audio id="song" src="song.mp3" loop preload="none"></audio>
+    <button class="mute" id="mute" type="button" aria-pressed="false" hidden>
+      <span class="mute-ico" aria-hidden="true">🎶</span>
+      <span class="mute-txt">music on</span>
+    </button>
 
     <canvas id="fx"></canvas>
 
@@ -1032,6 +1098,78 @@
         });
 
         let opened = false;
+        /* ---------------- the music ---------------- */
+        const song = $("#song"),
+          muteBtn = $("#mute");
+        const MUTE_KEY = "rayyan-music-muted";
+        /* Remembered, because "read it again" reloads the page and she should
+           not have to turn the music off twice. Storage throws in private
+           windows, so every touch of it is wrapped. */
+        let muted = false;
+        try {
+          muted = localStorage.getItem(MUTE_KEY) === "1";
+        } catch (_) {}
+
+        function paintMute() {
+          muteBtn.setAttribute("aria-pressed", String(muted));
+          muteBtn.setAttribute(
+            "aria-label",
+            muted ? "Turn the music on" : "Turn the music off",
+          );
+          muteBtn.querySelector(".mute-ico").textContent = muted
+            ? "🔇"
+            : "🎶";
+          muteBtn.querySelector(".mute-txt").textContent = muted
+            ? "music off"
+            : "music on";
+        }
+
+        /* A fade rather than a cut: arriving at full volume is a jolt, and so
+           is silence landing mid-note. */
+        let fader = 0;
+        function fadeTo(target, ms) {
+          clearInterval(fader);
+          const from = song.volume,
+            steps = Math.max(1, Math.round(ms / 50));
+          let i = 0;
+          fader = setInterval(() => {
+            i += 1;
+            song.volume = Math.min(1, Math.max(0, from + (target - from) * (i / steps)));
+            if (i >= steps) clearInterval(fader);
+          }, 50);
+        }
+
+        const VOLUME = 0.7;
+        function startMusic() {
+          muteBtn.hidden = false;
+          paintMute();
+          if (muted) return;
+          song.volume = 0;
+          /* Called straight out of her tap, which is what lets it play at all:
+             every browser blocks audio that no one asked for. If it is refused
+             anyway the button is already on screen for her to press. */
+          const go = song.play();
+          if (go && go.catch) go.catch(() => {});
+          fadeTo(VOLUME, 2500);
+        }
+
+        muteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          muted = !muted;
+          try {
+            localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+          } catch (_) {}
+          paintMute();
+          if (muted) {
+            fadeTo(0, 400);
+            setTimeout(() => song.pause(), 450);
+          } else {
+            const go = song.play();
+            if (go && go.catch) go.catch(() => {});
+            fadeTo(VOLUME, 900);
+          }
+        });
+
         $("#open").addEventListener("click", (e) => {
           e.stopPropagation();
           opened = true;
@@ -1046,6 +1184,7 @@
           $("#intro").classList.add("gone");
           $("#main").classList.add("show");
           document.body.classList.remove("locked");
+          startMusic();
 
           // the letter only starts once she scrolls down to it (or taps the cue)
           new IntersectionObserver(
