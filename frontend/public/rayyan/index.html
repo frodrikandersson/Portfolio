@@ -709,9 +709,93 @@
       .yes:active {
         transform: scale(0.95);
       }
+      /* A full second to go, rather than blinking out of existence. */
+      .yes.fading {
+        opacity: 0;
+        transform: scale(0.94);
+        pointer-events: none;
+        animation: none;
+        transition:
+          opacity 1s ease,
+          transform 1s ease;
+      }
       .answer.said .yes {
         display: none;
       }
+
+      /* Everything she has already read steps aside for the answer. */
+      #main.bowing {
+        opacity: 0;
+        transition: opacity 1s ease;
+        pointer-events: none;
+      }
+      body.vowing {
+        overflow: hidden;
+      }
+
+      /*
+       * The vow takes the whole screen.
+       *
+       * Fixed and on its own layer, above the effects canvas so the hearts
+       * rain behind the words rather than across them, and the words stay
+       * readable however thick the confetti gets.
+       */
+      .vow[hidden] {
+        display: none;
+      }
+      .vow {
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        display: grid;
+        place-items: center;
+        padding: 24px 18px;
+        text-align: center;
+        /* Taps still sparkle through it; only the button takes them. */
+        pointer-events: none;
+      }
+      .vow .forever {
+        display: block;
+        margin: 0;
+        font-family: "Dancing Script", cursive;
+        font-weight: 700;
+        /* Big enough to be the page, not a line on it. It is allowed to
+           wrap: more lines is more of the screen, which is the point. */
+        font-size: clamp(3.2rem, 15vw, 7rem);
+        line-height: 1.18;
+        max-width: 14ch;
+        color: var(--pink);
+        text-shadow:
+          0 0 28px rgba(255, 150, 190, 0.55),
+          0 0 80px rgba(255, 120, 170, 0.35);
+        opacity: 0;
+        transform: scale(0.82);
+        transition:
+          opacity 1.6s ease,
+          transform 2.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .vow.show .forever {
+        opacity: 1;
+        transform: none;
+      }
+      .vow .again {
+        display: block;
+        margin-top: 2.2rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1.4s ease;
+      }
+      .vow.ready .again {
+        opacity: 0.7;
+        pointer-events: auto;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .vow .forever {
+          transform: none;
+          transition: opacity 1.2s ease;
+        }
+      }
+
       .forever {
         display: none;
         margin-top: 14px;
@@ -1018,6 +1102,10 @@
         <span class="mute-ico" aria-hidden="true">🎶</span>
         <span class="mute-txt">music on</span>
       </button>
+    </div>
+
+    <div class="vow" id="vow" hidden>
+      <div class="vow-inner" id="vowInner"></div>
     </div>
 
     <canvas id="fx"></canvas>
@@ -1477,9 +1565,8 @@
         });
 
         /* ---------------- the answer ---------------- */
-        $("#yes").addEventListener("click", (e) => {
+        $("#yes").addEventListener("click", async (e) => {
           e.stopPropagation();
-          $("#answer").classList.add("said");
           shower = true;
           let n = 0;
           const fw = setInterval(
@@ -1504,6 +1591,36 @@
             });
             if (++h > 70) clearInterval(rain);
           }, 110);
+
+          /*
+           * The page bows out and the answer takes the screen.
+           *
+           * The words and the replay button are MOVED into the overlay rather
+           * than copied, so there is only ever one of each and #again keeps
+           * the handler it already has.
+           */
+          const yesBtn = $("#yes"),
+            vow = $("#vow");
+          yesBtn.classList.add("fading");
+          await sleep(1000);
+          $("#answer").classList.add("said");
+
+          $("#main").classList.add("bowing");
+          await sleep(1000);
+          document.body.classList.add("vowing");
+          $("#main").hidden = true;
+
+          const forever = document.querySelector(".forever"),
+            again = $("#again");
+          again.classList.remove("on");
+          $("#vowInner").append(forever, again);
+          vow.hidden = false;
+          /* A frame between showing it and animating it, or the browser
+             collapses the two into no transition at all. */
+          requestAnimationFrame(() => vow.classList.add("show"));
+
+          await sleep(5000);
+          vow.classList.add("ready");
         });
         $("#again").addEventListener("click", () => location.reload());
 
