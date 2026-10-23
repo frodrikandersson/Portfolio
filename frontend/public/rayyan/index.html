@@ -1183,18 +1183,44 @@
         });
 
         // keep the newest line in view, unless she is scrolling around herself
-        let userHold = 0;
+        let userHold = 0,
+          lastTouched = 0;
         ["touchstart", "wheel", "keydown"].forEach((ev) =>
           addEventListener(
             ev,
             () => {
-              userHold = Date.now() + 6000;
+              lastTouched = Date.now();
+              userHold = lastTouched + 6000;
             },
             { passive: true },
           ),
         );
-        function follow(el, pos = 0.45) {
-          if (Date.now() < userHold) return;
+
+        /*
+         * Carries her down to whatever has just appeared.
+         *
+         * Touching the page normally buys six seconds of being left alone,
+         * which is right while the letter writes itself: she may be reading
+         * back over a line and should not be dragged off it.
+         *
+         * It was wrong for the finale. The question is the whole point of the
+         * page, it arrives several seconds after the last word, and anyone who
+         * had scrolled in the meantime was simply never carried to it. So the
+         * finale asks with `force`, which waits only for her to stop moving
+         * rather than for the full six seconds, and tries again if she is
+         * still scrolling. Never yanked mid-swipe, never skipped either.
+         */
+        function follow(el, pos = 0.45, force = false, tries = 0) {
+          if (force) {
+            if (Date.now() - lastTouched < 1200) {
+              if (tries < 10) {
+                setTimeout(() => follow(el, pos, true, tries + 1), 1300);
+              }
+              return;
+            }
+          } else if (Date.now() < userHold) {
+            return;
+          }
           const r = el.getBoundingClientRect();
           if (r.bottom > innerHeight * 0.72 || r.top < innerHeight * 0.08) {
             scrollTo({
@@ -1232,13 +1258,13 @@
 
           await sleep(1800);
           $("#divider").classList.add("on");
-          follow($("#divider"), 0.3);
+          follow($("#divider"), 0.3, true);
           await sleep(2200);
 
           const qs = [...document.querySelectorAll(".q")];
           for (let i = 0; i < qs.length; i++) {
             qs[i].classList.add("on");
-            follow(qs[i], 0.4);
+            follow(qs[i], 0.4, true);
             if (i === qs.length - 1) {
               shower = true;
               await sleep(900);
@@ -1257,7 +1283,7 @@
           }
 
           $("#answer").classList.add("on");
-          follow($("#yes"), 0.55);
+          follow($("#yes"), 0.55, true);
           if (found) {
             await sleep(2500);
             const ps = $("#ps");
