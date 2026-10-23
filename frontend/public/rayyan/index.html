@@ -1289,7 +1289,9 @@
           VOLUME = Math.min(1, Math.max(0, Number(volSlider.value) / 100));
           /* A fade in flight would fight her for the dial, so she wins. */
           clearInterval(fader);
-          song.volume = VOLUME;
+          /* Silence wins over the dial: moving the slider while the music is
+             off sets the level it will come back at, not the level now. */
+          if (!muted) song.volume = VOLUME;
           try {
             localStorage.setItem(VOL_KEY, String(VOLUME));
           } catch (_) {}
@@ -1304,12 +1306,14 @@
           musicStarted = true;
           musicBar.hidden = false;
           paintMute();
-          if (muted) return;
           song.currentTime = 0;
-          song.volume = Math.min(FADE_FROM, VOLUME);
+          /* It plays even when she has it turned down, silently, so the track
+             keeps its place and unmuting later lands where the song has got
+             to rather than at the beginning. */
+          song.volume = muted ? 0 : Math.min(FADE_FROM, VOLUME);
           const go = song.play();
           if (go && go.catch) go.catch(() => {});
-          fadeTo(VOLUME, FADE_IN_MS);
+          if (!muted) fadeTo(VOLUME, FADE_IN_MS);
         }
 
         function playSong() {
@@ -1336,10 +1340,17 @@
           } catch (_) {}
           paintMute();
           if (muted) {
+            /* Down, not off. Nothing is paused, so the song carries on behind
+               the silence and is wherever it should be when she comes back. */
             fadeTo(0, 400);
-            setTimeout(() => song.pause(), 450);
           } else {
-            playSong();
+            /* Only ever needed if something outside the page stopped it, such
+               as the tab being suspended while she was away. */
+            if (song.paused && !song.ended) {
+              const go = song.play();
+              if (go && go.catch) go.catch(() => {});
+            }
+            fadeTo(VOLUME, 900);
           }
         });
 
