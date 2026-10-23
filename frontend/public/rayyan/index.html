@@ -751,12 +751,87 @@
       }
 
       /* ---------- the music ---------- */
-      .mute {
+      .musicbar {
         position: fixed;
         right: max(14px, env(safe-area-inset-right));
         bottom: max(14px, env(safe-area-inset-bottom));
         /* above #fx, which is 50 and covers the screen */
         z-index: 60;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /*
+       * The slider is for mice. A phone already has volume buttons that do
+       * this better than a 90px track ever could, and on a touch screen it
+       * would mostly be something to catch her thumb while she reads.
+       */
+      .vol {
+        display: none;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .vol {
+          display: block;
+          width: 92px;
+          height: 18px;
+          background: none;
+          cursor: pointer;
+          -webkit-appearance: none;
+          appearance: none;
+          opacity: 0.55;
+          transition: opacity 0.3s ease;
+          animation: fadeUp 1.2s ease both 0.6s;
+        }
+        .musicbar:hover .vol,
+        .vol:focus-visible {
+          opacity: 1;
+        }
+        .vol::-webkit-slider-runnable-track {
+          height: 3px;
+          border-radius: 999px;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 216, 138, 0.75),
+            rgba(255, 183, 203, 0.55)
+          );
+        }
+        .vol::-moz-range-track {
+          height: 3px;
+          border-radius: 999px;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 216, 138, 0.75),
+            rgba(255, 183, 203, 0.55)
+          );
+        }
+        .vol::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          margin-top: -4.5px;
+          border-radius: 50%;
+          background: #fff4dc;
+          box-shadow: 0 0 8px rgba(255, 216, 138, 0.8);
+          border: 0;
+        }
+        .vol::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #fff4dc;
+          box-shadow: 0 0 8px rgba(255, 216, 138, 0.8);
+          border: 0;
+        }
+        /* Nothing to set the level of while it is off. */
+        .musicbar.off .vol {
+          opacity: 0.25;
+          pointer-events: none;
+        }
+      }
+
+      .mute {
         display: inline-flex;
         align-items: center;
         gap: 0.45em;
@@ -805,7 +880,7 @@
         }
       }
       /* The intro owns the screen until she taps, so nothing floats over it. */
-      body.locked .mute {
+      body.locked .musicbar {
         display: none;
       }
 
@@ -913,10 +988,22 @@
     </main>
 
     <audio id="song" src="song.mp3" preload="none"></audio>
-    <button class="mute" id="mute" type="button" aria-pressed="false" hidden>
-      <span class="mute-ico" aria-hidden="true">🎶</span>
-      <span class="mute-txt">music on</span>
-    </button>
+    <div class="musicbar" id="musicbar" hidden>
+      <input
+        class="vol"
+        id="vol"
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value="70"
+        aria-label="Music volume"
+      />
+      <button class="mute" id="mute" type="button" aria-pressed="false">
+        <span class="mute-ico" aria-hidden="true">🎶</span>
+        <span class="mute-txt">music on</span>
+      </button>
+    </div>
 
     <canvas id="fx"></canvas>
 
@@ -1121,6 +1208,7 @@
 
         function paintMute() {
           muteBtn.setAttribute("aria-pressed", String(muted));
+          musicBar.classList.toggle("off", muted);
           const done = song.ended;
           muteBtn.setAttribute(
             "aria-label",
@@ -1157,7 +1245,39 @@
           }, 50);
         }
 
-        const VOLUME = 0.7;
+        /*
+         * Her level, remembered. 0.7 is where it has always landed; the
+         * slider only moves this, and the fades all aim at whatever it says.
+         */
+        const VOL_KEY = "rayyan-music-volume";
+        let VOLUME = 0.7;
+        try {
+          const saved = parseFloat(localStorage.getItem(VOL_KEY));
+          if (saved >= 0 && saved <= 1) VOLUME = saved;
+        } catch (_) {}
+
+        /* Where the fade-in begins. Low enough to arrive rather than start,
+           but never above where she set it. */
+        const FADE_FROM = 0.1;
+        const FADE_IN_MS = 4000;
+
+        const volSlider = $("#vol"),
+          musicBar = $("#musicbar");
+        volSlider.value = String(Math.round(VOLUME * 100));
+
+        volSlider.addEventListener("input", () => {
+          VOLUME = Math.min(1, Math.max(0, Number(volSlider.value) / 100));
+          /* A fade in flight would fight her for the dial, so she wins. */
+          clearInterval(fader);
+          song.volume = VOLUME;
+          try {
+            localStorage.setItem(VOL_KEY, String(VOLUME));
+          } catch (_) {}
+        });
+        /* It lives inside the page's click-to-sparkle handler, which only
+           steps aside for buttons. */
+        volSlider.addEventListener("click", (e) => e.stopPropagation());
+
 
         /*
          * Unlock the audio during her tap, without making a sound.
@@ -1194,14 +1314,14 @@
         function startMusic() {
           if (musicStarted) return;
           musicStarted = true;
-          muteBtn.hidden = false;
+          musicBar.hidden = false;
           paintMute();
           if (muted) return;
           song.currentTime = 0;
-          song.volume = 0;
+          song.volume = Math.min(FADE_FROM, VOLUME);
           const go = song.play();
           if (go && go.catch) go.catch(() => {});
-          fadeTo(VOLUME, 2500);
+          fadeTo(VOLUME, FADE_IN_MS);
         }
 
         function playSong() {
