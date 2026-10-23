@@ -1082,6 +1082,9 @@
           if (started) return;
           started = true;
           $("#cue").classList.add("gone");
+          /* The song belongs to the letter: it comes in as the words do,
+             whether she scrolled down to them or tapped the cue. */
+          startMusic();
           writeLetter();
         }
 
@@ -1155,14 +1158,47 @@
         }
 
         const VOLUME = 0.7;
+
+        /*
+         * Unlock the audio during her tap, without making a sound.
+         *
+         * The song is wanted later, when the letter begins, and the letter
+         * usually begins because she SCROLLED to it. Scrolling is not a user
+         * gesture as far as autoplay policy is concerned: iOS Safari in
+         * particular will refuse a play() that is not inside a real tap
+         * handler, and would simply never start the music.
+         *
+         * Playing the element once inside the tap and pausing it immediately
+         * marks it as user-approved for the rest of the visit. Volume is zero
+         * and it is rewound straight away, so nothing is heard now.
+         */
+        let primed = false;
+        function primeMusic() {
+          if (primed || muted) return;
+          primed = true;
+          song.volume = 0;
+          const go = song.play();
+          if (go && go.then) {
+            go.then(() => {
+              /* She can reach the letter before this resolves, by tapping the
+                 cue the moment the page opens. Pausing then would stop the
+                 song a beat after it started. */
+              if (musicStarted) return;
+              song.pause();
+              song.currentTime = 0;
+            }).catch(() => {});
+          }
+        }
+
+        let musicStarted = false;
         function startMusic() {
+          if (musicStarted) return;
+          musicStarted = true;
           muteBtn.hidden = false;
           paintMute();
           if (muted) return;
+          song.currentTime = 0;
           song.volume = 0;
-          /* Called straight out of her tap, which is what lets it play at all:
-             every browser blocks audio that no one asked for. If it is refused
-             anyway the button is already on screen for her to press. */
           const go = song.play();
           if (go && go.catch) go.catch(() => {});
           fadeTo(VOLUME, 2500);
@@ -1213,7 +1249,7 @@
           $("#intro").classList.add("gone");
           $("#main").classList.add("show");
           document.body.classList.remove("locked");
-          startMusic();
+          primeMusic();
 
           // the letter only starts once she scrolls down to it (or taps the cue)
           new IntersectionObserver(
