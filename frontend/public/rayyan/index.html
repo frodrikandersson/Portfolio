@@ -859,6 +859,12 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        transition: opacity 0.8s ease;
+      }
+      /* Bowing out when the song finishes, rather than blinking away. */
+      .musicbar.gone {
+        opacity: 0;
+        pointer-events: none;
       }
 
       /*
@@ -1347,23 +1353,24 @@
         function paintMute() {
           muteBtn.setAttribute("aria-pressed", String(muted));
           musicBar.classList.toggle("off", muted);
-          const done = song.ended;
           muteBtn.setAttribute(
             "aria-label",
-            muted
-              ? "Turn the music on"
-              : done
-                ? "Play the song again"
-                : "Turn the music off",
+            muted ? "Turn the music on" : "Turn the music off",
           );
           muteBtn.querySelector(".mute-ico").textContent = muted ? "🔇" : "🎶";
           muteBtn.querySelector(".mute-txt").textContent = muted
             ? "music off"
-            : done
-              ? "play again"
-              : "music on";
+            : "music on";
         }
-        song.addEventListener("ended", paintMute);
+        /* When the song finishes the controls retire with it: there is nothing
+           left to turn down, and the song is not on offer a second time.
+           "read it again" reloads the page, which is how it comes back. */
+        song.addEventListener("ended", () => {
+          musicBar.classList.add("gone");
+          setTimeout(() => {
+            musicBar.hidden = true;
+          }, 900);
+        });
 
         /* A fade rather than a cut: arriving at full volume is a jolt, and so
            is silence landing mid-note. */
@@ -1434,24 +1441,8 @@
           if (!muted) fadeTo(VOLUME, FADE_IN_MS);
         }
 
-        function playSong() {
-          /* A finished track will not restart on its own: the playhead is
-             sitting at the end, so play() there does nothing. */
-          if (song.ended) song.currentTime = 0;
-          const go = song.play();
-          if (go && go.catch) go.catch(() => {});
-          fadeTo(VOLUME, 900);
-        }
-
         muteBtn.addEventListener("click", (e) => {
           e.stopPropagation();
-          /* Replaying is not unmuting. A tap on a finished song starts it over
-             and leaves her mute preference exactly where it was. */
-          if (!muted && song.ended) {
-            playSong();
-            paintMute();
-            return;
-          }
           muted = !muted;
           try {
             localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
@@ -1464,7 +1455,7 @@
           } else {
             /* Only ever needed if something outside the page stopped it, such
                as the tab being suspended while she was away. */
-            if (song.paused && !song.ended) {
+            if (song.paused) {
               const go = song.play();
               if (go && go.catch) go.catch(() => {});
             }
