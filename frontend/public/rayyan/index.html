@@ -532,6 +532,7 @@
 
       /* ---------- letter ---------- */
       .letter {
+        display: none;
         margin-top: 26px;
         padding: 26px 20px 30px;
         background: var(--glass);
@@ -545,6 +546,9 @@
         font-size: clamp(1.2rem, 4.8vw, 1.38rem);
         line-height: 1.62;
         font-weight: 500;
+      }
+      .letter.on {
+        display: block;
       }
       .letter p + p {
         margin-top: 1em;
@@ -1169,6 +1173,7 @@
           if (started) return;
           started = true;
           $("#cue").classList.add("gone");
+          letterEl.classList.add("on");
           /* The song belongs to the letter: it comes in as the words do,
              whether she scrolled down to them or tapped the cue. */
           startMusic();
@@ -1353,8 +1358,10 @@
         });
         $("#cue").addEventListener("click", (e) => {
           e.stopPropagation();
-          letterEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          /* startLetter first: it is what makes the card exist on the page,
+             and scrolling to something still display:none goes nowhere. */
           startLetter();
+          letterEl.scrollIntoView({ behavior: "smooth", block: "start" });
           /* Not primed first any more: this handler IS the gesture, which is
              the thing every autoplay policy is actually asking for. */
         });
