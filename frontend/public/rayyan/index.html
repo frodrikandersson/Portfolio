@@ -597,7 +597,7 @@
       .finale {
         display: none;
         text-align: center;
-        padding: 36px 4px 10px;
+        padding: 36px 4px min(24vh, 200px);
       }
       .finale.on {
         display: block;
@@ -1284,6 +1284,10 @@
 
           $("#answer").classList.add("on");
           follow($("#yes"), 0.55, true);
+          /* The .answer transition runs for 1.6s from scale(0.9), so the first
+             measurement is of an element still on its way in. Ask again once
+             it has arrived, so the Yes settles where it was aimed. */
+          setTimeout(() => follow($("#yes"), 0.55, true), 1700);
           if (found) {
             await sleep(2500);
             const ps = $("#ps");
