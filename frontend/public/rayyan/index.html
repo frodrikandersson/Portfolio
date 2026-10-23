@@ -743,7 +743,7 @@
         font-style: italic;
       }
       .again {
-        display: block;
+        display: none;
         margin: 28px auto 0;
         background: none;
         border: 0;
@@ -753,8 +753,15 @@
         color: var(--muted);
         opacity: 0.65;
       }
+      /* Only once there is something to read again. */
+      .again.on {
+        display: block;
+      }
 
       /* ---------- the music ---------- */
+      .musicbar[hidden] {
+        display: none;
+      }
       .musicbar {
         position: fixed;
         right: max(14px, env(safe-area-inset-right));
@@ -1166,6 +1173,9 @@
               "p.s. your hedgehog will always be up there among your stars 🦔";
             ps.classList.add("on");
           }
+          /* The end of the letter is the first moment "read it again" means
+             anything, so that is when it appears. */
+          $("#again").classList.add("on");
         }
 
         let started = false;
