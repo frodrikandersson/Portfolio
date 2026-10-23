@@ -595,8 +595,12 @@
 
       /* ---------- finale ---------- */
       .finale {
+        display: none;
         text-align: center;
         padding: 36px 4px 10px;
+      }
+      .finale.on {
+        display: block;
       }
       .divider {
         color: var(--gold);
@@ -1184,6 +1188,7 @@
           started = true;
           $("#cue").classList.add("gone");
           letterEl.classList.add("on");
+          $("#finale").classList.add("on");
           /* The song belongs to the letter: it comes in as the words do,
              whether she scrolled down to them or tapped the cue. */
           startMusic();
@@ -1526,14 +1531,63 @@
         resize();
         addEventListener("resize", resize);
 
-        const stars = Array.from({ length: 240 }, () => ({
-          x: Math.random(),
-          y: Math.random(),
-          r: Math.random() ** 3 * 1.6 + 0.3,
-          p: Math.random() * 6.283,
-          s: rand(0.5, 2),
-          c: pick(["255,255,255", "255,255,255", "255,228,170", "190,215,255"]),
-        }));
+        /* Density, not a fixed count: 240 was tuned for a laptop and made a
+           phone's narrow screen both busier and slower than intended. */
+        const STAR_COUNT = Math.max(
+          90,
+          Math.min(240, Math.round((innerWidth * innerHeight) / 4200)),
+        );
+        const stars = Array.from({ length: STAR_COUNT }, () => {
+          const c = pick([
+            "255,255,255",
+            "255,255,255",
+            "255,228,170",
+            "190,215,255",
+          ]);
+          return {
+            x: Math.random(),
+            y: Math.random(),
+            r: Math.random() ** 3 * 1.6 + 0.3,
+            p: Math.random() * 6.283,
+            s: rand(0.5, 2),
+            c,
+            /* Built once. Assigning fillStyle a fresh string every frame made
+               the browser parse a colour 240 times a frame for no reason. */
+            style: "rgb(" + c + ")",
+          };
+        });
+
+        /*
+         * The faint majority are baked into one image and blitted.
+         *
+         * They were being drawn as 240 separate paths every frame, which is
+         * the bulk of the animation's cost, and nobody can see a 0.4px star
+         * twinkling on its own anyway. The big ones still get drawn properly,
+         * because those are the ones with visible personality.
+         */
+        const BRIGHT = 1.15;
+        const bright = stars.filter((st) => st.r > BRIGHT);
+        const faint = stars.filter((st) => st.r <= BRIGHT);
+        let field = null;
+        function bakeField() {
+          field = document.createElement("canvas");
+          const dpr = Math.min(devicePixelRatio || 1, 2);
+          field.width = Math.max(1, Math.round(W * dpr));
+          field.height = Math.max(1, Math.round(H * dpr));
+          const c = field.getContext("2d");
+          c.setTransform(dpr, 0, 0, dpr, 0, 0);
+          for (const st of faint) {
+            /* Their average twinkle, frozen. */
+            c.globalAlpha = 0.75 * 0.775;
+            c.fillStyle = st.style;
+            c.beginPath();
+            c.arc(st.x * W, st.y * H, st.r, 0, 6.283);
+            c.fill();
+          }
+        }
+        bakeField();
+        /* After the first listener, so W and H are already the new size. */
+        addEventListener("resize", bakeField);
 
         let meteors = [],
           nextMeteor = 1200,
@@ -1563,12 +1617,17 @@
 
         function drawSky(now, dt) {
           sctx.clearRect(0, 0, W, H);
-          for (const s of stars) {
+          if (field) {
+            /* One slow breath across the whole field, so it is not dead. */
+            sctx.globalAlpha = 0.92 + 0.08 * Math.sin(now * 0.0004);
+            sctx.drawImage(field, 0, 0, W, H);
+          }
+          for (const s of bright) {
             const tw = 0.55 + 0.45 * Math.sin(now * 0.001 * s.s + s.p);
             const x = s.x * W,
               y = s.y * H;
-            sctx.globalAlpha = tw * (s.r > 1.2 ? 1 : 0.75);
-            sctx.fillStyle = `rgb(${s.c})`;
+            sctx.globalAlpha = tw;
+            sctx.fillStyle = s.style;
             sctx.beginPath();
             sctx.arc(x, y, s.r, 0, 6.283);
             sctx.fill();
@@ -1774,7 +1833,19 @@
           c.fill();
         }
 
+        let fxDirty = false;
         function drawFx(dt) {
+          /* Nothing in flight means nothing to do. Clearing a screen-sized
+             canvas every frame is not free, especially at 2x on a phone, and
+             most of the time there is not a single particle on it. */
+          if (!parts.length && !rockets.length) {
+            if (fxDirty) {
+              fctx.clearRect(0, 0, W, H);
+              fxDirty = false;
+            }
+            return;
+          }
+          fxDirty = true;
           fctx.clearRect(0, 0, W, H);
           for (let i = rockets.length - 1; i >= 0; i--) {
             const r = rockets[i];
