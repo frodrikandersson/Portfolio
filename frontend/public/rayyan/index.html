@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="gated">
   <head>
     <meta charset="utf-8" />
     <meta
@@ -34,6 +34,27 @@
       }
       html {
         -webkit-text-size-adjust: 100%;
+      }
+      /*
+       * Nothing to scroll until the letter exists.
+       *
+       * Android hands the page a layout viewport measured with the address
+       * bar hidden, taller than what she can actually see, and lets a swipe
+       * travel that difference to collapse the bar. overflow:hidden does not
+       * refuse it and neither does overscroll-behavior; touch-action does,
+       * which is why the page kept sliding under the cue. pan-x and
+       * pinch-zoom stay allowed so zooming still works.
+       *
+       * The class comes off the moment the letter starts, and JS takes it
+       * off early if the hero is too tall to fit, since she has to be able
+       * to reach the cue before she can press it.
+       */
+      html.gated,
+      html.gated body {
+        height: 100%;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: pan-x pinch-zoom;
       }
       body {
         min-height: 100svh;
@@ -1333,6 +1354,7 @@
           started = true;
           $("#cue").classList.add("gone");
           /* Releases the scroll gate: there is something below the cue now. */
+          document.documentElement.classList.remove("gated");
           document.body.classList.add("reading");
           letterEl.classList.add("on");
           $("#finale").classList.add("on");
@@ -1699,8 +1721,12 @@
           H = 0;
         function resize() {
           const dpr = Math.min(devicePixelRatio || 1, 2);
-          W = innerWidth;
-          H = innerHeight;
+          /* The canvas's own box, not innerWidth/innerHeight: on Android
+             those are measured with the address bar hidden and disagree with
+             what the element is actually laid out at, which leaves the stars
+             drawn to one size and displayed at another. */
+          W = sky.clientWidth || innerWidth;
+          H = sky.clientHeight || innerHeight;
           for (const c of [sky, fx]) {
             c.width = W * dpr;
             c.height = H * dpr;
@@ -1710,6 +1736,29 @@
         }
         resize();
         addEventListener("resize", resize);
+
+        /*
+         * The gate holds only while everything above the cue fits on the
+         * screen. If it does not, she has to be able to scroll down to the
+         * cue, and the page already ends there, so that scroll stops exactly
+         * at the cue rather than carrying on past it.
+         *
+         * visualViewport is what she can see; innerHeight on Android is not.
+         */
+        const mainEl = $("#main");
+        function fitGate() {
+          if (started) return;
+          const seen =
+            (window.visualViewport && visualViewport.height) || innerHeight;
+          const needed = mainEl.getBoundingClientRect().height;
+          document.documentElement.classList.toggle("gated", needed <= seen);
+        }
+        fitGate();
+        addEventListener("resize", fitGate);
+        addEventListener("orientationchange", fitGate);
+        if (window.visualViewport) {
+          visualViewport.addEventListener("resize", fitGate);
+        }
 
         /* Density, not a fixed count: 240 was tuned for a laptop and made a
            phone's narrow screen both busier and slower than intended. */
