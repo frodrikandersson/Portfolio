@@ -251,6 +251,22 @@
       main.show {
         opacity: 1;
       }
+      /*
+       * Until she presses the cue, the page ends at the cue.
+       *
+       * The bottom padding above is room for the letter to breathe against
+       * the edge of a phone; before the letter exists it is just empty space
+       * under the cue to scroll into, which makes the cue look like
+       * scenery rather than the thing to press. Keeping only the safe-area
+       * inset leaves it clear of the home indicator without inviting a
+       * scroll. min-height goes with it, so a short page really is short.
+       */
+      body:not(.reading) {
+        min-height: 0;
+      }
+      body:not(.reading) main {
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
       .hero {
         text-align: center;
       }
@@ -773,6 +789,11 @@
         transition:
           opacity 1.6s ease,
           transform 2.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+        /* Its own layer for the duration. This is large script type with a
+           28px and an 80px blur shadow on it, being scaled for over two
+           seconds: without a layer to transform, the phone re-rasterises
+           the lot every frame and gives up part way. */
+        will-change: opacity, transform;
       }
       .vow.show .forever {
         opacity: 1;
@@ -1311,6 +1332,8 @@
           if (started) return;
           started = true;
           $("#cue").classList.add("gone");
+          /* Releases the scroll gate: there is something below the cue now. */
+          document.body.classList.add("reading");
           letterEl.classList.add("on");
           $("#finale").classList.add("on");
           /* The song belongs to the letter: it comes in as the words do,
@@ -1636,9 +1659,17 @@
           again.classList.remove("on");
           $("#vowInner").append(forever, again);
           vow.hidden = false;
-          /* A frame between showing it and animating it, or the browser
-             collapses the two into no transition at all. */
-          requestAnimationFrame(() => vow.classList.add("show"));
+          /*
+           * The overlay needs a computed style of its own before it can
+           * transition away from it. A requestAnimationFrame does not give
+           * one: rAF callbacks run BEFORE the style pass for that frame, so
+           * display:grid and .show landed in the same recalculation and the
+           * transition had no starting point to leave. Reading a layout
+           * value forces that first style pass to happen now, which is the
+           * difference between the words growing in and simply being there.
+           */
+          void vow.offsetHeight;
+          vow.classList.add("show");
 
           await sleep(5000);
           vow.classList.add("ready");
@@ -1921,7 +1952,12 @@
           });
         }
         function explode(r) {
-          const n = reduce ? 20 : 56;
+          /* A 56 dot shell is drawn for a desktop window; on a phone the
+             same count is denser than it needs to look full, and twenty
+             seven of them go up within ten seconds of the Yes. */
+          const n = reduce
+            ? 20
+            : Math.max(28, Math.min(56, Math.round((W * H) / 9700)));
           for (let i = 0; i < n; i++) {
             const a = (i / n) * 6.283 + rand(-0.05, 0.05),
               s = rand(0.08, 0.3);
@@ -1982,6 +2018,30 @@
           c.fill();
         }
 
+        /*
+         * A heart is four bezier curves, and the finale keeps sixty of them
+         * in the air at once. Draw each colour once into a small offscreen
+         * canvas and blit that instead, the way the starfield bakes its
+         * faint stars. Baked at 2x the reference size so shrinking it to a
+         * 10 to 26px heart stays clean.
+         */
+        const HEART_UNIT = 64;
+        const heartSprites = new Map();
+        function heartSprite(color) {
+          let sprite = heartSprites.get(color);
+          if (sprite) return sprite;
+          sprite = document.createElement("canvas");
+          sprite.width = sprite.height = HEART_UNIT * 2;
+          const g = sprite.getContext("2d");
+          /* Origin at the middle, one unit to two device pixels, so a
+             heartPath of HEART_UNIT fills the canvas exactly. */
+          g.setTransform(2, 0, 0, 2, HEART_UNIT, HEART_UNIT);
+          g.fillStyle = color;
+          heartPath(g, HEART_UNIT);
+          heartSprites.set(color, sprite);
+          return sprite;
+        }
+
         let fxDirty = false;
         function drawFx(dt) {
           /* Nothing in flight means nothing to do. Clearing a screen-sized
@@ -2032,15 +2092,22 @@
             const k = p.life / p.max;
             fctx.globalAlpha = 1 - k * k;
             fctx.fillStyle = p.color;
+            if (p.type === "dot") {
+              /* A circle has no orientation, so a dot needs none of the
+                 transform machinery around it. Dots are the bulk of what a
+                 firework puts on the screen, so this is the one that pays. */
+              fctx.beginPath();
+              fctx.arc(p.x, p.y, p.size, 0, 6.283);
+              fctx.fill();
+              continue;
+            }
             fctx.save();
             fctx.translate(p.x, p.y);
             fctx.rotate(p.rot);
             if (p.type === "spark") sparkPath(fctx, p.size * (1 - k * 0.4));
-            else if (p.type === "heart") heartPath(fctx, p.size);
-            else if (p.type === "dot") {
-              fctx.beginPath();
-              fctx.arc(0, 0, p.size, 0, 6.283);
-              fctx.fill();
+            else if (p.type === "heart") {
+              const sprite = heartSprite(p.color);
+              fctx.drawImage(sprite, -p.size / 2, -p.size / 2, p.size, p.size);
             } else {
               fctx.textAlign = "center";
               fctx.textBaseline = "middle";
